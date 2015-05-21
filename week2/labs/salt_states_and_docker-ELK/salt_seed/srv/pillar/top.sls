@@ -1,0 +1,3 @@
+base:
+  'logger':
+    - ssl
