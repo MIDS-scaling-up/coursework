@@ -8,8 +8,9 @@ logstash-forwarder-repo:
     - gpgcheck: 1
     - gpgkey: http://packages.elasticsearch.org/GPG-KEY-elasticsearch
 
-logstash-forwarder:
+logstash-forwarder-pkg:
   pkg.installed:
+    - name: logstash-forwarder
     - fromrepo: logstash-forwarder-repo
 
 /etc/logstash/conf.d/30-lumberjack-output.conf:
@@ -18,6 +19,9 @@ logstash-forwarder:
     - group: logstash
     - mode: 644
     - source: salt://logstash/30-lumberjack-output.conf
+    - require:
+      - user: logstash
+      - file: /etc/logstash
 
 /etc/logstash-forwarder.conf:
   file.managed:
@@ -25,15 +29,17 @@ logstash-forwarder:
     - group: logstash
     - mode: 644
     - source: salt://logstash/logstash-forwarder.conf
+    - require:
+      - user: logstash
+      - file: /etc/logstash
 
 logstash-forwarder.service:
   service.running:
     - name: logstash-forwarder
     - enable: True
     - require:
-        - pkg: logstash-forwarder
-        - service: logstash.service
+        - pkg: logstash-forwarder-pkg
     - watch:
-        - service: logstash.service
+        - file: /etc/logstash
         - file: /etc/logstash/conf.d/30-lumberjack-output.conf
         - file: /etc/logstash-forwarder.conf

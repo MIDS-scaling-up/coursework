@@ -10,34 +10,28 @@ logstash-repo:
 
 /etc/hosts:
   file.managed:
-    - user: root
-    - group: root
-    - mode: 644
-    - source: salt://logstash/hosts
-
-logstash:
-  pkg.installed:
-    - fromrepo: logstash-repo
-
-/etc/logstash:
-  file.directory:
     - user: logstash
     - group: logstash
-    - mode: 755
-    - recurse:
-      - user
-      - group
-      - mode
-    - requires:
-      pkg: logstash
+    - mode: 644
+    - source: salt://logstash/hosts
+    - require:
+      - user: logstash
+
+logstash-pkg:
+  pkg.installed:
+    - name: logstash
+    - fromrepo: logstash-repo
 
 /etc/ssl/logstash-forwarder.key:
   file.managed:
     - user: logstash
     - group: logstash
-    - mode: 644
+    - mode: 600
     - contents_pillar: sslkeys:logstash-forwarder-key
-
+    - require:
+      - user: logstash
+      - pkg: logstash-pkg
+      - file: /etc/logstash
 
 /etc/logstash/conf.d/10-filters.conf:
   file.managed:
@@ -45,6 +39,10 @@ logstash:
     - group: logstash
     - mode: 644
     - source: salt://logstash/10-filters.conf
+    - require:
+      - user: logstash
+      - pkg: logstash-pkg
+      - file: /etc/logstash
 
 /etc/logstash/conf.d/01-lumberjack-input.conf:
   file.managed:
@@ -52,16 +50,19 @@ logstash:
     - group: logstash
     - mode: 644
     - source: salt://logstash/01-lumberjack-input.conf
+    - require:
+      - user: logstash
+      - pkg: logstash-pkg
+      - file: /etc/logstash
 
 logstash.service:
   service.running:
     - name: logstash
     - enable: True
     - require:
-        - pkg: logstash
+        - pkg: logstash-pkg
     - watch:
         - file: /etc/logstash/conf.d/10-filters.conf
         - file: /etc/logstash/conf.d/01-lumberjack-input.conf
         - file: /etc/ssl/logstash-forwarder.key
-        - file: /etc/logstash
         - file: /etc/hosts
