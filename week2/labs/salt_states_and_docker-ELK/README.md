@@ -15,7 +15,6 @@ Container virtualization is a useful mechanism to isolate single-process runtime
 ## Preconditions
 You must have a Unix (Linux or OSX) shell, a SoftLayer account, and the SoftLayer tool installed and configured. If you successfully completed the “Cloud Computing 101” homework assignment then you have the tools to get started.
 
-
 ## Part 1: Provision and Configure VSes
 
 ### Provision VSes
@@ -53,11 +52,14 @@ Create the fileserver and pillar directories and restart the daemon:
 
     mkdir -p /srv/{salt,pillar} && systemctl restart salt-master
 
-Salt SSH uses the file `/etc/salt/roster` to configure minions. Browse the documentation (http://docs.saltstack.com/en/latest/topics/ssh/) and configure a roster file for use with _dhost_ and _logger_. Note that the file’s YAML (cf. http://yaml.org/) format requires leading spaces on indented lines and not tab characters. You may use either the password for the root account or configure SSH keys with `ssh-keygen`. Once you’ve completed this step, check your work by executing a remote command from the Salt Master.
+Salt SSH uses the file `/etc/salt/roster` to configure minions. Browse the documentation (http://docs.saltstack.com/en/latest/topics/ssh/) and configure a roster file for use with _dhost_ and _logger_. Note that the file’s YAML (cf. http://yaml.org/) format requires leading spaces on indented lines and not tab characters. You may use either the password for the root account or configure SSH keys with `ssh-keygen`. If you choose to use passwords, you might find the tool [print_vs_details](https://github.com/MIDS-scaling-up/tools/softlayer/print_vs_details) useful.
+
+Once you’ve completed this step, check your work by executing a remote command from the Salt Master.
 
     salt-ssh -i '*' cmd.run 'uname -a'
 
 Expected output:
+
     dhost:
       Linux dhost 3.10.0-229.1.2.el7.x86_64 #1 SMP Fri Mar 27 03:04:26 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
     logger:
@@ -72,17 +74,17 @@ Salt state files are idempotent declarations of the _end state_ that a salt-mana
 On _saltmaster_, execute:
 
     yum install -y git
-    cd /tmp && git clone https://github.com/MIDS-scaling-up/coursework.git && cd coursework/week2_lab_salt_and_docker_elk/week2/labs/salt_states_and_docker-ELK
+    cd /tmp && git clone https://github.com/MIDS-scaling-up/coursework.git && cd coursework/week2/labs/salt_states_and_docker-ELK/salt_seed/
 
 ### Modify state files and update logger
 
-Follow the directions in [salt_seed/README.md](week2_lab_salt_and_docker_elk/salt_seed/README.md) to generate the necessary certificates. Once complete, copy the content of `srv/` to `/srv/` on _saltmaster_. Apply the desired state to the logger VS:
+Follow the directions in [salt_seed/README.md](salt_seed/README.md) to generate the necessary certificates. Once complete, copy the content of `srv/` to `/srv/` on _saltmaster_. Apply the desired state to the logger VS:
 
     salt-ssh 'logger' state.highstate
 
 ### Tunnel to Kibana UI from workstation
 
-You should be able to now visit the Kibana UI. Because the UI is unprotected the port is not exposed over the internet. To create an SSH tunnel to the logger box **from your workstation**, execute (note that you must replace 'logger_ip' with the IP of the _logger_ VS you provisioned):
+You should now visit the Kibana UI. Because the UI is unprotected we've configured the service to listen only on the server's loopback interface. To create an SSH tunnel to the logger box **from your workstation**, execute the following command. Note that you must replace 'logger_ip' with the IP of the _logger_ VS you provisioned.
 
     ssh -L 5601:127.0.0.1:5601 root@logger_ip -N
 
