@@ -33,7 +33,7 @@ In this section you’ll need to edit some configuration files on the VS. If you
 
 Install the Salt Master daemon (note that using the ‘develop’ branch is normally not recommended but there’s a JSON rendering error as of this writing that the newest code avoids):
 
-    yum update && curl -o /tmp/install_salt.sh -L https://bootstrap.saltstack.com && sh /tmp/install_salt.sh -Z -M git develop
+    yum update && curl -o /tmp/install_salt.sh -L https://bootstrap.saltstack.com && sh /tmp/install_salt.sh -Z -M git v2015.5.0
 
 Edit the file `/etc/salt/master` and enable both the fs-based fileserver and pillar systems. Once correct, the file should contain uncommented configuration lines like these:
 
