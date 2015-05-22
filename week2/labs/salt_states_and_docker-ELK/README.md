@@ -104,14 +104,19 @@ Rather than compose a statefile for _dhost_’s container we’ll configure the 
     salt-ssh 'dhost' pkg.install git
     salt-ssh 'dhost' git.clone /usr/local/loggen https://github.com/michaeldye/loggen.git
     salt-ssh 'dhost' cp.get_file salt://logstash/logstash-forwarder.crt /usr/local/loggen/docker/fs/etc/ssl/
+
+Ensure you replace 'logger_ip' in the below command with the IP of your _logger_ instance:
+
     salt-ssh 'dhost' cmd.run 'echo -e "logger_ip elk.mids" >> /usr/local/loggen/docker/fs/etc/hosts_add'
+
+Finally, build the docker container. Note that this last command will take some time to complete.
+
     salt-ssh 'dhost' cmd.run 'cd /usr/local/loggen/; docker build -t loggen .'
 
-(This command will take some time to complete)
 
 ### Deploy Loggen
 
- To deploy a Docker container from a Docker Image (either pre-built and fetched from the internet or available locally as loggen is), use docker run with a command like the one below. Ensure you use the IP for your logger instance in the command.
+ To deploy a Docker container from a Docker Image (either pre-built and fetched from the internet or available locally as loggen is), use docker run with a command like the one below.
 
     salt-ssh 'dhost' cmd.run 'docker run -d --name loggen -p 80:80 -t loggen'
 
@@ -121,8 +126,8 @@ You can ensure that the container is running by executing:
 
 ### Issue HTTP Requests to Loggen, visit Kibana UI
 
-Loggen will send log events for HTTP requests it receives. The program is simple, a user issues an HTTP GET request and the server will send log events to logger. You can issue a request of loggen with:
+Loggen will send log events for HTTP requests it receives. The program is simple, a user issues an HTTP GET request and the server will send log events to logger. You can issue a request to loggen with the following command (note you must replace 'dhost_ip' with the IP of your _dhost_ instance).
 
-    curl -i http://logger_ip/
+    curl -i http://dhost_ip/
 
-Visit the Kibana UI again and locate log message(s) from loggen. (Note that Elasticsearch may take a moment or two to index the new messages. Also note that you may need to use a filter like "name:loggen" to filter out syslog messages that can prevent you from viewing incoming loggen messages.
+You might want to issue quite a few requests to make finding HTTP request log message easier to find in Kibana. Visit the Kibana UI again and locate log message(s) from loggen. (Note that Elasticsearch may take a moment or two to index the new messages. Also note that you may need to use a filter like "name:loggen" to filter out syslog messages that can prevent you from viewing incoming loggen messages.
