@@ -1,0 +1,4 @@
+#!/bin/bash -e
+
+cat < /etc/hosts_add >> /etc/hosts
+cd /src && node server.js
