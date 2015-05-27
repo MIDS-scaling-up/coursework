@@ -15,7 +15,7 @@ Add to /root/.bash\_profile the following line in the end:
 
 Make sure the nodes can talk to each other without a password.  When you created the VMs, you specified a keypair.  Copy it to /root/.ssh/id\_rsa (copy paste or scp works).  Set its permissions:
 
-    chmod 600 id_rsa
+    chmod 600 /root/.ssh/id_rsa
 
 Set up the hosts file (/etc/hosts) for your cluster by adding the internal IP addresses you noted earlier and names for each node in the cluster.  For instance:
 
@@ -42,7 +42,7 @@ As root on your node, download this tarball into /root, then unpack and install:
 
 Install pre-requisites:
 
-    yum -y install ksh gcc-c++ compat-libstdc++-33 kernel-devel redhat-lsb
+    yum -y install ksh gcc-c++ compat-libstdc++-33 kernel-devel redhat-lsb net-tools libaio
 
 The instructions below are specific to the version of the kernel running on your RedHat machine.  Verify what kernel you have by issuing:
 
