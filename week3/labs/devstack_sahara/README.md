@@ -6,24 +6,24 @@
 Use `slcli` to provision a VS with the latest version of 64bit CentOS, 2 or more cores, 8gb RAM, 1gbps internal and external nics and 100gb local hard drive.
 
 #### VS Creation example:
-    slcli vs create --datacenter=sjc01 --hostname=lab3 --domain=openstack.dye.zone --billing=hourly --key=IBM_local-2 --cpu=2 --memory=8192 --network=1000 --disk=100 --os=CENTOS_LATEST_64
+    slcli vs create --datacenter=sjc01 --hostname=lab3 --domain=openstack.sftlyr.ws --billing=hourly --key=somekey --cpu=4 --memory=8192 --network=1000 --disk=100 --os=UBUNTU_LATEST_64 --san
 
 ### Order additional IPs
 
-Order 4 static public IPs for your new openstack VS using the SL portal, https://control.softlayer.com/. Select the machine from the "Devices" menu and follow the link "order IPs".  You'll need to choose an endpoint address, choose the primary public IP of the system you provisioned.
+After the box has been assigned a public IP address, order 4 more static public IPs using the SL portal, https://control.softlayer.com/. Select the machine from the "Devices" menu and follow the link "order IPs".  You'll need to choose an endpoint address, choose the primary public IP of the system you provisioned.
 
 Once the subnet order is complete, you'll receive an email message from SoftLayer specifying the range. Retain this information for configuration later.
 
 ### Configure and start DevStack
 
-SSH to the machine and configure the _stack_ user:
+SSH to the machine and configure the __stack__ user:
 
     adduser stack
     echo "stack ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 Clone DevStack Repository, switch to "Juno" build:
 
-    yum install -y git
+    apt-get install -y git
     su - stack
     git clone https://git.openstack.org/openstack-dev/devstack
     cd devstack
@@ -33,36 +33,35 @@ Create the file `local.conf` and add the following content. Note that you must r
 
     [[local|localrc]]
     FLOATING_RANGE={first of your additional ips}/30
-    FIXED_RANGE=10.11.12.0/24
-    FIXED_NETWORK_SIZE=256
-    FLAT_INTERFACE=eth0
-    ADMIN_PASSWORD=changeme
-    MYSQL_PASSWORD=changeme
-    RABBIT_PASSWORD=changeme
-    SERVICE_PASSWORD=changeme
-    SERVICE_TOKEN=changeme
-    enable_service sahara
+    ADMIN_PASSWORD=stack
+    MYSQL_PASSWORD=stack
+    RABBIT_PASSWORD=stack
+    SERVICE_PASSWORD=stack
+    SERVICE_TOKEN=stack
     HOST_IP={public IP address of your VM}
+    enable_service sahara
 
 Start DevStack and flush the iptables rules in the filter chain:
 
-    sudo yum install -y iptables-services
     ./stack.sh
     sudo iptables -F INPUT
 
 ### Configure and Launch a Cluster
 
-Connect to the dashboard by browsing to ``.
 
-Browse to the "Images" area in the web UI. Import this image: http://sahara-files.mirantis.com/sahara-icehouse-vanilla-1.2.1-ubuntu-13.10.qcow2
+Connect to the dashboard (Horizon) by browsing to `http://{public_ip}/` and authenticating with user 'admin' and password specified in the config.
 
-Register the image in the image registry section of the data processing tab. Give your image a name, tag it as "vanilla, 1.2.1". The `userid` should be "ubuntu".
+Browse to the "Images" area in the web UI. Create an image using the URL http://sahara-files.mirantis.com/sahara-icehouse-vanilla-1.2.1-ubuntu-13.10.qcow2. Select the type "qcow2". Name it whatever you'd like.
 
-Create an "all in one" node group template. Include both job and task trackers, data and name nodes as well as _oozie_. Give it the public floating IP pool you created earlier. Use the `m1.small` VM type.
+Register the image in the "Image Registry" section of the "Data Processing" tab in the "Project" section. Use "ubuntu" for the User Name" and tag it as "vanilla, 1.2.1" (make sure to click "Add plugin tags" once the right values are selected).
 
-Create a corresponding cluster template with a single "all in one" node group.
+In the "Node Group Templates" section, create a new node group with Plugin Name "Vanilla Apache Hadoop" and Hadoop Version 1.2.1. When prompted, choose a valid hostname for the Template Name. Choose "m1.medium" for the Openstack Flavor, "Ephemeral Drive" for Storage location, and "public" for Floating IP pool. Ensure you include the following processes: "namenode", "datanode", "oozie", "tasktracker" and "jobtracker".
 
-Launch your cluster. Don't forget to give it your keypair (create one if necessary). Be patient, the cluster will take some time to start. When complete, your cluster should be available at a URL like http://{your_floating_ip}:50030/jobtracker.jsp.
+Create a corresponding cluster template in the "Cluster Templates" section. Note that you needn't select any anti-affinity options in the "Details" tab. To add your node group to the cluster template, click the "Node Groups" tab, select your node group, and click the __+__ button.
+
+Launch your cluster. Don't forget to give it your keypair (create one if necessary). Be patient, the cluster will take some time to start. You can watch cluster setup log output by browsing to "Instances" in the "Compute" section.
+
+When complete, your cluster should be available at a URL like http://{your_floating_ip}:50030/jobtracker.jsp.
 
 Check the newly created security group for your cluster.  Add the "ICMP -1" rule to enable ping.
 
@@ -75,7 +74,3 @@ Now, go the job binary area and create a job binary.  Upload this file, set "sto
 Create a new job of type Java Action, add the above jar file / binary in the libs area—make sure you __add__ the binary under the library by clicking __choose__.
 
 Run the job on your existing cluster.  Under "Configure", use `org.apache.hadoop.examples.ExampleDriver` as the `main` class.  Give it three Arguments on separate fields: "pi", "10", "10". Go the job tracker page, ensure that your job is running.
-
-
-
-
