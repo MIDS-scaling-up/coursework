@@ -20,8 +20,8 @@ This is an index of coursework for the MIDS class "Scaling Up! Really Big Data".
 
 _This is a graded homework_
 
-0. [Part 1- GPFS setup](week3/hw/gpfs_setup)
-0. [Part 2- The Mumbler](week3/hw/the_mumbler)
+0. [Part 1- GPFS setup](week4/hw/gpfs_setup)
+0. [Part 2- The Mumbler](week4/hw/the_mumbler)
 
 ### Labs
 
