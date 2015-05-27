@@ -8,6 +8,12 @@ This is an index of coursework for the MIDS class "Scaling Up! Really Big Data".
 
 0. [Salt States and Docker deployment of the ELK stack](week2/labs/salt_states_and_docker-ELK)
 
+## Week 3: Openstack Introduction
+
+### Labs
+
+0. [Hadoop over OpenStack DevStack using Sahara](week3/labs/devstack_sahara)
+
 ## Week 4: Distributed Filesystems
 
 ### Homework
