@@ -8,6 +8,12 @@ Use `slcli` to provision a VS with the latest version of 64bit CentOS, 2 or more
 #### VS Creation example:
     slcli vs create --datacenter=sjc01 --hostname=lab3 --domain=openstack.sftlyr.ws --billing=hourly --key=somekey --cpu=4 --memory=8192 --network=1000 --disk=100 --os=UBUNTU_LATEST_64 --san
 
+Once you can login to the box, execute:
+
+    cat /proc/cpuinfo | grep 'model name'
+
+If you the reported model is "Intel(R) Xeon(R) CPU E5-2650 v2", reprovision the VS. The DevStack installation version uses a libvirt version that is too old to identify this processor.
+
 ### Order additional IPs
 
 After the box has been assigned a public IP address, order 4 more static public IPs using the SL portal, https://control.softlayer.com/. Select the machine from the "Devices" menu and follow the link "order IPs".  You'll need to choose an endpoint address, choose the primary public IP of the system you provisioned.
@@ -25,6 +31,7 @@ Clone DevStack Repository, switch to "Juno" build:
 
     apt-get install -y git
     su - stack
+    script /dev/null
     git clone https://git.openstack.org/openstack-dev/devstack
     cd devstack
     git checkout stable/juno
@@ -41,29 +48,28 @@ Create the file `local.conf` and add the following content. Note that you must r
     HOST_IP={public IP address of your VM}
     enable_service sahara
 
-Start DevStack and flush the iptables rules in the filter chain:
+Start DevStack and flush the iptables rules in the filter chain (note: this operation will take some time to complete):
 
     ./stack.sh
     sudo iptables -F INPUT
 
 ### Configure and Launch a Cluster
 
+Connect to the dashboard (Horizon) by browsing to `http://{public_ip}/` and authenticating with user _admin_ and password specified in the config.
 
-Connect to the dashboard (Horizon) by browsing to `http://{public_ip}/` and authenticating with user 'admin' and password specified in the config.
+Browse to the __Images__ section of the __Compute__ tab in the __Project__ area in the web UI. Create an image using the URL http://sahara-files.mirantis.com/sahara-icehouse-vanilla-1.2.1-ubuntu-13.10.qcow2. Select the type _qcow2_. Name it whatever you'd like.
 
-Browse to the "Images" area in the web UI. Create an image using the URL http://sahara-files.mirantis.com/sahara-icehouse-vanilla-1.2.1-ubuntu-13.10.qcow2. Select the type "qcow2". Name it whatever you'd like.
+Register the image in the __Image Registry__ section of the __Data Processing__ tab in the __Project__ area. Use `ubuntu` for the +_User Name_ and tag it as `vanilla, 1.2.1` (make sure to click "Add plugin tags" once the right values are selected).
 
-Register the image in the "Image Registry" section of the "Data Processing" tab in the "Project" section. Use "ubuntu" for the User Name" and tag it as "vanilla, 1.2.1" (make sure to click "Add plugin tags" once the right values are selected).
+In the __Node Group Templates__ section, create a new node group with _Plugin Name_ `Vanilla Apache Hadoop` and _Hadoop Version_ `1.2.1`. When prompted, choose a valid hostname for the _Template Name_. Choose `m1.medium` for the _Openstack Flavor_, `Ephemeral Drive` for _Storage location_, and `public` for _Floating IP_ pool. Ensure you include the following _processes_ `namenode`, `datanode`, `oozie`, `tasktracker` and `jobtracker`.
 
-In the "Node Group Templates" section, create a new node group with Plugin Name "Vanilla Apache Hadoop" and Hadoop Version 1.2.1. When prompted, choose a valid hostname for the Template Name. Choose "m1.medium" for the Openstack Flavor, "Ephemeral Drive" for Storage location, and "public" for Floating IP pool. Ensure you include the following processes: "namenode", "datanode", "oozie", "tasktracker" and "jobtracker".
+Create a corresponding cluster template in the __Cluster Templates__ section. Note that you needn't select any anti-affinity options in the __Details__ tab. To add your node group to the cluster template, click the __Node Groups__ tab, select your node group, and click the "__+__" button.
 
-Create a corresponding cluster template in the "Cluster Templates" section. Note that you needn't select any anti-affinity options in the "Details" tab. To add your node group to the cluster template, click the "Node Groups" tab, select your node group, and click the __+__ button.
+Launch your cluster. Don't forget to give it your keypair (create one if necessary). Be patient, the cluster will take some time to start. You can watch cluster setup log output by browsing to __Instances__ in the __Compute__ section. If your cluster status changes to _Error_, attach to the `screen` session on the DevStack VS to investigate output logs.
 
-Launch your cluster. Don't forget to give it your keypair (create one if necessary). Be patient, the cluster will take some time to start. You can watch cluster setup log output by browsing to "Instances" in the "Compute" section.
+When complete, your cluster's jobtracker should be available at the URL `http://{your_floating_ip}:50030/jobtracker.jsp`.
 
-When complete, your cluster should be available at a URL like http://{your_floating_ip}:50030/jobtracker.jsp.
-
-Check the newly created security group for your cluster.  Add the "ICMP -1" rule to enable ping.
+Check the newly created security group for your cluster. Add the "ICMP -1" rule to enable ping.
 
 ### Use the Cluster
 
