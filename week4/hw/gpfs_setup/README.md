@@ -162,7 +162,7 @@ Let’s check that the file system is created:
 
 Mounting the distributed FS:
 
-    mmount all -a
+    mmmount all -a
 
 All done.  Now you should be able to go to the mounted FS:
 
