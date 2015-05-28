@@ -79,7 +79,7 @@ The process is repeated until either there is no two-gram that starts with that 
 mumble is exhausted.
 
 The trick is to write the mumbler in such a way that the amount of network traffic is minimized.  
-We ask that you install nmon (http://sourceforge.net/projects/nmon/files/nmon\_linux\_x86\_64/download)
+We ask that you install nmon (http://sourceforge.net/projects/nmon/files/nmon_linux_x86_64/download)
 and use it to see how much network traffic you generate as you run the mumbler.  If you write it well, the 
 amount of network traffic will be small as it is running.
 
