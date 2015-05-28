@@ -6,7 +6,10 @@ These instructions are a subset of the official instructions available here: [IB
 
 We will install GPFS FPO with no replication (replication=1) and local write affinity.  This means that if you are on one of the nodes and are writing a file in GPFS, the file will end up on your local node unless your local node is out of space.
 
-A. __Get three virtual servers provisioned__, 2 vCPUs, 4G RAM, REDHAT\_LATEST\_64, __two local disks__ 25G each, in San Jose. __Make sure__ you attach a keypair.  Pick intuitive names such as gpfs1, gpfs2, gpfs3.  Note their internal (10.x.x.x) ip addresses.  
+A. __Get three virtual servers provisioned__, 2 vCPUs, 4G RAM, REDHAT\_6\_64, __two local disks__ 25G each, in San Jose. __Make sure__ you attach a keypair.  Pick intuitive names such as gpfs1, gpfs2, gpfs3.  Note their internal (10.x.x.x) ip addresses.  
+
+_Note: The 3.10 kernel from RHEL 7 is not compatible with the GPFS kernel module build tools. Make sure you are provisioning RHEL 6 instances._
+
 B. __Set up each one of your nodes as follows:__  
 
 Add to /root/.bash\_profile the following line in the end:
