@@ -94,11 +94,11 @@ Now, start GPFS:
 
     mmstartup -a
 
-All nodes should be up:
+All nodes should be up ("GPFS state" column shows "active"):
 
     mmgetstate -a
 
-If one or more nodes are down, you will need to go back and see what you might have missed.  The main GPFS log file is /var/adm/ras/mmfs.log.latest  So look for errors there.
+Nodes may reflect "arbitrating" state briefly before "active".  If one or more nodes are down, you will need to go back and see what you might have missed.  The main GPFS log file is /var/adm/ras/mmfs.log.latest  So look for errors there.
 
 You could get more details on your cluster:
 
@@ -128,18 +128,21 @@ Disk /dev/xvda is where the operating system is, so we’re going to leave it al
     servers=gpfs1
     usage=dataAndMetadata 
     pool=system
+    failureGroup=1
     
     %nsd:
     device=/dev/xvdc
     servers=gpfs2
     usage=dataAndMetadata 
     pool=system
+    failureGroup=2
     
     %nsd:
     device=/dev/xvdc
     servers=gpfs3
     usage=dataAndMetadata 
     pool=system
+    failureGroup=3
 
 Now run:
 
