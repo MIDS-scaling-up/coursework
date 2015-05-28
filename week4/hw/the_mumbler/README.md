@@ -2,7 +2,7 @@
 
 ## Markov chain text generator application.  
 
-The idea of this very simple exercise is to understand and play with data to compute affinity.  
+The idea of this very simple exercise is to understand and play with data to compute affinity.
 Oftentimes fundamental issues are lost in complexity, so here are considering a trivial example that in 
 practice could be scaled to hundreds or thousands of nodes and requires no map-reduce or any 
 complicated scheduler.
@@ -10,8 +10,8 @@ complicated scheduler.
 First, we assume that you have a GPFS FPO cluster configured with write affinity and replication=1 
 (meaning no data replication, writes will be attempted local).  Metadata will be replicated and that’s ok.
 You’ll need to write a couple of scripts to download the google two-gram 60G data set from here:
-(http://storage.googleapis.com/books/ngrams/books/datasetsv2.html).
-_Note: considering the above, it does make a difference FROM WHERE you are downloading the data set._
+(http://storage.googleapis.com/books/ngrams/books/datasetsv2.html). _Note: considering the above, it does
+ make a difference FROM WHERE you are downloading the data set._
 
 Since GPFS FPO is not replicated, each file will be placed on one of the nodes.  Make sure you 
 understand where each file is placed and control this placement.  The same goes for uncompressing 
@@ -78,13 +78,13 @@ evaluate all two-grams that start with "straits" and select the next word.
 The process is repeated until either there is no two-gram that starts with that words or the length of the 
 mumble is exhausted.
 
-The trick is to write the mumbler in such a way that the amount of network traffic is minimized.  
+The trick is to write the mumbler in such a way that the amount of network traffic is minimized.
 We ask that you install nmon (http://sourceforge.net/projects/nmon/files/nmon_linux_x86_64/download)
 and use it to see how much network traffic you generate as you run the mumbler.  If you write it well, the 
 amount of network traffic will be small as it is running.
 
 Think about the fact that your 60G data set does not fit on any individual node, so it will be split 
-between the three nodes in GPFS even if you don’t use the write affinity to distribute the data set.  
+between the three nodes in GPFS even if you don’t use the write affinity to distribute the data set.
 Knowing where each file is, however, should enable you to move compute (as part of your mumbler) to 
 the data and minimize network chatter.
 

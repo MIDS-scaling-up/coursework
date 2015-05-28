@@ -160,7 +160,7 @@ Let’s check that the file system is created:
 
     mmlsfs all
 
-Mounting the distributed FS:
+Mounting the distributed FS (be sure to pass -a so that the filesystem is mounted on all nodes):
 
     mmmount all -a
 
@@ -178,4 +178,10 @@ Make sure you can write, e.g.
 
     touch aa
 
-If the file was created, you are all set.  Proceed to [Part 2 - The Mumbler](../the_mumbler).
+If the file was created, you are all set:
+
+    ls -l /gpfs/gpfsfpo
+    ssh gpfs2 'ls -l /gpfs/gpfsfpo'
+    ssh gpfs3 'ls -l /gpfs/gpfsfpo'
+
+Proceed to [Part 2 - The Mumbler](../the_mumbler).
