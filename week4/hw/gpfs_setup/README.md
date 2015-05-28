@@ -20,8 +20,9 @@ Make sure the nodes can talk to each other without a password.  When you created
 
     chmod 600 /root/.ssh/id_rsa
 
-Set up the hosts file (/etc/hosts) for your cluster by adding the internal IP addresses you noted earlier and names for each node in the cluster.  For instance:
+Set up the hosts file (/etc/hosts) for your cluster by adding the internal IP addresses you noted earlier and names for each node in the cluster.  __Also__ you should remove the entry containing the fully qualified node name for your headnode / gpfs1.sftlyr.ws (otherwise it will trip up some of the GPFS tools since it likely does not resolve). For instance, your hosts file might look like this:
 
+    127.0.0.1 		localhost.localdomain localhost
     10.122.6.68		gpfs1
     10.122.6.70		gpfs2
     10.122.6.71		gpfs3
