@@ -12,7 +12,7 @@ Once you can login to the box, execute:
 
     cat /proc/cpuinfo | grep 'model name'
 
-If you the reported model is "Intel(R) Xeon(R) CPU E5-2650 v2", reprovision the VS. The DevStack installation version uses a libvirt version that is too old to identify this processor.
+If you find the reported model is "Intel(R) Xeon(R) CPU E5-2650 v2", reprovision the VS. The DevStack installation version uses a libvirt version that is too old to identify this processor.
 
 ### Order additional IPs
 
