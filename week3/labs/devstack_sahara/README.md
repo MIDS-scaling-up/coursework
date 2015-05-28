@@ -3,7 +3,7 @@
 ## Part 1: Provision and Configure VSes
 
 ### Provision VSes
-Use `slcli` to provision a VS with the latest version of 64bit CentOS, 2 or more cores, 8gb RAM, 1gbps internal and external nics and 100gb local hard drive.
+Use `slcli` to provision a VS with the latest version of 64bit Ubuntu, 2 or more cores, 8gb RAM, 1gbps internal and external nics and 100gb local hard drive.
 
 #### VS Creation example:
     slcli vs create --datacenter=sjc01 --hostname=lab3 --domain=openstack.sftlyr.ws --billing=hourly --key=somekey --cpu=4 --memory=8192 --network=1000 --disk=100 --os=UBUNTU_LATEST_64 --san
