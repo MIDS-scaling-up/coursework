@@ -9,9 +9,11 @@ complicated scheduler.
 
 First, we assume that you have a GPFS FPO cluster configured with write affinity and replication=1 
 (meaning no data replication, writes will be attempted local).  Metadata will be replicated and that’s ok.
-You’ll need to write a couple of scripts to download the google two-gram 60G data set from here:
-(http://storage.googleapis.com/books/ngrams/books/datasetsv2.html). _Note: considering the above, it does
- make a difference FROM WHERE you are downloading the data set._
+You’ll need to write a couple of scripts to download the google two-gram 60G data set - English version 20090715, 
+further down the page - from here: http://storage.googleapis.com/books/ngrams/books/datasetsv2.html.
+_Note: considering the above, it does make a difference FROM WHERE you are downloading the data set._
+
+![Google data set][googledata]
 
 Since GPFS FPO is not replicated, each file will be placed on one of the nodes.  Make sure you 
 understand where each file is placed and control this placement.  The same goes for uncompressing 
@@ -91,3 +93,5 @@ the data and minimize network chatter.
 ## Extra credit
 
 Extra credit will be given for preprocessing input files to speed up the runtime of the text generator.
+
+[googledata]: ./google_data_set.png
