@@ -1,16 +1,16 @@
 # Homework: Part 1 - Installing GPFS FPO
 
-## Overview 
+## Overview
 
 These instructions are a subset of the official instructions available here: [IBM Knowledge Center - GPFS](http://www-01.ibm.com/support/knowledgecenter/SSFKCN/gpfs4).
 
 We will install GPFS FPO with no replication (replication=1) and local write affinity.  This means that if you are on one of the nodes and are writing a file in GPFS, the file will end up on your local node unless your local node is out of space.
 
-A. __Get three virtual servers provisioned__, 2 vCPUs, 4G RAM, REDHAT\_6\_64, __two local disks__ 25G each, in San Jose. __Make sure__ you attach a keypair.  Pick intuitive names such as gpfs1, gpfs2, gpfs3.  Note their internal (10.x.x.x) ip addresses.  
+A. __Get three virtual servers provisioned__, 2 vCPUs, 4G RAM, REDHAT\_6\_64, __two local disks__ 25G each, in San Jose. __Make sure__ you attach a keypair.  Pick intuitive names such as gpfs1, gpfs2, gpfs3.  Note their internal (10.x.x.x) ip addresses.
 
 _Note: The 3.10 kernel from RHEL 7 is not compatible with the GPFS kernel module build tools. Make sure you are provisioning RHEL 6 instances._
 
-B. __Set up each one of your nodes as follows:__  
+B. __Set up each one of your nodes as follows:__
 
 Add to /root/.bash\_profile the following line in the end:
 
@@ -50,12 +50,12 @@ Install pre-requisites:
 
 The instructions below are specific to the version of the kernel running on your RedHat machine.  Verify what kernel you have by issuing:
 
-    uname -a 
+    uname -a
 
 Here's mine:
 
     [root@gpfs1 gpfsfpo]# uname -a
-    Linux gpfs1.bigdataclass.sftlyr.ws 2.6.32-504.3.3.el6.x86_64 #1 SMP Fri Dec 12 16:05:43 EST 2014 
+    Linux gpfs1.bigdataclass.sftlyr.ws 2.6.32-504.3.3.el6.x86_64 #1 SMP Fri Dec 12 16:05:43 EST 2014
     x86_64 x86_64 x86_64 GNU/Linux
 
 __If the kernel version has updated in the package repositories since the image was built, such that you have just installed a new kernel package, you should reboot before continuing.__
@@ -64,7 +64,7 @@ So replacing the below with your kernel version we will symlink the kernel modul
 
     cd /lib/modules/2.6.32-504.3.3.el6.x86_64
     rm -f build
-    ln -sf  /usr/src/kernels/2.6.32-504.8.1.el6.x86_64 build
+    ln -sf /usr/src/kernels/2.6.32-504.8.1.el6.x86_64 build
 
 _Kernel modules are a common feature of normal filesystems and distributed/cluster filesystems alike_
 
@@ -98,49 +98,53 @@ All nodes should be up ("GPFS state" column shows "active"):
 
     mmgetstate -a
 
-Nodes may reflect "arbitrating" state briefly before "active".  If one or more nodes are down, you will need to go back and see what you might have missed.  The main GPFS log file is /var/adm/ras/mmfs.log.latest  So look for errors there.
+Nodes may reflect "arbitrating" state briefly before "active".  If one or more nodes are down, you will need to go back and see what you might have missed.  The main GPFS log file is `/var/adm/ras/mmfs.log.latest`; look for errors there.
 
 You could get more details on your cluster:
 
     mmlscluster
 
-Now we need to define our disks. Do this:
+Now we need to define our disks. Do this to print the paths and sizes of disks on your machine:
 
-    fdisk –l
+    fdisk -l
 
-Note the names of your 25G disks.  Here's what I see:
+Note the names of your 25G disks. Here's what I see:
 
     [root@gpfs1 ras]# fdisk -l |grep Disk |grep bytes
     Disk /dev/xvdc: 26.8 GB, 26843545600 bytes
     Disk /dev/xvda: 26.8 GB, 26843545600 bytes
     Disk /dev/xvdb: 2147 MB, 2147483648 bytes
 
+Now inspect the mount location of the root filesystem on your boxes:
 
-Disk /dev/xvda is where the operating system is, so we’re going to leave it alone.  In my case, xvdc is my second 25 disk.  In your case, it could be /dev/xvdb, so __please be careful here__.  Assuming your second disk is /dev/xvdc then add these lines to /root/diskfile.fpo:
+    [root@gpfs1 ras]# mount | grep ' \/ '
+    /dev/xvda2 on / type ext3 (rw,noatime)
+
+Disk /dev/xvda (partition 2) is where my operating system is installed, so I'm going to leave it alone.  In my case, __xvdc__ is my second 25 disk.  In your case, it could be /dev/xvdb, so __please be careful here__.  Assuming your second disk is `/dev/xvdc` then add these lines to `/root/diskfile.fpo`:
 
     %pool:
     pool=system
     allowWriteAffinity=yes
     writeAffinityDepth=1
-    
+
     %nsd:
     device=/dev/xvdc
     servers=gpfs1
-    usage=dataAndMetadata 
+    usage=dataAndMetadata
     pool=system
     failureGroup=1
-    
+
     %nsd:
     device=/dev/xvdc
     servers=gpfs2
-    usage=dataAndMetadata 
+    usage=dataAndMetadata
     pool=system
     failureGroup=2
-    
+
     %nsd:
     device=/dev/xvdc
     servers=gpfs3
-    usage=dataAndMetadata 
+    usage=dataAndMetadata
     pool=system
     failureGroup=3
 
@@ -168,7 +172,7 @@ All done.  Now you should be able to go to the mounted FS:
 
     cd /gpfs/gpfsfpo
 
-.. and see that there’s 75 G there:
+.. and see that there's 75 G there:
 
     [root@gpfs1 gpfsfpo]# df -h .
     Filesystem      Size  Used Avail Use% Mounted on
