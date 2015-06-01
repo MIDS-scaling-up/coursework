@@ -2,6 +2,8 @@
 
 ## Markov chain text generator application.  
 
+_Note: Remember to back up your code in order to prevent losing work. A simple method might be to develop locally and push to test, or to pull periodically._
+
 The idea of this very simple exercise is to understand and play with data to compute affinity.
 Oftentimes fundamental issues are lost in complexity, so here are considering a trivial example that in 
 practice could be scaled to hundreds or thousands of nodes and requires no map-reduce or any 
@@ -9,7 +11,7 @@ complicated scheduler.
 
 First, we assume that you have a GPFS FPO cluster configured with write affinity and replication=1 
 (meaning no data replication, writes will be attempted local).  Metadata will be replicated and that’s ok.
-You’ll need to write a couple of scripts to download the google two-gram 60G data set - English version 20090715, 
+You’ll need to write a couple of scripts to download the google two-gram 27G data set - English version 20090715, 
 further down the page - from here: http://storage.googleapis.com/books/ngrams/books/datasetsv2.html.
 _Note: considering the above, it does make a difference FROM WHERE you are downloading the data set._
 
@@ -85,13 +87,28 @@ We ask that you install nmon (http://sourceforge.net/projects/nmon/files/nmon_li
 and use it to see how much network traffic you generate as you run the mumbler.  If you write it well, the 
 amount of network traffic will be small as it is running.
 
-Think about the fact that your 60G data set does not fit on any individual node, so it will be split 
+Think about the fact that your 27G data set does not fit on any individual node, so it will be split 
 between the three nodes in GPFS even if you don’t use the write affinity to distribute the data set.
 Knowing where each file is, however, should enable you to move compute (as part of your mumbler) to 
 the data and minimize network chatter.
 
+## Submission
+
+By submission time you should have the program described above 'mumbler' which can perform the task of walking the n-gram dataset according to the probabilities associated with each word.
+
+Please submit:
+
+ * Your login information for the cluster (you can obtain the root password for us with slcli vs list and slcli vs detail --passwords, or in the softlayer portal at control.softlayer.com)
+ * Pointers for the grader about where the mumbler script is and how to run it  
+
+## Grade scale
+
+ * **50%** - GPFS installation
+ * **25%** - A running mumbler
+ * **25%** - Quality score
+
 ## Extra credit
 
-Extra credit will be given for preprocessing input files to speed up the runtime of the text generator.
+10% Extra credit will be given for preprocessing input files to speed up the runtime of the text generator/mumbler command.
 
 [googledata]: ./google_data_set.png
