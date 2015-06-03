@@ -223,10 +223,8 @@ scp –r /usr/local/hadoop/conf/* hadoop@hadoopslave1:/usr/local/hadoop/conf/
 scp –r /usr/local/hadoop/conf/* hadoop@hadoopslave2:/usr/local/hadoop/conf
 ```
 
- * Format your NameNode the first time you set up your cluster. If you
-
-format a running Hadoop filesystem, you will lose all the data stored
-in HDFS.
+ * Format your NameNode the first time you set up your cluster. If you format a running Hadoop 
+filesystem, you will lose all the data stored in HDFS.
 
 ```
 /usr/local/hadoop/bin/hadoop namenode -format
