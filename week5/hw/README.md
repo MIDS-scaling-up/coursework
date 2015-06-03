@@ -17,10 +17,9 @@ the 100G disk for HDFS data and the 25G disk for the OS and housekeeping.
 ### Hosts file
 * Login into VMs (all 3 of them) and update /etc/hosts/ for instance (add your own private IP addresses):
 
-    10.122.152.76 master
-    10.122.152.77 slave1
-    10.122.152.75 slave2
-
+    10.122.152.76 master  
+    10.122.152.77 slave1  
+    10.122.152.75 slave2  
 
 ### Passwordless SSH
 * Setup passwordless ssh from hadoop@master to hadoop@master, hadoop@slave1 and hadoop@slave2  
@@ -57,13 +56,16 @@ Assuming your disk is called /dev/xvdc as it is for me,
     apt-get install default-jdk
 
 **RHEL**
+
     yum install java-1.6.0-openjdk*
 
 * Install nmon
 **UBUNTU**
+
     apt-get install nmon
 
 **RHEL**
+
     yum install nmon
 
 ### Hadoop Download
@@ -76,23 +78,29 @@ Download the files into `/usr/local` and extract it
 ### Hadoop Install preparation
 
  * Create a user hadoop (all 3 nodes)
+
     adduser hadoop
 
  * Make sure your key directories have correct permissions
+
     chown -R hadoop.hadoop /data
     chown -R hadoop.hadoop /usr/local/hadoop
 
  * From now on, you're working as user hadoop.
+
     su – hadoop
 
  * Add to the end of .profile in hadoop's home directory:
+
     ...
     export PATH=$PATH:/usr/local/hadoop/bin
 
  * Source these changes in to the open shell
+
     source .profile
 
  * Create a key pair on the master node under the Hadoop user
+
     hadoop@hadoopmaster ~] ssh-keygen –t rsa
     Leave the passphrase blank. The public key and private key are saved in ~/.ssh/id_rsa.pub and
     ~/.ssh/id_rsa respectively.
@@ -100,16 +108,20 @@ Download the files into `/usr/local` and extract it
 ###Edit Configuration Files 
 
  * Change conf/master and conf/slave ( on the master node Only)
+
 In the `conf/master` file, list your master by name
+
     master
 
  * In the `conf/slaves` file, list your slaves by name, one per line.```
+
     master
     slave1
     slave2
 
  * We need to edit the following configuration files in `/usr/local/hadoop/conf`.
    * hadoop-env.sh
+
 (Add the java home for your freshly installed java, e.g on ubuntu):
 
     export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/jre
