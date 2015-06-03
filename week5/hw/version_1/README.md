@@ -2,7 +2,7 @@
 
 ## VM Provisioning
 
-Set up 3 VM instances on Softlayer.
+Set up 3 VM instances on Softlayer- master, slave1, slave2.
 
 Please add your public key while provisioning the VMs (`slcli vs create ... --key KEYID`) so that you can login 
 from your PC/Mac/laptop without a password.  You could use UBUNTU_LATEST_64 or REDHAT_LATEST_64 while 
@@ -11,7 +11,7 @@ provisioning (although ubuntu is a little cheaper).
 Get **2 CPUs**, **4G of RAM**, **1G private / public NICS** and **two disks: 25G and 100G local** the idea is to use 
 the 100G disk for HDFS data and the 25G disk for the OS and housekeeping.
 
-## VM Configuration  
+## VM Configuration  - for each node unless otherwise stated
 
 ### Hosts file
  * Login into VMs (all 3 of them) and update `/etc/hosts/` for instance (add your own private IP addresses):
@@ -21,10 +21,6 @@ the 100G disk for HDFS data and the 25G disk for the OS and housekeeping.
 10.122.152.77 slave1  
 10.122.152.75 slave2  
 ```
-
-### Passwordless SSH
- * Setup passwordless ssh from hadoop@master to hadoop@master, hadoop@slave1 and hadoop@slave2  
- * Add the public key (in `~/.ssh/id_rsa.pub`) to `/home/hadoop/.ssh/authorized_keys` on master, slave1 and slave2.  
 
 ## 100G Disk Formatting
 
@@ -43,10 +39,9 @@ mkdir -m 777 /data
 mkfs.ext4 /dev/xvdc
 ```
 
- * Add this line to `/etc/fstab`
+ * Add this line to `/etc/fstab` (with the appropriate disk path):
 
 ```
-...
 /dev/xvdc /data                   ext4    defaults,noatime        0 0
 ```
 
@@ -65,14 +60,13 @@ mount /data
 **UBUNTU**
 
 ```
-apt-get install default-jre
-apt-get install default-jdk
+apt-get install -y default-jre default-jdk
 ```
 
 **RHEL**
 
 ```
-yum install java-1.6.0-openjdk*
+yum install -y java-1.6.0-openjdk*
 ```
 
  * Install nmon
@@ -80,13 +74,13 @@ yum install java-1.6.0-openjdk*
 **UBUNTU**
 
 ```
-apt-get install nmon
+apt-get install -y nmon
 ```
 
 **RHEL**
 
 ```
-yum install nmon
+yum install -y nmon
 ```
 
 ### Hadoop Download
@@ -115,16 +109,92 @@ chown -R hadoop.hadoop /data
 chown -R hadoop.hadoop /usr/local/hadoop
 ```
 
+#### Passwordless SSH 
+
+ * Add the public key (in `~root/.ssh/id_rsa.pub`) to `~hadoop/.ssh/authorized_keys` on master
+
+```
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys 
+```
+
+ * Copy the key pair and authorized hosts from the root user to the Hadoop user
+
+```
+mv ~hadoop/.ssh{,-old}
+cp -a ~/.ssh ~hadoop/.ssh
+chown -R hadoop ~hadoop/.ssh
+```
+
+ * Setup passwordless ssh from hadoop@master to hadoop@master, hadoop@slave1 and hadoop@slave2 by copying the files in `~hadoop/.ssh` between them.  __From your workstation, substituting MASTER-IP, etc with your VM IPs__
+
+First accept all keys
+
+```
+for IP in MASTER-IP SLAVE1-IP SLAVE2-IP; do ssh-keyscan -H $IP >> ~/.ssh/known_hosts; done
+```
+
+Then copy the files around, preserving permissions
+
+```
+ssh root@MASTER-IP 'tar -czvp /home/hadoop/.ssh' | ssh root@SLAVE1-IP 'cd /; tar -xzvp'
+ssh root@SLAVE1-IP 'tar -czvp /home/hadoop/.ssh' | ssh root@SLAVE2-IP 'cd /; tar -xzvp'
+```
+
+ * Test your work by trying to ssh __from user hadoop, on master__ to __master (itself)__, slave1 and slave2.  You should issue commands and see output like this:
+
+__The administrative scripts use ssh to start the jobtrackers and datanodes on each, including master__
+
+```
+root@master:~# su - hadoop
+hadoop@master:~$ ssh master
+The authenticity of host 'master (10.76.68.69)' can't be established.
+ECDSA key fingerprint is 98:da:1e:45:cf:d4:6f:51:b4:c3:ee:fe:d8:1c:ee:ad.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'master,10.76.68.69' (ECDSA) to the list of known hosts.
+...
+hadoop@master:~$ logout
+Connection to slave1 closed.
+hadoop@master:~$
+```
+
+```
+root@master:~# su - hadoop
+hadoop@master:~$ ssh slave1
+The authenticity of host 'slave1 (10.76.68.81)' can't be established.
+ECDSA key fingerprint is 98:da:1e:45:cf:d4:6f:51:b4:c3:ee:fe:d8:1c:ee:ad.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'slave1,10.76.68.81' (ECDSA) to the list of known hosts.
+...
+hadoop@slave1:~$ logout
+Connection to slave1 closed.
+hadoop@master:~$
+```
+
+```
+hadoop@master:~$ ssh slave2
+The authenticity of host 'slave2 (10.76.68.106)' can't be established.
+ECDSA key fingerprint is 17:b3:54:cc:b8:ef:82:9c:e3:cd:43:91:1c:15:c7:e6.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'slave2,10.76.68.106' (ECDSA) to the list of known hosts.
+...
+hadoop@slave2:~$ logout
+Connection to slave2 closed.
+hadoop@master:~$
+```
+
+__You should do this step to avoid problems starting the cluster, and to add the slave nodes to the known hosts__ 
+
+### Switch 
+
  * From now on, you're working as user hadoop.
 
 ```
 su – hadoop
 ```
 
- * Add to the end of .profile in hadoop's home directory:
+ * Add this line to the end of `.profile` in hadoop's home directory:
 
 ```
-...
 export PATH=$PATH:/usr/local/hadoop/bin
 ```
 
@@ -134,19 +204,11 @@ export PATH=$PATH:/usr/local/hadoop/bin
 source .profile
 ```
 
- * Create a key pair on the master node under the Hadoop user
-
-```
-hadoop@hadoopmaster ~] ssh-keygen –t rsa
-Leave the passphrase blank. The public key and private key are saved in ~/.ssh/id_rsa.pub and
-~/.ssh/id_rsa respectively.
-```
-
 ### Edit Configuration Files 
 
- * Change `conf/master` and `conf/slave` (on the master node only)
+ * Change `conf/masters` and `conf/slaves` (on the master node only)
 
-In the `conf/master` file, list your master by name
+In the `conf/masters` file, list your master by name
 
 ```
 master
@@ -219,15 +281,15 @@ it should make. With 3 nodes, we can set it to 3.
  * Copy all your files to the other machines since you need this configuration on all the nodes:
 
 ```
-scp –r /usr/local/hadoop/conf/* hadoop@hadoopslave1:/usr/local/hadoop/conf/
-scp –r /usr/local/hadoop/conf/* hadoop@hadoopslave2:/usr/local/hadoop/conf
+scp –r /usr/local/hadoop/conf/* hadoop@slave1:/usr/local/hadoop/conf/
+scp –r /usr/local/hadoop/conf/* hadoop@slave2:/usr/local/hadoop/conf/
 ```
 
- * Format your NameNode the first time you set up your cluster. If you format a running Hadoop 
-filesystem, you will lose all the data stored in HDFS.
+ * Format your namenode before the first time you set up your cluster. __If you format a running Hadoop 
+filesystem, you will lose all the data stored in HDFS.__
 
 ```
-/usr/local/hadoop/bin/hadoop namenode -format
+hadoop namenode -format
 ```
 
 ## Starting the Cluster
