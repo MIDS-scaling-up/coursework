@@ -4,17 +4,17 @@
 
 Set up 3 VM instances on Softlayer.
 
-Please add your public key while provisioning the VMs (slcli vs create ... --key KEYID) so that you can login 
+Please add your public key while provisioning the VMs (`slcli vs create ... --key KEYID`) so that you can login 
 from your PC/Mac/laptop without a password.  You could use UBUNTU_LATEST_64 or REDHAT_LATEST_64 while 
 provisioning (although ubuntu is a little cheaper).
 
-Get *2 CPUs*, *4G of RAM*, *1G private / public NICS* and *two disks: 25G and 100G local* the idea is to use 
+Get **2 CPUs**, **4G of RAM**, **1G private / public NICS** and **two disks: 25G and 100G local** the idea is to use 
 the 100G disk for HDFS data and the 25G disk for the OS and housekeeping.
 
 ## VM Configuration  
 
 ### Hosts file
- * Login into VMs (all 3 of them) and update /etc/hosts/ for instance (add your own private IP addresses):
+ * Login into VMs (all 3 of them) and update `/etc/hosts/` for instance (add your own private IP addresses):
 
 ```
 10.122.152.76 master  
@@ -24,7 +24,7 @@ the 100G disk for HDFS data and the 25G disk for the OS and housekeeping.
 
 ### Passwordless SSH
  * Setup passwordless ssh from hadoop@master to hadoop@master, hadoop@slave1 and hadoop@slave2  
- * Add the public key (in ~/.ssh/id\_rsa.pub) to /home/hadoop/.ssh/authorized\_keys on master, slave1 and slave2.  
+ * Add the public key (in `~/.ssh/id_rsa.pub`) to `/home/hadoop/.ssh/authorized_keys` on master, slave1 and slave2.  
 
 ## 100G Disk Formatting
 
@@ -36,14 +36,14 @@ OR
 cat /proc/partitions
 ```
 
-Assuming your disk is called /dev/xvdc as it is for me,
+Assuming your disk is called `/dev/xvdc` as it is for me,
 
 ```
 mkdir -m 777 /data
 mkfs.ext4 /dev/xvdc
 ```
 
- * Add this line to /etc/fstab 
+ * Add this line to `/etc/fstab`
 
 ```
 ...
@@ -144,7 +144,7 @@ Leave the passphrase blank. The public key and private key are saved in ~/.ssh/i
 
 ### Edit Configuration Files 
 
- * Change conf/master and conf/slave ( on the master node Only)
+ * Change `conf/master` and `conf/slave` (on the master node only)
 
 In the `conf/master` file, list your master by name
 
