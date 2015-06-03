@@ -160,8 +160,8 @@ slave1
 slave2
 ```
 
- * We need to edit the following configuration files in `/usr/local/hadoop/conf`.
-   * hadoop-env.sh
+We need to edit the following configuration files in `/usr/local/hadoop/conf`.
+ * hadoop-env.sh
 
 (Add the java home for your freshly installed java, e.g on ubuntu):
 
@@ -169,7 +169,7 @@ slave2
 export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/jre
 ```
 
-   * core-site.xml
+ * core-site.xml
 
 Add this configuration, make sure to use the name of the master node
 in the value.
@@ -183,7 +183,7 @@ in the value.
 </configuration>
 ```
 
-   * mapred-site.xml
+ * mapred-site.xml
 
 Add this configuration, make sure to use the name of the master node
 in the value.
@@ -197,7 +197,7 @@ in the value.
 </configuration>
 ```
 
-  * hdfs-site.xml
+ * hdfs-site.xml
 
 The `dfs.replication` value tells Hadoop how many copies of the data
 it should make. With 3 nodes, we can set it to 3.
