@@ -160,7 +160,8 @@ slave1
 slave2
 ```
 
-We need to edit the following configuration files in `/usr/local/hadoop/conf`.
+__We need to edit the following configuration files in `/usr/local/hadoop/conf`.__
+
  * hadoop-env.sh
 
 (Add the java home for your freshly installed java, e.g on ubuntu):
