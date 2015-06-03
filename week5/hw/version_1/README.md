@@ -142,7 +142,7 @@ ssh root@SLAVE1-IP 'tar -czvp /home/hadoop/.ssh' | ssh root@SLAVE2-IP 'cd /; tar
 
  * Test your work by trying to ssh __from user hadoop, on master__ to __master (itself)__, slave1 and slave2.  You should issue commands and see output like this:
 
-__The administrative scripts use ssh to start the jobtrackers and datanodes on each, including master__
+__The administrative scripts use ssh to start the namenode(s), tasktrackers and datanodes on each, including master__
 
 ```
 root@master:~# su - hadoop
