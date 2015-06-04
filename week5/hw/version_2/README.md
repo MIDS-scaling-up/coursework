@@ -1,4 +1,4 @@
-# Homework: Setting up Hadoop 1
+# Homework: Setting up Hadoop 2
 
 ## VM Provisioning
 
@@ -89,9 +89,9 @@ Download the files into `/usr/local` and extract it
 
 ```
 cd /usr/local
-wget http://apache.claz.org/hadoop/core/hadoop-1.2.1/hadoop-1.2.1.tar.gz
-tar xzf hadoop-1.2.1.tar.gz
-mv hadoop-1.2.1 hadoop
+wget http://apache.claz.org/hadoop/core/hadoop-2.6.0/hadoop-2.6.0.tar.gz
+tar xzf hadoop-2.6.0.tar.gz
+mv hadoop-2.6.0 hadoop
 ```
 
 ### Hadoop Install preparation
@@ -206,22 +206,21 @@ source .profile
 
 ### Edit Configuration Files 
 
- * Go to the hadoop home directory `/usr/local/hadoop`
+ * Go to the hadoop home directory `/usr/local/hadoop/etc/hadoop`
 
 ```
-cd /usr/local/hadoop
+cd /usr/local/hadoop/etc/hadoop
 ```
 
+ * Change `./masters` and `./slaves` files (on the master node only)
 
- * Change `conf/masters` and `conf/slaves` (on the master node only)
-
-In the `conf/masters` file, list your master by name
+In the `./masters` file, list your master by name
 
 ```
 master
 ```
 
- * In the `conf/slaves` file, list your slaves by name, one per line.```
+ * In the `./slaves` file, list your slaves by name, one per line.```
 
 ```
 master
@@ -229,11 +228,19 @@ slave1
 slave2
 ```
 
-__We need to edit the following configuration files in `/usr/local/hadoop/conf`.__
+__We need to edit the following configuration files in `/usr/local/hadoop/etc/hadoop`.__
 
  * `hadoop-env.sh`
 
 (Add the java home for your freshly installed java, e.g on ubuntu):
+
+```
+export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/jre
+```
+
+ * `yarn-env.sh`
+
+(Add the java home here too)
 
 ```
 export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/jre
@@ -255,17 +262,15 @@ in the value.
 
  * `mapred-site.xml`
 
-Add this configuration, make sure to use the name of the master node
-in the value.
-
 ```
 <configuration>
 <property>
-<name>mapred.job.tracker</name>
-<value>master:54311</value>
+<name>mapreduce.framework.name</name>
+<value>yarn</value>
 </property>
 </configuration>
 ```
+
 
  * `hdfs-site.xml`
 
@@ -285,53 +290,69 @@ it should make. With 3 nodes, we can set it to 3.
 </configuration>
 ```
 
+ * `yarn-site.xml`
+
+```
+<configuration>
+<property>
+<name>yarn.nodemanager.aux-services</name>
+<value>mapreduce_shuffle</value>
+</property>
+<property>
+<name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</
+name>
+<value>org.apache.hadoop.mapred.ShuffleHandler</value>
+</property>
+<property>
+<name>yarn.resourcemanager.resource-tracker.address</name>
+<value>master:8025</value>
+</property>
+<property>
+<name>yarn.resourcemanager.scheduler.address</name>
+<value>master:8030</value>
+</property>
+<property>
+<name>yarn.resourcemanager.address</name>
+<value>master:8050</value>
+</property>
+</configuration>
+```
+
  * Copy all your files to the other machines since you need this configuration on all the nodes:
 
 ```
-scp –r /usr/local/hadoop/conf/* hadoop@slave1:/usr/local/hadoop/conf/
-scp –r /usr/local/hadoop/conf/* hadoop@slave2:/usr/local/hadoop/conf/
+scp –r /usr/local/hadoop/etc/hadoop/\* hadoop@slave1:/usr/local/hadoop/etc/hadoop/
+scp –r /usr/local/hadoop/etc/hadoop/\* hadoop@slave2:/usr/local/hadoop/etc/hadoop/
 ```
 
- * Format your namenode before the first time you set up your cluster. __If you format a running Hadoop 
-filesystem, you will lose all the data stored in HDFS.__
+ * Format your namenode before the first time you set up your cluster. __If you format a running Hadoop filesystem, you will lose all the data stored in HDFS.__
 
 ```
 hadoop namenode -format
 ```
 
-## Starting the Cluster
+## Starting The Cluster
 
- * After hadoop is installed and formatted, you can start your cluster with
-
-```
-/usr/local/hadoop/bin/start-all.sh
-```
-
- * This will start all the daemons. You can also start them separately
-with:
+ * For master node, start everything. 
 
 ```
-/usr/local/hadoop/bin/start-dfs.sh
-/usr/local/hadoop/bin/start-mapred.sh
+/usr/local/hadoop/sbin/hadoop-daemon.sh --config /usr/local/hadoop/etc/hadoop --script hdfs start namenode
+/usr/local/hadoop/sbin/yarn-daemon.sh --config /usr/local/hadoop/etc/hadoop/ start resourcemanager
+/usr/local/hadoop/sbin/yarn-daemon.sh start proxyserver --config /usr/local/hadoop/etc/hadoop/
+/usr/local/hadoop/sbin/mr-jobhistory-daemon.sh start historyserver --config /usr/local/hadoop/etc/hadoop
 ```
 
- * You can view information about your cluster at
-   * http://hadoopmaster-ip:50070  
-   * http://hadoopmaster-ip:50030  
-
-## Stopping the cluster
+ * For slave nodes, only start DataNode and NodeManager.
 
 ```
-/usr/local/hadoop/bin/stop-all.sh
+/usr/local/hadoop/sbin/yarn-daemon.sh --config /usr/local/hadoop/etc/hadoop/ start nodemanager
+/usr/local/hadoop/sbin/hadoop-daemon.sh --config /usr/local/hadoop/etc/hadoop --script hdfs start datanode
 ```
 
-This will stop all the daemons. You can also start them separately
-with
-
-```
-/usr/local/hadoop/bin/stop-dfs.sh
-/usr/local/hadoop/bin/stop-mapred.sh
-```
+ * To check your cluster, go to:
+   * http://master-ip:50070/dfshealth.jsp
+   * http://master-ip:8088/cluster
+   * http://master-ip:19888/jobhistory (for Job History Server)
 
 Log files are located under `/usr/local/hadoop/logs`
 
@@ -344,24 +365,24 @@ You can check the java services running once your cluster is running using `jps`
 _Note that the input to teragen is the number of 100 byte rows_
 
 ```
-cd /usr/local/hadoop
-hadoop jar hadoop-examples-1.2.1.jar teragen 100000000 /terasort/in
+cd /usr/local/hadoop/share/hadoop/mapreduce
+hadoop jar hadoop-mapreduce-examples-2.6.0.jar teragen 100000000 /terasort/in
 ```
 
  * Now, let's do the sort
 
 ```
-hadoop jar hadoop-examples-1.2.1.jar terasort /terasort/in /terasort/out
+hadoop jar hadoop-mapreduce-examples-2.6.0.jar terasort /terasort/in /terasort/out
 ```
 
  * Validate that everything completed successfully:
 
 ```
-hadoop jar hadoop-examples-1.2.1.jar teravalidate /terasort/out /terasort/val
+hadoop jar hadoop-mapreduce-examples-2.6.0.jar teravalidate /terasort/out /terasort/val
 ```
 
  * Clean up, e.g.
 
 ```
-hadoop dfs -rmr /terasort/*
+hdfs dfs -rmr /terasort/\*
 ```
