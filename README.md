@@ -26,3 +26,11 @@ _This is a graded homework_
 ### Labs
 
 _There will be no in-class lab for this assignment_
+
+## Week 5: Distributed Filesystems
+
+### Homework
+
+0. [Part 1- Hadoop v1 Setup](week5/hw/version_1)
+0. [Part 2- Hadoop v2 Setup](week5/hw/verison_2)
+
