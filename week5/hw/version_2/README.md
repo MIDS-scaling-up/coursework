@@ -321,8 +321,8 @@ name>
  * Copy all your files to the other machines since you need this configuration on all the nodes:
 
 ```
-scp –r /usr/local/hadoop/etc/hadoop/\* hadoop@slave1:/usr/local/hadoop/etc/hadoop/
-scp –r /usr/local/hadoop/etc/hadoop/\* hadoop@slave2:/usr/local/hadoop/etc/hadoop/
+scp –r /usr/local/hadoop/etc/hadoop/* hadoop@slave1:/usr/local/hadoop/etc/hadoop/
+scp –r /usr/local/hadoop/etc/hadoop/* hadoop@slave2:/usr/local/hadoop/etc/hadoop/
 ```
 
  * Format your namenode before the first time you set up your cluster. __If you format a running Hadoop filesystem, you will lose all the data stored in HDFS.__
