@@ -255,7 +255,7 @@ in the value.
 <configuration>
 <property>
 <name>fs.default.name</name>
-<value>master:54310</value>
+<value>hdfs://master:9000</value>
 </property>
 </configuration>
 ```
