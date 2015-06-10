@@ -12,7 +12,7 @@ In `/home/hadoop`, prepare `urls.txt` which we'll later use as input to a Hadoop
 
     rm -f urls.txt
 
-    for i in {0..99}; do echo http://storage.googleapis.com/books/ngrams/books/googlebooks-eng-all-2gram-20090715-$i.csv.zip >> urls.txt; done
+    for i in {0..15}; do echo http://storage.googleapis.com/books/ngrams/books/googlebooks-eng-all-2gram-20090715-$i.csv.zip >> urls.txt; done
 
 Make the script executable and execute it:
 
