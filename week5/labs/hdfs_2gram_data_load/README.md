@@ -22,7 +22,6 @@ Make the script executable and execute it:
 Prepare file-downloading script (the map function):
 
     cat <<\EOF > mapper.sh
-    hadoop@node1:~$ cat mapper.sh
     #!/bin/bash
 
 
