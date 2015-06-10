@@ -7,7 +7,7 @@ This lab assumes you have a Hadoop cluster set up **and** that you've completed 
 
 In `/home/hadoop`, write the __map__ function to filter the 2-gram dataset stored in HDFS:
 
-    cat > mapper.py
+    cat <<\EOF > mapper.py
     #!/usr/bin/python2
 
     import sys
@@ -35,6 +35,7 @@ In `/home/hadoop`, write the __map__ function to filter the 2-gram dataset store
             except ValueError:
                     continue;
             print word, "\t", n
+    EOF
 
 This step merely filters non-alphanumeric words from lines of data.
 
@@ -55,7 +56,7 @@ A mumbler algorithm cares about the total number of occurrences of the word "tas
 
 To accomplish this, we'll apply the following function in Hadoop's __reduce__ step:
 
-    cat > reducer.py
+    cat <<\EOF > reducer.py
     #!/usr/bin/python
 
     import sys
@@ -87,6 +88,7 @@ To accomplish this, we'll apply the following function in Hadoop's __reduce__ st
 
     if lastwc > 0:
             print lastword, lastwc
+    EOF
 
 # Part 3: Run the map, reduce scripts with Hadoop
 
