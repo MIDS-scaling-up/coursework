@@ -40,3 +40,9 @@ _There will be no in-class lab for this assignment_
 
 0. [Load Google 2-gram dataset into HDFS](week5/labs/hdfs_2gram_data_load)
 0. [Preprocess 2-gram data for Mumbler](week5/labs/2gram_mumbler_preprocess)
+
+## Week 6: Apache Spark
+
+### Homework
+
+0. [Apache Spark Introduction](week6/hw/apache_spark_introduction)
