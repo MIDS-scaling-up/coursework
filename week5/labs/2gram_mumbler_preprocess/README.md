@@ -1,4 +1,4 @@
-# Lab: Load Google 2-gram dataset into HDFS
+# Lab: Preprocess 2-gram data for Mumbler
 
 ### Preconditions
 This lab assumes you have a Hadoop cluster set up **and** that you've completed the Lab [Load Google 2-gram dataset into HDFS](../hdfs_2gram_data_load/README.md).
@@ -91,6 +91,7 @@ To accomplish this, we'll apply the following function in Hadoop's __reduce__ st
 # Part 3: Run the map, reduce scripts with Hadoop
 
 (Note that this will take a while):
+
     hadoop jar /usr/local/hadoop/contrib/streaming/hadoop-streaming-1.2.1.jar -D mapred.reduce.tasks=6 \
     -D mapred.output.compress=true -D mapred.compress.map.output=true -input /mumbler/files \
     -output /mumbler/results -mapper mapper.py -reducer reducer.py \
