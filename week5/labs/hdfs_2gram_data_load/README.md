@@ -7,12 +7,13 @@ This lab assumes you have a Hadoop cluster set up that can store 26GB of compres
 
 In `/home/hadoop`, prepare `urls.txt` which we'll later use as input to a Hadoop map function:
 
-    cat > mkinput.sh
+    cat <<\EOF > mkinput.sh
     #!/bin/bash
 
     rm -f urls.txt
 
     for i in {0..15}; do echo http://storage.googleapis.com/books/ngrams/books/googlebooks-eng-all-2gram-20090715-$i.csv.zip >> urls.txt; done
+    EOF
 
 Make the script executable and execute it:
 
@@ -20,7 +21,7 @@ Make the script executable and execute it:
 
 Prepare file-downloading script (the map function):
 
-    cat > mapper.sh
+    cat <<\EOF > mapper.sh
     hadoop@node1:~$ cat mapper.sh
     #!/bin/bash
 
@@ -28,6 +29,7 @@ Prepare file-downloading script (the map function):
     while read line;do
     wget $line -O - | gzip -d 2> /dev/null
     done
+    EOF
 
 Make the script executable:
 
