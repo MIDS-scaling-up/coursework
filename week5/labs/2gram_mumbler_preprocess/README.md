@@ -39,6 +39,10 @@ In `/home/hadoop`, write the __map__ function to filter the 2-gram dataset store
 
 This step merely filters non-alphanumeric words from lines of data.
 
+Finally set the permissions:
+
+    chmod ugo+rx reducer.py
+
 ## Part 2: Create a reducer script
 
 After the map step is complete, lines of the 2-gram dataset look something like this:
@@ -86,6 +90,10 @@ To accomplish this, we'll apply the following function in Hadoop's __reduce__ st
     if lastwc > 0:
             print lastword, lastwc
     EOF
+
+Again, set the permissions:
+
+    chmod ugo+rx reducer.py
 
 # Part 3: Run the map, reduce scripts with Hadoop
 
