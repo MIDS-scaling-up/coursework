@@ -92,9 +92,9 @@ To accomplish this, we'll apply the following function in Hadoop's __reduce__ st
 
 # Part 3: Run the map, reduce scripts with Hadoop
 
-(Note that this will take a while):
+Note that this will take a while. Note also that this assumes you're using Hadoop v1; if you're using Hadoop v2, substitute the following jar path: `/usr/local/hadoop/share/hadoop/tools/lib/hadoop-streaming-2.6.0.jar`:
 
     hadoop jar /usr/local/hadoop/contrib/streaming/hadoop-streaming-1.2.1.jar -D mapred.reduce.tasks=6 \
-    -D mapred.output.compress=true -D mapred.compress.map.output=true -input /mumbler/files \
+    -D mapred.output.compress=true -D mapred.compress.map.output=true -input /mumbler/pass \
     -output /mumbler/results -mapper mapper.py -reducer reducer.py \
-    -file /home/hadooop/mapper.py -file /home/hadoop/reducer.py
+    -file /home/hadoop/mapper.py -file /home/hadoop/reducer.py
