@@ -47,7 +47,7 @@ Verify that the file is there:
 
 ## Part 2: Load data
 
-Execute the map operation (note this will take a while):
+Execute the map operation (note this will take a while). Note that this assumes you're using Hadoop v1; if you're using Hadoop v2, substitute the following jar path: `/usr/local/hadoop/share/hadoop/tools/lib/hadoop-streaming-2.6.0.jar`:
 
     hadoop jar /usr/local/hadoop/contrib/streaming/hadoop-streaming-1.2.1.jar -D mapred.reduce.tasks=0 \
     -input /mumbler/urls.txt -output /mumbler/pass -mapper mapper.sh -file /home/hadoop/mapper.sh \
