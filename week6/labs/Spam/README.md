@@ -40,7 +40,7 @@ This driver program has your program's main method and is executed on the Spark 
 There are several optional arguments that can be given to the constructor of the Spark Context.  There are also several helper methods that can be called on the Spark Context.  Read about them [here](https://spark.apache.org/docs/1.0.2/api/python/pyspark.context.SparkContext-class.html) in the pyspark reference.
 
 
-## Part 2: Data Preporcessing
+## Part 2: Data Preprocessing
 
 The training and test data need to be in a format that can be easily used to generate feature vectors for training the learning algorithm.  
 
