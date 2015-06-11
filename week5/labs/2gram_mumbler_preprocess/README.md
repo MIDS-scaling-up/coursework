@@ -64,18 +64,15 @@ To accomplish this, we'll apply the following function in Hadoop's __reduce__ st
     lastword = "";
     lastwc = 0;
     for line in sys.stdin:
-
             a = line.split( );
             if len(a) < 2:
                     continue;
 
-    #        word = a[0] + " " + a[1];
-            word = a[0];
+            word = a[0] + " " + a[1];
             try:
-                    n = int(a[1]);
+                    n = int(a[2]);
             except ValueError:
                     continue;
-    #       print word, lastword, lastwc
 
             if word == lastword:
                     lastwc = lastwc + n;
