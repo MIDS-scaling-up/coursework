@@ -154,7 +154,7 @@ There are additional metrics available in MLLib if you are using Scala or Java, 
 Now that we have trained a model with an acceptable error rate, we need to save the model for use in a production system.  The simplest thing to do is serialize the model object using Python's pickle module.
 
 	# Serialize the model for presistance
-	pickle.dump( model, open( "spamFilter.pkl", "wb" )
+	pickle.dump( model, open( "spamFilter.pkl", "wb" ))
 	
 There is [work being done](https://issues.apache.org/jira/browse/SPARK-1406) to add support in MLLib for [PMML](http://en.wikipedia.org/wiki/Predictive_Model_Markup_Language), which is a serialization format specifically for statistical and machine learning models.
 
@@ -239,7 +239,7 @@ Note the import statements at the begining and the call to stop on the SparkCont
 		print( "Error Rate: " + str( error_rate ) )
 		
 		# Serialize the model for presistance
-		pickle.dump( model, open( "spamFilter.pkl", "wb" )
+		pickle.dump( model, open( "spamFilter.pkl", "wb" ))
 
 		# Stop the SparkContext execution
 		sc.stop()
