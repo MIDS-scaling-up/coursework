@@ -112,7 +112,7 @@ Exit the Spark shell with `CTRL-D`.
 
 ## Example 3: Submitting a Scala program to Spark
 
-You can process data in an RDD by providing a function to execute on it. Spark will schedule execution of that function, collect results and process them as instructed. This is a common use case for Spark and often it is accomplished by submitting Scala programs to a Spark cluster. You'll write a small Scala program and submit it to the master. Note that we're going to package the simple program using Scala Build Tool(SBT), the most macho build tool ever made (cf. http://www.scala-sbt.org/0.13/tutorial/index.html).
+You can process data in an RDD by providing a function to execute on it. Spark will schedule execution of that function, collect results and process them as instructed. This is a common use case for Spark and often it is accomplished by submitting Scala programs to a Spark cluster. You'll write a small Scala program and submit it to the master. Note that we're going to package the simple program using Scala Build Tool(SBT), the most useful build tool ever made (cf. http://www.scala-sbt.org/0.13/tutorial/index.html).
 
 ### Install SBT
 
