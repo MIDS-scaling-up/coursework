@@ -83,6 +83,8 @@ Try a Python example (note that Python code executed in Spark is executed in the
 
 ## Example 2: Use the Spark shell
 
+Start the spark shell from $SPARK_HOME (otherwise you won't be able to find the README.md file as below)
+
     $SPARK_HOME/bin/spark-shell
 
 At the shell prompt, `scala>`, execute:
