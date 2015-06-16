@@ -72,7 +72,10 @@ def main():
 
 	# Calculate the error rate as number wrong / total number
 	error_rate = labels_and_predictions.filter( lambda (val, pred): val != pred ).count() / float(testData.count() )
+	print( "*********** SPAM FILTER RESULTS **********" )
+	print( "\n" )
 	print( "Error Rate: " + str( error_rate ) )
+	print( "\n" )
 
 	# Serialize the model for presistance
 	pickle.dump( model, open( "spamFilter.pkl", "wb" ) )
