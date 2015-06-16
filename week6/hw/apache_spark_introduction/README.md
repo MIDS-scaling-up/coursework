@@ -136,7 +136,7 @@ Write the following content into `SimpleApp.scala`:
           val data = sc.textFile(file, 2).cache()
           val numAs = data.filter(line => line.contains("a")).count()
           val numBs = data.filter(line => line.contains("b")).count()
-          println("Lines with a: %s, Lines with b: %s".format(numAs, numBs))
+          println(s"Lines with a: $numAs, Lines with b: $numBs")
       }
     }
 
