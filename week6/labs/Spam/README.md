@@ -7,7 +7,7 @@ In most big data analytics processes we develop a model to do the analysis as a 
 1. Data preprocessing
 2. Learning algorithm training
 3. Learning algorithm testing
-4. Model persistance
+4. Model persistence
 
 In this lab we will see a simple version of each of these steps executed in Spark.  
 
@@ -17,11 +17,17 @@ The main advantage of using Spark's **_MLLib package_** is that it's machine lea
 
 You must have a Spark cluster setup including the MLLib library.  You will also need Python 2.7 with Numpy 1.7 and PySpark provisioned on each machine.  It is assumed that you have had prior exposure to machine learning algorithms (this lab will not cover the details of how these algorithms work).
 
+To install Numpy use yum:
+
+	$ yum install numpy
+
 ## Scenario: Spam Filter
 
 You have been given a dump of emails (actual emails, this is not dummy data) which you will use to create a spam filter.  Each email is a separate plain text file.  The emails are divided into a set of spam and a set of non-spam (called ham).  You will use these files to generate the training and testing data sets.
 
-The data are available [here] (https://spamassassin.apache.org/publiccorpus/)
+The spam data are available here https://spamassassin.apache.org/publiccorpus/20050311_spam_2.tar.bz2
+
+The ham data are available here https://spamassassin.apache.org/publiccorpus/20030228_easy_ham_2.tar.bz2
 
 **EXERCISE:** Run the spamFilter.py script available in the GitHub project.  You should see an error rate for the spam filter in the output.  To run Python scripts in Spark use:
 
@@ -46,7 +52,7 @@ The training and test data need to be in a format that can be easily used to gen
 
 ### Consolidating Emails to a Single Data Source ([Data Munging](http://en.wikipedia.org/wiki/Data_wrangling))
 
-The textFile method will make an RDD from a text file.  It will by default treat each line of the text file as a one data point.  So we need to transform each email such that it will appear as a single line of text (no returns/line feeds) and combine all the emails of a given class (spam or ham) into a single input file for that class.  Since we will use this process twice we will define it as a separate function.
+The textFile method will make an RDD from a text file.  It will by default treat each line of the text file as a one data point.  So we need to transform each email such that it will appear as a single line of text (no returns / line feeds) and combine all the emails of a given class (spam or ham) into a single input file for that class.  Since we will use this process twice we will define it as a separate function.
 
 	def makeDataFileFromEmails( dir_path, out_file_path ):
 		"""
@@ -104,13 +110,13 @@ Now that our raw data is in an RDD we must generate features from the data to us
 	spamFeatures = spam.map(lambda email: tf.transform(email.split(" ")))
 	hamFeatures = ham.map(lambda email: tf.transform(email.split(" ")))
 
-**EXERCISE:** There are more sophisticated ways that we could generate features from the unstructured data.  One of the most common is the [TF-IDF](http://en.wikipedia.org/wiki/Tf%E2%80%93idf) algorithm.  Use the Spark MLLib [documentation](https://spark.apache.org/docs/latest/mllib-feature-extraction.html) to see how to implment TF-IDF and try it in our application.
+**EXERCISE:** There are more sophisticated ways that we could generate features from the unstructured data.  One of the most common is the [TF-IDF](http://en.wikipedia.org/wiki/Tf%E2%80%93idf) algorithm.  Use the Spark MLLib [documentation](https://spark.apache.org/docs/latest/mllib-feature-extraction.html) to see how to implement TF-IDF and try it in our application.
 
 Note:  there are several other feature extraction, selection, and generation techniques available in MLLib, you should familiarize yourself with all of them.
 
 ### Labeling Data Points
 
-We now need to pair our data points with labels (spam or ham) encoded at 1 for spam and 0 for ham.  MLLib provides a class [LabeledPoint](https://spark.apache.org/docs/1.2.0/api/scala/index.html#org.apache.spark.mllib.regression.LabeledPoint) that we can use to do this.  We then construct a new RDD of labled points from the smap and ham RDDs we created above.
+We now need to pair our data points with labels (spam or ham) encoded at 1 for spam and 0 for ham.  MLLib provides a class [LabeledPoint](https://spark.apache.org/docs/1.2.0/api/scala/index.html#org.apache.spark.mllib.regression.LabeledPoint) that we can use to do this.  We then construct a new RDD of labeled points from the spam and ham RDDs we created above.
 
 	# Create LabeledPoint datasets for positive (spam) and negative (ham) data points.
 	positiveExamples = spamFeatures.map(lambda features: LabeledPoint(1, features))
@@ -126,7 +132,7 @@ Now that our data points are labeled we can combine the spam and ham datasets so
 	# Split the data into two RDDs. 70% for training and 30% test data sets 
 	( trainingData, testData ) = data.randomSplit( [0.7, 0.3] )
 	
-## Part 3: Traing the Learning Algorithm
+## Part 3: Training the Learning Algorithm
 
 From a programming perspective this is the simplest step.  However, in data mining one of the most difficult issues is picking a good learning algorithm for the problem you are trying to solve.  Here we use logistic regression.
 
@@ -135,11 +141,11 @@ From a programming perspective this is the simplest step.  However, in data mini
 	
 ## Part 4: Testing the Learning Algorithm
 
-Now we test the model first by making a new RDD of tuples containing the actual label and the predicted label.  Remember that testData is an RDD of LabeledPoint objects, we can use a lambda function to create these touples by extracting the label for each email and then the then using the model to predict on the features extracted from the labeled point.  The RDDs map function applies this lambda function to each element on the testData RDD.
+Now we test the model first by making a new RDD of tuples containing the actual label and the predicted label.  Remember that testData is an RDD of LabeledPoint objects, we can use a lambda function to create these tuples by extracting the label for each email and then the then using the model to predict on the features extracted from the labeled point.  The RDDs map function applies this lambda function to each element on the testData RDD.
 
 	labels_and_predictions = testData.map( lambda email: (email.label, model.predict( email.features) ) )
 
-Next we need to count up the number of times the model made an incorrect prediction and divide it by the total number of test data points.  We use the RDD's filter transformation to select only the elements where the actual value does not eqaul the predicted value and the count() action to sum up those occurances.  Then use the count action to sum up the total number of test data point.
+Next we need to count up the number of times the model made an incorrect prediction and divide it by the total number of test data points.  We use the RDD's filter transformation to select only the elements where the actual value does not eqaul the predicted value and the count() action to sum up those occurrences.  Then use the count action to sum up the total number of test data point.
 
 	error_rate = labels_and_predictions.filter( lambda (val, pred): val != pred ).count() / float(testData.count() )
 
@@ -147,20 +153,20 @@ Next we need to count up the number of times the model made an incorrect predict
 	
 There are additional metrics available in MLLib if you are using Scala or Java, [work is being done](https://github.com/apache/spark/blob/master/python/pyspark/mllib/evaluation.py) to make these metrics available in PySpark as well. 
 
-**EXERCISE:** There are other learning algorithms provied by MLLib that we could use.  Look through the MLLib documenation for support vector machines (SVMs) [here](http://spark.apache.org/docs/1.0.1/api/python/pyspark.mllib.classification.SVMWithSGD-class.html) and change the code to use an SVM instead of logistic regression.  Compare the error rates of the two different algorithms.
+**EXERCISE:** There are other learning algorithms provided by MLLib that we could use.  Look through the MLLib documentation for support vector machines (SVMs) [here](http://spark.apache.org/docs/1.0.1/api/python/pyspark.mllib.classification.SVMWithSGD-class.html) and change the code to use an SVM instead of logistic regression.  Compare the error rates of the two different algorithms.
 
-## Part 5: Model Persistance
+## Part 5: Model Persistence
 
 Now that we have trained a model with an acceptable error rate, we need to save the model for use in a production system.  The simplest thing to do is serialize the model object using Python's pickle module.
 
 	# Serialize the model for presistance
-	pickle.dump( model, open( "spamFilter.pkl", "wb" )
+	pickle.dump( model, open( "spamFilter.pkl", "wb" ))
 	
 There is [work being done](https://issues.apache.org/jira/browse/SPARK-1406) to add support in MLLib for [PMML](http://en.wikipedia.org/wiki/Predictive_Model_Markup_Language), which is a serialization format specifically for statistical and machine learning models.
 
 ## Addendum: Original Code
 
-Note the import statements at the begining and the call to stop on the SparkContext object at the end.
+Note the import statements at the beginning and the call to stop on the SparkContext object at the end.
 
 	from pyspark.mllib.regression import LabeledPoint
 	from pyspark.mllib.feature import HashingTF
@@ -239,7 +245,7 @@ Note the import statements at the begining and the call to stop on the SparkCont
 		print( "Error Rate: " + str( error_rate ) )
 		
 		# Serialize the model for presistance
-		pickle.dump( model, open( "spamFilter.pkl", "wb" )
+		pickle.dump( model, open( "spamFilter.pkl", "wb" ))
 
 		# Stop the SparkContext execution
 		sc.stop()
