@@ -17,6 +17,10 @@ The main advantage of using Spark's **_MLLib package_** is that it's machine lea
 
 You must have a Spark cluster setup including the MLLib library.  You will also need Python 2.7 with Numpy 1.7 and PySpark provisioned on each machine.  It is assumed that you have had prior exposure to machine learning algorithms (this lab will not cover the details of how these algorithms work).
 
+To install Numpy use yum:
+
+	$ yum install numpy
+
 ## Scenario: Spam Filter
 
 You have been given a dump of emails (actual emails, this is not dummy data) which you will use to create a spam filter.  Each email is a separate plain text file.  The emails are divided into a set of spam and a set of non-spam (called ham).  You will use these files to generate the training and testing data sets.
