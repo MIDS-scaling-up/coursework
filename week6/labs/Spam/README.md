@@ -1,13 +1,5 @@
 # Machine Learning with Spark and MLLib
 
-## Preconditions
-
-To complete this lab, you'll need a Spark cluster. If you need to set one up, consult the instructions in [Apache Spark Introduction](../hw/apache_spark_introduction).
-
-You'll also need to install some packages. Execute:
-
-    yum install -y git numpy
-
 ## Overview
 
 In most big data analytics processes we develop a model to do the analysis as a separate step before using the model in an in-production application.  There are four steps to develop the model:
@@ -23,7 +15,7 @@ The main advantage of using Spark's **_MLLib package_** is that it's machine lea
 
 ## Preconditions
 
-You must have a Spark cluster setup including the MLLib library.  You will also need Python 2.7 with Numpy 1.7 and PySpark provisioned on each machine.  It is assumed that you have had prior exposure to machine learning algorithms (this lab will not cover the details of how these algorithms work).
+You must have a Spark cluster setup including the MLLib library (see [Apache Spark Introduction](../../hw/apache_spark_introduction) if you need to set up a Spark cluster).  You will also need Python 2.7 with Numpy 1.7 and PySpark provisioned on each machine.  It is assumed that you have had prior exposure to machine learning algorithms (this lab will not cover the details of how these algorithms work).
 
 To install Numpy use yum:
 
