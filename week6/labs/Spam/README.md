@@ -21,7 +21,8 @@ You must have a Spark cluster setup including the MLLib library.  You will also 
 
 You have been given a dump of emails (actual emails, this is not dummy data) which you will use to create a spam filter.  Each email is a separate plain text file.  The emails are divided into a set of spam and a set of non-spam (called ham).  You will use these files to generate the training and testing data sets.
 
-The data are available [here](https://spamassassin.apache.org/publiccorpus/)
+The spam data are available here [https://spamassassin.apache.org/publiccorpus/20050311_spam_2.tar.bz2]
+The ham data are available here [https://spamassassin.apache.org/publiccorpus/20030228_easy_ham_2.tar.bz2]
 
 **EXERCISE:** Run the spamFilter.py script available in the GitHub project.  You should see an error rate for the spam filter in the output.  To run Python scripts in Spark use:
 
