@@ -53,7 +53,7 @@ First run hamster.py and then copy the data to the worker nodes.  This needs to 
 
 To run Python scripts in Spark use:
 
-	$SPARK_HOME/bin/spark-submit spamFilter.py
+	$SPARK_HOME/bin/spark-submit --master spark://spark1:7077 spamFilter.py
 
 Now lets walk through the code in spamFilter.py and see what its doing.
 
