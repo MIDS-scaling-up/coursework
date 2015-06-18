@@ -15,11 +15,25 @@ The main advantage of using Spark's **_MLLib package_** is that it's machine lea
 
 ## Preconditions
 
-You must have a Spark cluster setup including the MLLib library (see [Apache Spark Introduction](../../hw/apache_spark_introduction) if you need to set up a Spark cluster).  You will also need Python 2.7 with Numpy 1.7 and PySpark provisioned on each machine.  It is assumed that you have had prior exposure to machine learning algorithms (this lab will not cover the details of how these algorithms work).
+You must have a Spark cluster setup including the MLLib library (see [Apache Spark Introduction](../../hw/apache_spark_introduction) if you need to set up a Spark cluster).  You will also need Python 2.7 with Numpy 1.7 on each machine.  You will need Git on the master It is assumed that you have had prior exposure to machine learning algorithms (this lab will not cover the details of how these algorithms work).
 
-To install Numpy use yum:
-
+To install Numpy and Git use yum:
+	$ yum update
 	$ yum install numpy
+	
+On the master only:
+
+	$ yum install git
+	
+You will then need to clone the course GitHub repo:
+
+	$ git clone https://github.com/MIDS-scaling-up/coursework.git
+	
+After cloning you need to copy the data directory, hamster.py, and spamFilter.py to the root directory
+
+	$ cp -r coursework/week6/labs/Spam/data ~/
+	$ cp coursework/week6/labs/Spam/hamster.py ~/
+	$ cp coursework/week6/labs/Spam/spamFilter.py ~/
 
 ## Scenario: Spam Filter
 
@@ -29,7 +43,15 @@ The spam data are available here https://spamassassin.apache.org/publiccorpus/20
 
 The ham data are available here https://spamassassin.apache.org/publiccorpus/20030228_easy_ham_2.tar.bz2
 
-**EXERCISE:** Run the spamFilter.py script available in the GitHub project.  You should see an error rate for the spam filter in the output.  To run Python scripts in Spark use:
+**EXERCISE:** Run the spamFilter.py script available in the GitHub project.  You should see an error rate for the spam filter in the output.  
+
+First run hamster.py and then copy the data to the worker nodes.  This needs to be done because we do not have a distributed file system or a database setup:
+
+	$ python hamster
+	$ scp -r data/ root@spark2:/root
+	$ scp -r data/ root@spark3:/root
+
+To run Python scripts in Spark use:
 
 	$SPARK_HOME/bin/spark-submit spamFilter.py
 
@@ -52,7 +74,7 @@ The training and test data need to be in a format that can be easily used to gen
 
 ### Consolidating Emails to a Single Data Source ([Data Munging](http://en.wikipedia.org/wiki/Data_wrangling))
 
-The textFile method will make an RDD from a text file.  It will by default treat each line of the text file as a one data point.  So we need to transform each email such that it will appear as a single line of text (no returns / line feeds) and combine all the emails of a given class (spam or ham) into a single input file for that class.  Since we will use this process twice we will define it as a separate function.
+The textFile method will make an RDD from a text file.  It will by default treat each line of the text file as a one data point.  So we need to transform each email such that it will appear as a single line of text (no returns / line feeds) and combine all the emails of a given class (spam or ham) into a single input file for that class.  Since we will use this process twice we will define it as a separate function and run it in a separate script, as we did above (hamster.py).
 
 	def makeDataFileFromEmails( dir_path, out_file_path ):
 		"""
@@ -73,6 +95,7 @@ The textFile method will make an RDD from a text file.  It will by default treat
 					text = text + "\n"
 					# Write each email out to a single file
 					out_file.write( text )
+					
 With larger data sets we would want to load the data in to a database and then have Spark interact with the database.  SparkSQL is a good way to interact with databases in Spark, which you can read about [here](https://spark.apache.org/docs/1.1.0/sql-programming-guide.html#other-sql-interfaces).  NoSQL databases can be interfaced with through configuration of the RDD using the conf property.  [Here](https://github.com/apache/spark/blob/master/examples/src/main/python/cassandra_inputformat.py) is an example
 
 ### Loading Data in Spark
@@ -176,47 +199,21 @@ Note the import statements at the beginning and the call to stop on the SparkCon
 	import pickle
 
 
-	def makeDataFileFromEmails( dir_path, out_file_path ):
-		"""
-		Iterate over files converting them to a single line
-		then write the set of files to a single output file
-		"""
-
-		with open( out_file_path, 'w' ) as out_file:
-
-			# Iterate over the files in directory 'path'
-			for file_name in os.listdir( dir_path ):
-
-				# Open each file for reading
-				with open( dir_path + file_name ) as in_file:
-
-					# Reformat emails as a single line of text
-					text = in_file.read().replace( '\n',' ' ).replace( '\r', ' ' )
-					text = text + "\n"
-					# Write each email out to a single file
-					out_file.write( text )
-
-
 	def main():
 		"""
 		Driver program for a spam filter using Spark and MLLib
 		"""
 
-		# Consolidate the individual email files into a single spam file
-		# and a single ham file
-		makeDataFileFromEmails( "data/spam_2/", "data/spam.txt")
-		makeDataFileFromEmails( "data/easy_ham_2/", "data/ham.txt" )
-
 		# Create the Spark Context for parallel processing
 		sc = SparkContext( appName="Spam Filter")
-
+		
 		# Load the spam and ham data files into RDDs
 		spam = sc.textFile( "data/spam.txt" )
 		ham = sc.textFile( "data/ham.txt" )
 
 		# Create a HashingTF instance to map email text to vectors of 10,000 features.
 		tf = HashingTF(numFeatures = 10000)
-
+	
 		# Each email is split into words, and each word is mapped to one feature.
 		spamFeatures = spam.map(lambda email: tf.transform(email.split(" ")))
 		hamFeatures = ham.map(lambda email: tf.transform(email.split(" ")))
@@ -242,17 +239,21 @@ Note the import statements at the beginning and the call to stop on the SparkCon
 
 		# Calculate the error rate as number wrong / total number
 		error_rate = labels_and_predictions.filter( lambda (val, pred): val != pred ).count() / float(testData.count() )
+
+		# End the Spark Context
+		sc.stop()
+
+		# Print out the error rate
+		print( "*********** SPAM FILTER RESULTS **********" )
+		print( "\n" )
 		print( "Error Rate: " + str( error_rate ) )
+		print( "\n" )
 
 		# Serialize the model for presistance
-		pickle.dump( model, open( "spamFilter.pkl", "wb" ))
-
-		# Stop the SparkContext execution
-		sc.stop()
+		pickle.dump( model, open( "spamFilter.pkl", "wb" ) )
 
 	if __name__ == "__main__":
 		main()
-
 
 
 
