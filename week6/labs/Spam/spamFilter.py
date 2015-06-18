@@ -11,11 +11,6 @@ def main():
 	Driver program for a spam filter using Spark and MLLib
 	"""
 
-	# Consolidate the individual email files into a single spam file
-	# and a single ham file
-	makeDataFileFromEmails( "data/spam_2/", "data/spam.txt")
-	makeDataFileFromEmails( "data/easy_ham_2/", "data/ham.txt" )
-
 	# Create the Spark Context for parallel processing
 	sc = SparkContext( appName="Spam Filter")
 
