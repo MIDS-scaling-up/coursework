@@ -18,8 +18,9 @@ The main advantage of using Spark's **_MLLib package_** is that it's machine lea
 You must have a Spark cluster setup including the MLLib library (see [Apache Spark Introduction](../../hw/apache_spark_introduction) if you need to set up a Spark cluster).  You will also need Python 2.7 with Numpy 1.7 on each machine.  You will need Git on the master It is assumed that you have had prior exposure to machine learning algorithms (this lab will not cover the details of how these algorithms work).
 
 To install Numpy and Git use yum:
-	$ yum update
-	$ yum install numpy
+
+	$ yum update  
+	$ yum install numpy  
 	
 On the master only:
 
