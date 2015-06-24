@@ -4,6 +4,8 @@
 
 This lab assumes you have two VSes to perform data transfers with. If you do not, follow the instructions in [Data Transfer Performance](../data_xfer_perf).
 
+In this lab, `rsync` and `scp` are used, and both use SSH for transport. Ensure that you can SSH between test systems without using passwords.
+
 ### Install unzip
 
     yum install -y unzip
@@ -14,7 +16,7 @@ Fetch some Google 2-mer files, decompress them, and create a large concatenation
 
     for i in {0..3}; do wget http://storage.googleapis.com/books/ngrams/books/googlebooks-eng-all-2gram-20090715-${i}.csv.zip; unzip -p *${i}.csv.zip >> 2gram_concat.csv; \rm *${i}.csv.zip; done
 
-Observe that the ignominious rex you've created is a  GB file:
+Observe that the Indominus Rex you've created is a  GB file:
 
     ls -lh 2gram_concat.csv
 
