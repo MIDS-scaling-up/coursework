@@ -56,3 +56,7 @@ _There will be no in-class lab for this assignment_
 ### Homework
 
 0. [Object Storage](week7/hw)
+
+### Labs
+
+0. [Data Transfer Performance](week7/labs/data_xfer_perf)
