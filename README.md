@@ -63,3 +63,9 @@ _There will be no in-class lab for this assignment_
 
 0. [Data Transfer Performance](week7/labs/data_xfer_perf)
 0. [Rsync Investigation](week7/labs/rsync_investigation)
+
+## Week 8: NoSQL
+
+### Homework
+
+0. [NoSQL](week8/hw)
