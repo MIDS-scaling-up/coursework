@@ -56,3 +56,10 @@ _There will be no in-class lab for this assignment_
 ### Homework
 
 0. [Object Storage](week7/hw)
+
+### Labs
+
+(Complete the following in order)
+
+0. [Data Transfer Performance](week7/labs/data_xfer_perf)
+0. [Rsync Investigation](week7/labs/rsync_investigation)
