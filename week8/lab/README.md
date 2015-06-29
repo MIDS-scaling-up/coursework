@@ -3,7 +3,8 @@
 * Make sure that you have a JSON plugin added to your browser so that you can see JSON documents, pretty printed.  For instance, if you are using Chrome, you can install JSONView
 * Make sure that you have a shell -- either locally on your laptop or via a VM in the Cloud that has curl working on it.
 * Ensure that you can use this command line curl to connect to your cloundant account, e.g.
-curl -X GET -H 'Content-Type: application/json' https://userid:pass@userid.cloudant.com
+
+`curl -X GET -H 'Content-Type: application/json' https://userid:pass@userid.cloudant.com`
 
 
 ##Basic lab
@@ -28,9 +29,10 @@ Part 4: [Search Indexing and Query] (https://cloudant.com/for-developers/search/
 * Create a secondary index allowing you to list all users who reviewed a particular business.
 
 To create a database "yelp" in Cloudant, you'd do something like:
+
 `curl -v -i -X PUT -H 'Content-Type: application/json' https://userid:passwrd@user.cloudant.com/yelp`
 
-To cut out 50000 lines from an input file, you do:
+To cut out 50000 lines from an input file, you do:  
 `head -50000 yelp_academic_dataset_business.json > business.json`
 
 This file is not yet in the json format that the bulk upload can accept -- we need to add in the beginning:
@@ -54,60 +56,61 @@ Now check that your documents made it over:
 
 `curl -v -i -X GET -H 'Content-Type: application/json' https://userid:passwrd@user.cloudant.com/yelp`
 
-Here's the design dov that we'd need to create in order to be able to retrieve businesses by business id along with their reviews. This should be done via the GUI.
+Here's the design doc that we'd need to create in order to be able to retrieve businesses by business id along with their reviews. This should be done via the GUI.
 
-under indices
+Under indices:
 
-function(doc) {
-	var key= null; 
-	var value = null; 
-	if (doc.type==="business") { 
-		key = [doc.business_id]; 
-		value = null; 
+    function(doc) {  
+	    var key= null;  
+	    var value = null;  
+	    if (doc.type==="business") {  
+	    	key = [doc.business_id];  
+	    	value = null;  
+	    	emit(key, value);  
+	    } else if (doc.type==="review") { 
+	    	key = [doc.business_id,doc.review_id ];  
+	    	value = {"_id":doc._id};  
 		emit(key, value); 
-	} else if (doc.type==="review") {
-		key = [doc.business_id,doc.review_id ]; 
-		value = {"_id":doc._id}; 
-		emit(key, value);
-	}
-}
+	    }  
+    }  
 
 
-under views:
+Under views:
 
-function(doc){
- if(doc.type==="business") {
-	index("default", doc._id);
-	if(doc.name){
-		index("name", doc.name, {"store": "yes"});
-	}
-	if(doc.business_id){
-		index("business_id", doc.business_id, {"store": "yes"});
-	}					
-	if (doc.latitude){
-		index("lat", doc.latitude, {"store": "yes"});
-	}
-	if (doc.longitude){
-		index("lon", doc.longitude, {"store": "yes"});
-	}
- }
-}
+    function(doc){
+     if(doc.type==="business") {
+    	index("default", doc._id);
+    	if(doc.name){
+    		index("name", doc.name, {"store": "yes"});
+    	}
+    	if(doc.business_id){
+    		index("business_id", doc.business_id, {"store": "yes"});
+    	}					
+    	if (doc.latitude){
+    		index("lat", doc.latitude, {"store": "yes"});
+    	}
+	    if (doc.longitude){
+	    	index("lon", doc.longitude, {"store": "yes"});
+	    }
+     }
+    }
 
+And:
 
-function(doc){
-	if(doc.type==="review") {
-		index("default", doc._id);
-		if(doc.review_id){
-			index("review_id", doc.review_id, {"store": "yes"});
-		}
-		if(doc.business_id){
-			index("business_id", doc.business_id, {"store": "yes"});
-	    }					
-		if (doc.text){
-			index("text", doc.text, {"store": "yes"});
-		}
-	}
-}
+    function(doc){
+    	if(doc.type==="review") {
+    		index("default", doc._id);
+    		if(doc.review_id){
+    			index("review_id", doc.review_id, {"store": "yes"});
+    		}
+    		if(doc.business_id){
+		    	index("business_id", doc.business_id, {"store": "yes"});
+    	    }					
+	    	if (doc.text){
+	    		index("text", doc.text, {"store": "yes"});
+	    	}
+	    }
+    }
 
 
 
@@ -117,7 +120,7 @@ Now you should be able to query the businesses, e.g.
 `curl -v -i -X GET -H 'Content-Type: application/json' https://username:pass@username.cloudant.com/yelp/_design/thursday/_search/businesses?q=name:Eric`
 
 
-get one of the keys ... this is the business id -- e.g. fgjPheORTQCwwPOWiUE2SQ
+Get one of the keys ... this is the business id -- e.g. fgjPheORTQCwwPOWiUE2SQ
 
 To retrieve all of its reviews, you would do:
 
