@@ -72,4 +72,6 @@ _There will be no in-class lab for this assignment_
 
 ## Week 9: Spark Streaming
 
+### Homework
+
 0. [Streaming Tweet Processing](week9/hw)
