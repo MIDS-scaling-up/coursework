@@ -69,3 +69,7 @@ _There will be no in-class lab for this assignment_
 ### Homework
 
 0. [NoSQL](week8/hw)
+
+## Week 9: Spark Streaming
+
+0. [Streaming Tweet Processing](week9/hw)
