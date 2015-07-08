@@ -75,3 +75,7 @@ _There will be no in-class lab for this assignment_
 ### Homework
 
 0. [Streaming Tweet Processing](week9/hw)
+
+### Labs
+
+0. [Spark Streaming and Cassandra](week9/labs/streaming_and_cassandra)
