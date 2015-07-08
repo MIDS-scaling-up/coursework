@@ -1,5 +1,5 @@
 #Orchestrate with Brooklyn
-You'll need a VM with 2 CPUs and 4G of RAM to serve as the brooklyn server.
+You'll need a VM with 2 CPUs and 4G of RAM to serve as the brooklyn server, e.g. this is how Dima did it.  Note that the key needs to exist in SoftLayer for this to work (p305 in this case)
 
     sl vs create --datacenter=sjc01 --domain=dima.com  --hostname=brooklyn --os=UBUNTU_LATEST_64 --key=p305 --cpu=2 --memory=4096 --hourly --really --wait=64000
 
@@ -50,8 +50,8 @@ Brooklyn uses a properties file (~/.brooklyn/brooklyn.properties) to define thin
     mkdir /root/.brooklyn  
 edit /root/.brooklyn/brooklyn.properties  and add the following lines:  
 
-    brooklyn.location.jclouds.softlayer.identity=YOUR_USERNAME  
-    brooklyn.location.jclouds.softlayer.credential=YOUR_API_KEY  
+    brooklyn.location.jclouds.softlayer.identity=YOUR_SOFTLAYER_USERNAME  
+    brooklyn.location.jclouds.softlayer.credential=YOUR_SOFTLAYER_API_KEY  
     # brooklyn.localhost.private-key-file = path to your private key, set up if using localhost to test  
     brooklyn.webconsole.security.https.required=true  
     brooklyn.webconsole.security.users=admin  
