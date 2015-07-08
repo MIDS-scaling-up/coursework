@@ -39,7 +39,7 @@ http://sldn.softlayer.com/blog/waelriac/Managing-SoftLayer-Object-Storage-Throug
 
 First you can check if you have already ordered object storage for a previous assignment, and if so retrieve the username(s):
 
-    curl --user USERID:API_KEY https://api.softlayer.com/rest/v3.1/SoftLayer_Account/getHubNetworkStorage | tee softlayer.$(date +%s).log | jq 'del(.[][]|iterables) | .[] | select(.vendorName == "Swift")'
+    curl --user USERID:API_KEY https://api.softlayer.com/rest/v3.1/SoftLayer_Account/getHubNetworkStorage | tee softlayer.$(date +%s).log | jq '.[] | select(.vendorName == "Swift") | del (.properties)'  
 
 You will see output similar to the following if you have:
 
@@ -80,7 +80,7 @@ An example for ordering would be the following command, where NNNNN is the objec
 
 When the order is complete you will see a storage account when we re-visit this API call:
 
-    curl --user USERID:API_KEY https://api.softlayer.com/rest/v3.1/SoftLayer_Account/getHubNetworkStorage | tee softlayer.$(date +%s).log | jq 'del(.[][]|iterables) | .[] | select(.vendorName == "Swift")'
+    curl --user USERID:API_KEY https://api.softlayer.com/rest/v3.1/SoftLayer_Account/getHubNetworkStorage | tee softlayer.$(date +%s).log | jq '.[] | select(.vendorName == "Swift") | del (.properties)'  
 
 The name of the created accounts are of the form SLUSER-IDNUM, for example "SL000000-1".
 
@@ -91,7 +91,7 @@ The rest of the article (http://sldn.softlayer.com/blog/waelriac/Managing-SoftLa
 You do not need to use the SLAPI to manage object storage accounts, You could use a generic swift client instead, e.g., to list containers in the account in the particular datacenter using the openstack swift utility:
 
 	pip install python-swiftclient  
-	swift -A https://SL_DATA_CENTER_ID.objectstorage.softlayer.net/ -U ACCOUNT-ID:USERID -K API_KEY list  
+	swift -A https://SL_DATA_CENTER_ID.objectstorage.softlayer.net/auth/v1.0/ -U ACCOUNT-ID:USERID -K API_KEY list  
 
 Where the SL_DATA_CENTER_ID is something like dal05 or sjc01, as returned in the call to getHubNetworkStorage, ACCOUNT-ID is the storage account you retrieved above and USERID is your portal username.  For example if the datacenter is sjc01, your storage username is SL000000-1 and you log into the portal with just SL000000 your command line would look similar to the following:
 

@@ -6,36 +6,10 @@ import os
 import pickle
 
 
-def makeDataFileFromEmails( dir_path, out_file_path ):
-	"""
-	Iterate over files converting them to a single line
-	then write the set of files to a single output file
-	"""
-
-	with open( out_file_path, 'w' ) as out_file:
-
-		# Iterate over the files in directory 'path'
-		for file_name in os.listdir( dir_path ):
-
-			# Open each file for reading
-			with open( dir_path + file_name ) as in_file:
-
-				# Reformat emails as a single line of text
-				text = in_file.read().replace( '\n',' ' ).replace( '\r', ' ' )
-				text = text + "\n"
-				# Write each email out to a single file
-				out_file.write( text )
-
-
 def main():
 	"""
 	Driver program for a spam filter using Spark and MLLib
 	"""
-
-	# Consolidate the individual email files into a single spam file
-	# and a single ham file
-	makeDataFileFromEmails( "data/spam_2/", "data/spam.txt")
-	makeDataFileFromEmails( "data/easy_ham_2/", "data/ham.txt" )
 
 	# Create the Spark Context for parallel processing
 	sc = SparkContext( appName="Spam Filter")
@@ -72,6 +46,11 @@ def main():
 
 	# Calculate the error rate as number wrong / total number
 	error_rate = labels_and_predictions.filter( lambda (val, pred): val != pred ).count() / float(testData.count() )
+
+	# End the Spark Context
+	sc.stop()
+
+	#  Print out the error rate
 	print( "*********** SPAM FILTER RESULTS **********" )
 	print( "\n" )
 	print( "Error Rate: " + str( error_rate ) )
@@ -80,7 +59,6 @@ def main():
 	# Serialize the model for presistance
 	pickle.dump( model, open( "spamFilter.pkl", "wb" ) )
 
-	sc.stop()
 
 if __name__ == "__main__":
 	main()
