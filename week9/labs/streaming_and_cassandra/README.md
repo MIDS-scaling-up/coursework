@@ -135,6 +135,8 @@ Write the following content to the file `/etc/yum.repos.d/datastax.repo`:
     enabled = 1
     gpgcheck = 0
 
+Now install the Cassandra database:
+
     yum -y install dsc20
 
 Now start Cassandra:
