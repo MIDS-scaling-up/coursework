@@ -44,7 +44,7 @@ https://brooklyn.incubator.apache.org/v/latest/start/blueprints.html
     #build brooklyn 
     mvn clean install -DskipTests  
 
-###Confgure the thing
+### Configure SoftLayer
 Brooklyn uses a properties file (~/.brooklyn/brooklyn.properties) to define things like Cloud Endpoints (SoftLayer in our case) and portal security.
 
     mkdir /root/.brooklyn  
