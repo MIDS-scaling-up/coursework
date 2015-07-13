@@ -1,7 +1,7 @@
 #Orchestrate with Brooklyn
 You'll need a VM with 2 CPUs and 4G of RAM to serve as the brooklyn server, e.g. this is how Dima did it.  Note that the key needs to exist in SoftLayer for this to work (p305 in this case)
 
-    sl vs create --datacenter=sjc01 --domain=dima.com  --hostname=brooklyn --os=UBUNTU_LATEST_64 --key=p305 --cpu=2 --memory=4096 --hourly --really --wait=64000
+    slcli vs create --datacenter=sjc01 --domain=dima.com  --hostname=brooklyn --os=UBUNTU_LATEST_64 --key=p305 --cpu=2 --memory=4096 --hourly --wait=64000
 
 
 In general, a good starting point for Brooklyn is here:
