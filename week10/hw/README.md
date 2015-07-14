@@ -116,4 +116,5 @@ Go to the applications tab, click on the + icon, then on the yaml tab and paste 
 This will take a few minutes to provision.  Once the blueprint is up, you should be able to click on the My Web entity on the left and it'll display URL for the newly provisioned application on the right , e.g. 
 http://169.53.137.237:8000/ 
 
-##This homework is not graded. It is complete/incomplete only.
+##This homework is not graded. It is complete/incomplete only. 
+###Submit the URL for your brooklyn admin UI as well as the ID and Password to access it.
