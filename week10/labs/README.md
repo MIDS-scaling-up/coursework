@@ -117,7 +117,8 @@ From the master node, cd to the spark directory:
 
     cd .brooklyn/apps/HhIBwRQd/entities/SparkNode_Q6ULr5gk/spark-1.1.0/
    
-Note that HhIBwRQd and SparkNode_Q6ULr5gk are dynamically generated and will be different on your install.
+
+**Note that HhIBwRQd and SparkNode_Q6ULr5gk are dynamically generated and will be different on your install.**
 
 From this directory, run the following command (make sure you use the public IP of your master node):
 
