@@ -109,5 +109,18 @@ https://198.11.207.91:8443
 
 Go to the applications tab and observe your Spark provisioning in real time.
 Once its up , click on the master node and sensor tab and get its ip address.  Connect to the Spark UI like this
-http://masternodeip:8080
+http://MASTER_NODE_IP:8080
 
+Login to the master node (via ssh) and update /etc/hosts to replace 127.0.0.1 with the public IP of the master node. This is to compensate for a bug in brooklyn's deployment of Spark.
+
+From the master node, cd to the spark directory:
+
+    cd .brooklyn/apps/HhIBwRQd/entities/SparkNode_Q6ULr5gk/spark-1.1.0/
+   
+Note that HhIBwRQd and SparkNode_Q6ULr5gk are dynamically generated and will be different on your install.
+
+From this directory, run the following command (make sure you use the public IP of your master node):
+
+    MASTER=spark://MASTER_NODE_IP:7077 ./bin/run-example SparkPi 100
+
+You can monitor progress in the Spark UI and on the command line.
