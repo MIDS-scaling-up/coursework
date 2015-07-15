@@ -79,3 +79,17 @@ _There will be no in-class lab for this assignment_
 ### Labs
 
 0. [Spark Streaming and Cassandra](week9/labs/streaming_and_cassandra)
+
+## Week 10: Scaling Up
+
+### Homework
+
+0. [Orchestrate with Brooklyn](week10/hw)
+
+### Labs
+
+0. [Brooklyn labs](week10/labs)
+
+## Week 11: Spark ML Round 2
+
+(Homework-free week!)
