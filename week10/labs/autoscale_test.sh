@@ -501,7 +501,7 @@ wget $1&
 wget $1&
 wget $1&
 wget $1&
-sleep 30
+sleep 10
 
 wget $1&
 wget $1&
@@ -1004,5 +1004,5 @@ wget $1&
 wget $1&
 wget $1&
 wget $1&
-sleep 30
+sleep 10
 rm index.html*
