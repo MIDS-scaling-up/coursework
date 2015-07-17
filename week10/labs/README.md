@@ -38,7 +38,7 @@
 * Wait for this blueprint to come up  
 * Click on the Controlled Dynamic Web AppCluster, policies tab  
 * The autoscaler policy - minpool size -- change to two  
-* Observe reprosinioning
+* Observe reprovisioning
 
 
 
