@@ -52,10 +52,10 @@ We will use Spark Streaming and the Twitter streaming source to get our tweets. 
 	  val totalRuntime_s = 32
 	  
 	  val propPrefix = "twitter4j.oauth."
-	  System.setProperty(s"${propPrefix}consumerKey", "x3jzYlQAzgOXzGIuJX4VvzeSw")
-	  System.setProperty(s"${propPrefix}consumerSecret", "uYTH4OzbElgbDK81gERvdvIezuCefhcmyFFWyFihL41u3TDWwq")
-	  System.setProperty(s"${propPrefix}accessToken", "467827626-BbJ9VrNyKT7rMY8iRYaAluirOorNNiX1wc9jHoKk")
-	  System.setProperty(s"${propPrefix}accessTokenSecret", "CwTR8LIxqhtikpqdzaMx3JpNPF6L1nY9EIrBr9Dn6UKZc")
+	  System.setProperty(s"${propPrefix}consumerKey", "")
+	  System.setProperty(s"${propPrefix}consumerSecret", "")
+	  System.setProperty(s"${propPrefix}accessToken", "")
+	  System.setProperty(s"${propPrefix}accessTokenSecret", "")
 	  
 	  // create SparkConf
 	  val conf = new SparkConf().setAppName("mids tweeteat")
@@ -107,7 +107,7 @@ Because of this we will need a simple function to make an HTTP request formatted
     		val baseurl = alchemyurl + call
     		
     		// AlchemyAPI key
-    		val apikey = "3c4420d68ce67f391180ebf15658b09864ec606a"
+    		val apikey = ""
     		
     		// URL encode the tweet body 
     		val tweetEncoded = URLEncoder.encode( tweet, "UTF-8" )
@@ -275,10 +275,10 @@ When you have this working, try modifying the code to use one of the other Alche
   			val totalRuntime_s = 32
 
   			val propPrefix = "twitter4j.oauth."
-  			System.setProperty(s"${propPrefix}consumerKey", "x3jzYlQAzgOXzGIuJX4VvzeSw")
-  			System.setProperty(s"${propPrefix}consumerSecret", "uYTH4OzbElgbDK81gERvdvIezuCefhcmyFFWyFihL41u3TDWwq")
-  			System.setProperty(s"${propPrefix}accessToken", "467827626-BbJ9VrNyKT7rMY8iRYaAluirOorNNiX1wc9jHoKk")
-  			System.setProperty(s"${propPrefix}accessTokenSecret", "CwTR8LIxqhtikpqdzaMx3JpNPF6L1nY9EIrBr9Dn6UKZc")
+  			System.setProperty(s"${propPrefix}consumerKey", "")
+  			System.setProperty(s"${propPrefix}consumerSecret", "")
+  			System.setProperty(s"${propPrefix}accessToken", "")
+  			System.setProperty(s"${propPrefix}accessTokenSecret", "")
 
   			// create SparkConf
   			val conf = new SparkConf().setAppName("mids tweeteat")
