@@ -14,7 +14,7 @@ object TweetEat extends App {
 
   def getAlchemyResults( tweet:String, call:String ): String = {
     //insert apikey here
-    val apikey = "eea306487900c9ece1ffad8668fae4ce9f4d0881"
+    val apikey = ""
     
     val alchemyurl = "http://access.alchemyapi.com/calls/text/"
     val baseurl = alchemyurl + call
@@ -111,10 +111,10 @@ object TweetEat extends App {
   val totalRuntime_s = 32
 
   val propPrefix = "twitter4j.oauth."
-  System.setProperty(s"${propPrefix}consumerKey", "x3jzYlQAzgOXzGIuJX4VvzeSw")
-  System.setProperty(s"${propPrefix}consumerSecret", "uYTH4OzbElgbDK81gERvdvIezuCefhcmyFFWyFihL41u3TDWwq")
-  System.setProperty(s"${propPrefix}accessToken", "467827626-BbJ9VrNyKT7rMY8iRYaAluirOorNNiX1wc9jHoKk")
-  System.setProperty(s"${propPrefix}accessTokenSecret", "CwTR8LIxqhtikpqdzaMx3JpNPF6L1nY9EIrBr9Dn6UKZc")
+  System.setProperty(s"${propPrefix}consumerKey", "")
+  System.setProperty(s"${propPrefix}consumerSecret", "")
+  System.setProperty(s"${propPrefix}accessToken", "")
+  System.setProperty(s"${propPrefix}accessTokenSecret", "")
 
   // create SparkConf
   val conf = new SparkConf().setAppName("mids tweeteat")
