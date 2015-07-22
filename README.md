@@ -94,6 +94,10 @@ _There will be no in-class lab for this assignment_
 
 (Homework-free week!)
 
+### Labs
+
+0. [Streaming Analytics with AlchemyAPI](week11/labs/Sentiment)
+
 ## Week 12: Search
 
 ### Homework
