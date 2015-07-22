@@ -1,102 +1,128 @@
-#Configure ELK stack
-The ELK stack is ElasticSearch, Logstash and Kibana. Together they provide a fully working real-time data analytics tool. 
+# Elasticsearch
+Elasticsearch is a scalable, full-text search engine with real-time analytics and search features. It provides a RESTful API for indexing and querying. It's document-oriented/based and can store documents as JSON. This makes it powerful, simple and flexible.
 
-You parse your data with Logstash directly into the ElasticSearch node. ElasticSearch will then handle the data, and Kibana will vizualise the data for you.
+It is built on top of Apache Lucene; by default, ituses port `9200` `+1` per node.
 
-##Provision your VM
+## Provision your VM
 
-    slcli vs create --datacenter=sjc01 --domain=brad.com  --hostname=elkstack --os=UBUNTU_LATEST_64 --key="YOUR KEY NAME" --cpu=2 --memory=4096 --billing=hourly --disk-100 --wait=64000
+    slcli vs create --datacenter=sjc01 --domain=brad.com --hostname=elasticsearch --os=CENTOS_LATEST_64 --key=IBM_local-2 --cpu=2 --memory=4096 --billing=hourly --disk=100 --key=<your key name>
 
-##ElasticSearch
-ElasticSearch is a search engine with focus on real-time and analysis of the data it holds, and is based on the RESTful architecture. It comes with compatibility with standard full text search functionality, but also with much more powerful query options. ElasticSearch is document-oriented/based and you can store everything you want as JSON. This makes it powerful, simple and flexible.
-
-It is built on top of Apache Lucene, and is by default running on port 9200 +1 per node.
-
-##Download
-This URL provides resources to the newest versions: 
-http://www.elasticsearch.org/overview/elkdownloads/
+## Download
+https://www.elastic.co/downloads/elasticsearch
 
 Install prerequisites:
 
-    apt-get install -y curl apache2 openjdk-7-jre 
+    yum install -y epel-release && yum install -y java-1.8.0-openjdk-headless net-tools jq
 
-To download the ElasticSearch tar: 
+Set the proper location of `JAVA_HOME` and test it:
 
-    $ curl -OL https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.1.0.tar.gz
+    echo export JAVA_HOME=\"$(readlink -f $(which java) | grep -oP '.*(?=/bin)')\" >> /root/.bash_profile
+    source /root/.bash_profile
+    $JAVA_HOME/bin/java -version
 
-To extract the tarball: 
+Download the Elasticsearch tarball (from https://www.elastic.co/downloads/elasticsearch):
 
-    $ tar xzf elasticsearch-1.1.0.tar.gz 
+    curl -OL https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.7.0.tar.gz
 
+To extract the tarball:
 
-##Getting started with ElasticSearch
+    tar xzf elasticsearch-1.7.0.tar.gz
+
+## Getting started with Elasticsearch
 
 Run the elasticsearch-file inside the ./bin/ folder:
 
-    $ cd elasticsearch-1.1.0
-    $ nohup ./bin/elasticsearch &
+    cd elasticsearch-1.7.0
+    nohup ./bin/elasticsearch &
 
-This will start a master node on port 9200. Go to your public address to see the search engine in action. curl works well:
+This will start a master node on port `9200`. You can check that the service is listening with the command `netstat -tnlp`. If you need to investigate a problem, check the output written to the file `nohup.out`. Browse to your public address to see the search engine in action. `curl` works as well:
 
-    $ curl -X GET http://localhost:9200
+    curl -X GET http://localhost:9200
+
+You should see output like this:
+
     {
       "status" : 200,
-      "name" : "Master Khan",
+      "name" : "Polaris",
+      "cluster_name" : "elasticsearch",
       "version" : {
-        "number" : "1.1.0",
-        "build_hash" : "2181e113dea80b4a9e31e58e9686658a2d46e363",
-        "build_timestamp" : "2014-03-25T15:59:51Z",
+        "number" : "1.7.0",
+        "build_hash" : "929b9739cae115e73c346cb5f9a6f24ba735a743",
+        "build_timestamp" : "2015-07-16T14:31:07Z",
         "build_snapshot" : false,
-        "lucene_version" : "4.7"
+        "lucene_version" : "4.10.4"
       },
       "tagline" : "You Know, for Search"
     }
 
-To insert stuff you can use PUT, as it is a part of the REST architecture.
+Then to do a simple search, you can use the "_search" request built into ElasticSearch, like this:
 
-Then to do a simple search, you can use the "_search" request build into ElasticSearch, like this: 
+    curl -X GET http://localhost:9200/_search?q=test
 
-    $ curl -X GET http://localhost:9200/_search?q=test
+For prettier output, run the `curl` command and pipe the output to `jq`:
 
-To create a record you could run:
+    curl -X GET http://localhost:9200/_search?q=test | jq -r '.'
 
-    $ curl -X POST 'http://localhost:9200/person/1' -d '{
-        "info" : {
-            "height" : 2,
-            "width" : 20
-        }
+Note the total number of documents matching the query (hits -> total) in the response. For more information on the format of the response, see https://www.elastic.co/guide/en/elasticsearch/reference/current/_the_search_api.html.
+
+To index new documents you can use the HTTP POST method. For more information on indexing records with the API, consult https://www.elastic.co/guide/en/elasticsearch/reference/current/.
+
+Try inserting a new document this way:
+
+    curl -X POST 'http://localhost:9200/artist/bieber' -d '{
+            "talent" : 5,
+            "best_song.release_year": 2010,
+            "best_song.title": "Eenie Meenie"
     }'
 
-Which then will give you a success message in JSON in return if it was created. This can the be retrieved with a search request:
+... and then a few more:
 
-    curl -X GET http://localhost:9200/person/_search
+    curl -X POST 'http://localhost:9200/artist/plant' -d '{
+            "talent": 90,
+            "best_song.release_year": 1970,
+            "best_song.title": "Bron-Y-Aur Stomp"
+    }'
 
-or  
+...
 
-    curl -X GET http://localhost:9200/person/_search?q=2
+    curl -X POST 'http://localhost:9200/artist/bluhm' -d '{
+            "talent": 91,
+            "best_song.release_year": 2013,
+            "best_song.title": "Little too Late"
+    }'
 
-##Insert some data
-Find some documents to download and index.  Select a document repository, preferably something that DOES NOT contain personal information and that you would be fine to see results come up in a search publicly.
+Elasticsearch will respond with a success message in JSON if the document was indexed. Documents can be retrieved withsearch requests:
 
-Suggestions:
+    curl -X GET http://localhost:9200/artist/_search
 
-- imdb scripts
-- wikipedia dump
-- books from gutenberg
-- links to all cat photos from geocities
+You can also specify a query and output options:
 
-Want to get fancy? Use Nutch to crawl a website.
+    curl -X GET 'http://localhost:9200/artist/_search?q=talent:\[90+TO+100\]&pretty'
 
-###Tips for inserting documents
+Note how queries issued without specified field names are handled:
 
-- Use a bash script to get a list of all files, then use curl to insert them (one by one) into ElasticSearch
+    curl -X GET 'http://localhost:9200/artist/_search?q=Stomp&pretty'
+
+## Index Interesting Data
+Elasticsearch is good at indexing large volumes of similarly-formatted text documents and providing an easy query mechanism for humans to retrieve them. Your task is to index a collection of documents. The source of the data and indexing tools you use are up to you. Try to select a data set that is not too small and that produces interesting search results. Finally, **be careful not to index sensitive data!!** Your search engine will be public so make sure the data you make available through it can be published.
+
+If you're having trouble selecting a dataset, consider these:
+
+- IMDB movie scripts
+- A Wikipedia dump
+- Books from Project Gutenberg
+
+### Tips for Inserting Documents
+
+- Use a Bash script to get a list of all files, then use `curl` to insert them (one by one) into Elasticsearch
 - [Use stream2es] (https://github.com/elastic/stream2es#wikipedia)
-- [Use the bulk insert method of ElasticSearch] (https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html)
-- [Use hadoop to make the process more powerful] (http://thedatachef.blogspot.com/2011/01/bulk-indexing-with-elasticsearch-and.html)
+- [Use the bulk insert method of Elasticsearch] (https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html)
+- [Use Hadoop] (http://thedatachef.blogspot.com/2011/01/bulk-indexing-with-elasticsearch-and.html)
 - [Use the Python API] (http://qnundrum.com/question/1388508)
 - [Use Nutch to crawl a website] (http://www.aossama.com/search-engine-with-apache-nutch-mongodb-and-elasticsearch/)
 
+### Going the Distance
+Want to get fancy? Deploy a graphical frontend for easier interaction with your instance: https://github.com/jettro/elasticsearch-gui.
 
-
-##To turn in
-Submit the REST URLs for five interesting ElasticSearch queries
+## To Turn In
+Submit the REST URLs for **five** interesting queries we can execute on your Elasticsearch instance.
