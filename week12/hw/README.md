@@ -5,7 +5,7 @@ It is built on top of Apache Lucene; by default, ituses port `9200` `+1` per nod
 
 ## Provision your VM
 
-    slcli vs create --datacenter=sjc01 --domain=brad.com --hostname=elasticsearch --os=CENTOS_LATEST_64 --key=IBM_local-2 --cpu=2 --memory=4096 --billing=hourly --disk=100 --key=<your key name>
+    slcli vs create --datacenter=sjc01 --domain=brad.com --hostname=elasticsearch --os=CENTOS_LATEST_64 --cpu=2 --memory=4096 --billing=hourly --disk=100 --key=<your key name>
 
 ## Download
 https://www.elastic.co/downloads/elasticsearch
