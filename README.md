@@ -93,3 +93,9 @@ _There will be no in-class lab for this assignment_
 ## Week 11: Spark ML Round 2
 
 (Homework-free week!)
+
+## Week 12: Search
+
+### Homework
+
+0. [Elasticsearch](week12/hw)
