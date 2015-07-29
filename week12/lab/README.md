@@ -1,14 +1,14 @@
 #Search Lab Instructions
 
 
-This tutorial describes the installation and use of Nutch 1.x (current release is 1.9). 
+This tutorial describes the installation and use of Nutch 1.x (current release is 1.9).
 
 ##Requirements
 
 Provision a VSI:
 
     slcli vs create --datacenter=sjc01 --domain=data.com  --hostname=nutchtest --os=UBUNTU_LATEST_64 --key="YOUR KEY NAME" --cpu=2 --memory=4096 --billing=hourly --disk=100
-    
+
 On the VSI (once provisioned):
 
     apt-get install -y curl openjdk-7-jre unzip
@@ -19,7 +19,7 @@ On the VSI (once provisioned):
 
 * Download a binary package (apache-nutch-1.10-bin.zip) from [here](http://ftp.wayne.edu/apache/nutch/1.10/apache-nutch-1.10-bin.zip).
 * Unzip your binary Nutch package. There should be a folder apache-nutch-1.10
-* From now on, we are going to use ${NUTCH\_RUNTIME\_HOME} to refer to the current directory (apache-nutch-1.10/).
+* From now on, we are going to use `${NUTCH_RUNTIME_HOME}` to refer to the current directory (apache-nutch-1.10/).
 
         cd
         wget http://ftp.wayne.edu/apache/nutch/1.10/apache-nutch-1.10-bin.zip
@@ -27,13 +27,13 @@ On the VSI (once provisioned):
         cd apache-nutch-1.10-bin.zip
         export NUTCH_RUNTIME_HOME=~/apache-nutch-1.10/
 
-* Setup JAVA\_HOME 
+* Setup `JAVA_HOME`
 
         export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
 
 ##Verify your Nutch installation
 
-Run "bin/nutch" - You can confirm a correct installation if you see something similar to the following:
+Run `bin/nutch` - You can confirm a correct installation if you see something similar to the following:
 
     Usage: nutch COMMAND where command is one of:
     readdb            read / dump crawl db
@@ -47,10 +47,10 @@ Run "bin/nutch" - You can confirm a correct installation if you see something si
 
 Some troubleshooting tips:
 
-* Run the following command if you are seeing "Permission denied":  
+* Run the following command if you are seeing "Permission denied":
 
         chmod +x bin/nutch
-    
+
 Note that the __nutchtest__ above should be replaced with your machine name.
 
 ##Crawl your first website
@@ -62,35 +62,31 @@ Nutch requires two configuration changes before a website can be crawled:
 
 ###Customize your crawl properties
 
-* Default crawl properties can be viewed and edited within conf/nutch-default.xml - where most of these can be used without modification
-* The file conf/nutch-site.xml serves as a place to add your own custom crawl properties that overwrite conf/nutch-default.xml. The only required modification for this file is to override the value field of the http.agent.name     
-i.e. Add your agent name in the value field of the http.agent.name property in conf/nutch-site.xml, for example:
+* Default crawl properties can be viewed and edited within `conf/nutch-default.xml` - where most of these can be used without modification
+* The file `conf/nutch-site.xml` serves as a place to add your own custom crawl properties that overwrite `conf/nutch-default.xml`. The only required modification for this file is to override the value field of the `http.agent.name` i.e. add your agent name in the value field of the `http.agent.name` property in `conf/nutch-site.xml`, for example:
 
-        <configuration>
-          <property>
-           <name>http.agent.name</name>
-           <value>My Nutch Spider</value>
-          </property>
-        </configuration>
+        <property>
+         <name>http.agent.name</name>
+         <value>My Nutch Spider</value>
+        </property>
 
 ###Create a URL seed list
 
 * A URL seed list includes a list of websites, one-per-line, which nutch will look to crawl
-* The file conf/regex-urlfilter.txt will provide Regular Expressions that allow nutch to filter and narrow the types of web resources to crawl and download
+* The file `conf/regex-urlfilter.txt` will provide Regular Expressions that allow Nutch to filter and narrow the types of web resources to crawl and download
 
 ###Create a URL seed list
 
     mkdir -p urls
     cd urls
-    
-Create seed.txt under urls/ with the following content (one URL per line for each site you want Nutch to crawl).
+
+Create the file `seed.txt` under `urls/` with the following content (one URL per line for each site you want Nutch to crawl).
 
     http://nutch.apache.org/
 
 Configure Regular Expression Filters
 
-Edit the file conf/regex-urlfilter.txt and replace
-
+Edit the file `conf/regex-urlfilter.txt` and replace
 
     # accept anything else
     +.
@@ -102,11 +98,11 @@ with a regular expression matching the domain you wish to crawl. For example, if
 
 This will include any URL in the domain nutch.apache.org.
 
-__NOTE:__ Not specifying any domains to include within regex-urlfilter.txt will lead to all domains linking to your seed URLs file being crawled as well.
+__NOTE:__ Leaving only general regex rules in `regex-urlfilter.txt` will cause Nutch to crawl all domains linked to from URLs specified in your seed file.
 
 ##Using Individual Commands for Whole-Web Crawling
 
-Whole-Web crawling is designed to handle very large crawls which may take weeks to complete, running on multiple machines. This also permits more control over the crawl process, and incremental crawling. It is important to note that whole Web crawling does not necessarily mean crawling the entire World Wide Web. We can limit a whole Web crawl to just a list of the URLs we want to crawl. This is done by using a filter just like the one we used when we did the crawl command (above).
+Whole-web crawling is designed to handle very large crawls which may take weeks to complete, running on multiple machines. This also permits more control over the crawl process, and incremental crawling. It is important to note that whole Web crawling does not necessarily mean crawling the entire World Wide Web. We can limit a whole Web crawl to just a list of the URLs we want to crawl. This is done by using a filter just like the one we used when we did the crawl command (above).
 
 ###Step-by-Step: Concepts
 
@@ -143,7 +139,7 @@ This generates a fetch list for all of the pages due to be fetched. The fetch li
 
 
     s1=`ls -d crawl/segments/2* | tail -1`
-    
+
     #Verify s1 is properly set
     echo $s1
 
@@ -167,7 +163,7 @@ Now we generate and fetch a new segment containing the top-scoring 1,000 pages:
 
     bin/nutch generate crawl/crawldb crawl/segments -topN 1000
     s2=`ls -d crawl/segments/2* | tail -1`
-    
+
     #verify s2 is set properly
     echo $s2
 
@@ -180,7 +176,7 @@ Let's fetch one more round:
 
     bin/nutch generate crawl/crawldb crawl/segments -topN 1000
     s3=`ls -d crawl/segments/2* | tail -1`
-    
+
     #verify s3 is set properly
     echo $s3
 
@@ -202,7 +198,7 @@ We are now ready to search with Apache Solr.
 
 If you have followed the section above on how the crawling can be done step by step, you might be wondering how a bash script can be written to automate all the process described above.
 
-Nutch developers have written one for you :), and it is available at bin/crawl.
+Nutch developers have written one for you :), it's available at `bin/crawl`.
 
 
      Usage: crawl [-i|--index] [-D "key=value"] <Seed Dir> <Crawl Dir> <Num Rounds>
@@ -218,7 +214,7 @@ The crawl script has lot of parameters set, and you can modify the parameters to
 ##Setup Solr for search
 
 * Download binary solr 4.10.4 file from [here](http://mirror.reverse.net/pub/apache/lucene/solr/4.10.4/solr-4.10.4.zip)
-* unzip to $HOME/apache-solr, we will now refer to this as ${APACHE\_SOLR\_HOME}
+* unzip to $HOME/apache-solr, we will now refer to this as `${APACHE_SOLR_HOME}`
 
 
         cd
@@ -226,8 +222,8 @@ The crawl script has lot of parameters set, and you can modify the parameters to
         unzip solr-4.10.4.zip
         export APACHE_SOLR_HOME=~/solr-4.10.4
         cd ${APACHE_SOLR_HOME}/example
-        java -jar start.jar 
-        
+        nohup java -jar start.jar &
+
 ##Verify Solr installation
 
 After you started Solr admin console, you should be able to access the following URL (replace YOUR\_IP\_ADDRESS with your IP address):
@@ -239,7 +235,7 @@ After you started Solr admin console, you should be able to access the following
 
 We have both Nutch and Solr installed and setup correctly. And Nutch already created crawl data from the seed URL(s). Below are the steps to delegate searching to Solr for links to be searchable:
 
-* Backup the original Solr example schema.xml:
+* Backup the original Solr example `schema.xml`:
 
         mv ${APACHE_SOLR_HOME}/example/solr/collection1/conf/schema.xml ${APACHE_SOLR_HOME}/example/solr/collection1/conf/schema.xml.org
 
@@ -253,19 +249,19 @@ We have both Nutch and Solr installed and setup correctly. And Nutch already cre
 
     * Comment out the following lines 54-55 in the file by changing this:
 
-            <filter class="solr.EnglishPorterFilterFactory" 
+            <filter class="solr.EnglishPorterFilterFactory"
                     protected="protwords.txt"/>
 
-     to this 
+     to this
 
-             <!--   <filter class="solr.EnglishPorterFilterFactory" 
+             <!--   <filter class="solr.EnglishPorterFilterFactory"
                     protected="protwords.txt"/> -->
 
-        
+
         * If you want to see the raw HTML indexed by Solr, change the content field definition (line 102) to true:
 
             `<field name="content" type="text" stored="true" indexed="true"/>`
-    
+
     * Add the int and double types right after ` <fieldType name="string"...`:
 
             <fieldType name="int" class="solr.TrieIntField" precisionStep="0" omitNorms="true" positionIncrementGap="0"/>
@@ -280,11 +276,11 @@ and
             <!-- <copyField source="latLon" dest="location"/> -->
 
 
-* Save the file and restart Solr under ${APACHE\_SOLR\_HOME}/example:
+* Save the file and restart Solr under `${APACHE_SOLR_HOME}/example`:
 
-        java -jar start.jar
+        pkill -f 'java -jar start.jar'; nohup java -jar start.jar &
 
-* run the Solr Index command from ${NUTCH\_RUNTIME\_HOME}:
+* run the Solr Index command from `${NUTCH_RUNTIME_HOME}`:
 
         cd $NUTCH_RUNTIME_HOME
         bin/nutch solrindex http://127.0.0.1:8983/solr/ crawl/crawldb -linkdb crawl/linkdb crawl/segments/*
