@@ -51,19 +51,6 @@ Some troubleshooting tips:
 
         chmod +x bin/nutch
     
-* You may also have to update your /etc/hosts file. If so you can add the following
-
-
-        ##
-        # Host Database
-        #
-        # localhost is used to configure the loopback interface
-        # when the system is booting.  Do not change this entry.
-        ##
-        127.0.0.1       localhost.localdomain localhost nutchtest
-        ::1             ip6-localhost ip6-loopback
-        fe80::1%lo0     ip6-localhost ip6-loopback
-
 Note that the __nutchtest__ above should be replaced with your machine name.
 
 ##Crawl your first website
@@ -79,10 +66,12 @@ Nutch requires two configuration changes before a website can be crawled:
 * The file conf/nutch-site.xml serves as a place to add your own custom crawl properties that overwrite conf/nutch-default.xml. The only required modification for this file is to override the value field of the http.agent.name     
 i.e. Add your agent name in the value field of the http.agent.name property in conf/nutch-site.xml, for example:
 
-        <property>
-         <name>http.agent.name</name>
-         <value>My Nutch Spider</value>
-        </property>
+        <configuration>
+          <property>
+           <name>http.agent.name</name>
+           <value>My Nutch Spider</value>
+          </property>
+        </configuration>
 
 ###Create a URL seed list
 
@@ -237,7 +226,7 @@ The crawl script has lot of parameters set, and you can modify the parameters to
         unzip solr-4.10.4.zip
         export APACHE_SOLR_HOME=~/solr-4.10.4
         cd ${APACHE_SOLR_HOME}/example
-        nohup java -jar start.jar &
+        java -jar start.jar 
         
 ##Verify Solr installation
 
@@ -272,13 +261,10 @@ We have both Nutch and Solr installed and setup correctly. And Nutch already cre
              <!--   <filter class="solr.EnglishPorterFilterFactory" 
                     protected="protwords.txt"/> -->
 
-    * Add the following line right after the line `<field name="id" ... />` (line 88-89)
+        
+        * If you want to see the raw HTML indexed by Solr, change the content field definition (line 102) to true:
 
-            <field name="_version_" type="long" indexed="true" stored="true"/>
-
-    * If you want to see the raw HTML indexed by Solr, change the content field definition (line 102) to true:
-
-            <field name="content" type="text" stored="true" indexed="true"/>
+            `<field name="content" type="text" stored="true" indexed="true"/>`
     
     * Add the int and double types right after ` <fieldType name="string"...`:
 
