@@ -100,6 +100,10 @@ _There will be no in-class lab for this assignment_
 
 ## Week 12: Search
 
+### Labs
+
+0. [Crawling the Web with Nutch, Indexing with Solr](week12/lab)
+
 ### Homework
 
 0. [Elasticsearch](week12/hw)
