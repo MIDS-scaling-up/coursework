@@ -11,7 +11,7 @@ Provision a VSI:
     
 On the VSI (once provisioned):
 
-    apt-get install -y curl openjdk-7-jre 
+    apt-get install -y curl openjdk-7-jre unzip
 
 ##Install Nutch
 
@@ -19,11 +19,17 @@ On the VSI (once provisioned):
 
 * Download a binary package (apache-nutch-1.10-bin.zip) from [here](http://ftp.wayne.edu/apache/nutch/1.10/apache-nutch-1.10-bin.zip).
 * Unzip your binary Nutch package. There should be a folder apache-nutch-1.10
-* cd apache-nutch-1.10/
+* From now on, we are going to use ${NUTCH\_RUNTIME\_HOME} to refer to the current directory (apache-nutch-1.10/).
 
-From now on, we are going to use ${NUTCH_RUNTIME_HOME} to refer to the current directory (apache-nutch-1.10/).
+        cd
+        wget http://ftp.wayne.edu/apache/nutch/1.10/apache-nutch-1.10-bin.zip
+        unzip apache-nutch-1.10-bin.zip
+        cd apache-nutch-1.10-bin.zip
+        export NUTCH_RUNTIME_HOME=~/apache-nutch-1.10/
 
-    export NUTCH_RUNTIME_HOME=~/apache-nutch-1.10/
+* Setup JAVA\_HOME 
+
+        export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
 
 ##Verify your Nutch installation
 
@@ -45,26 +51,18 @@ Some troubleshooting tips:
 
         chmod +x bin/nutch
     
-* Setup JAVA_HOME if you are seeing JAVA_HOME not set. 
-
-### note that the actual path may be different on your system
-On Debian or Ubuntu, you can run the following command or add it to ~/.bashrc:
+* You may also have to update your /etc/hosts file. If so you can add the following
 
 
-    export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
-    
-You may also have to update your /etc/hosts file. If so you can add the following
-
-
-    ##
-    # Host Database
-    #
-    # localhost is used to configure the loopback interface
-    # when the system is booting.  Do not change this entry.
-    ##
-    127.0.0.1       localhost.localdomain localhost nutchtest
-    ::1             ip6-localhost ip6-loopback
-    fe80::1%lo0     ip6-localhost ip6-loopback
+        ##
+        # Host Database
+        #
+        # localhost is used to configure the loopback interface
+        # when the system is booting.  Do not change this entry.
+        ##
+        127.0.0.1       localhost.localdomain localhost nutchtest
+        ::1             ip6-localhost ip6-loopback
+        fe80::1%lo0     ip6-localhost ip6-loopback
 
 Note that the __nutchtest__ above should be replaced with your machine name.
 
@@ -100,7 +98,7 @@ Create seed.txt under urls/ with the following content (one URL per line for eac
 
     http://nutch.apache.org/
 
-(Optional) Configure Regular Expression Filters
+Configure Regular Expression Filters
 
 Edit the file conf/regex-urlfilter.txt and replace
 
@@ -156,6 +154,8 @@ This generates a fetch list for all of the pages due to be fetched. The fetch li
 
 
     s1=`ls -d crawl/segments/2* | tail -1`
+    
+    #Verify s1 is properly set
     echo $s1
 
 Now we run the fetcher on this segment with:
@@ -228,21 +228,23 @@ The crawl script has lot of parameters set, and you can modify the parameters to
 
 ##Setup Solr for search
 
-* download binary solr 4.x file from [here](http://mirror.reverse.net/pub/apache/lucene/solr/4.10.4/)
-* unzip to $HOME/apache-solr, we will now refer to this as ${APACHE_SOLR_HOME}
+* Download binary solr 4.10.4 file from [here](http://mirror.reverse.net/pub/apache/lucene/solr/4.10.4/solr-4.10.4.zip)
+* unzip to $HOME/apache-solr, we will now refer to this as ${APACHE\_SOLR\_HOME}
 
-To start Solr:
 
-        export APACHE_SOLR_HOME=$HOME/apache-solr
+        cd
+        wget http://mirror.reverse.net/pub/apache/lucene/solr/4.10.4/solr-4.10.4.zip
+        unzip solr-4.10.4.zip
+        export APACHE_SOLR_HOME=~/solr-4.10.4
         cd ${APACHE_SOLR_HOME}/example
-        java -jar start.jar
+        nohup java -jar start.jar &
         
 ##Verify Solr installation
 
-After you started Solr admin console, you should be able to access the following links:
+After you started Solr admin console, you should be able to access the following URL (replace YOUR\_IP\_ADDRESS with your IP address):
 
 
-    http://localhost:8983/solr/#/
+    http://YOUR_IP_ADDRESS:8983/solr/#/
 
 ##Integrate Solr with Nutch
 
@@ -260,35 +262,50 @@ We have both Nutch and Solr installed and setup correctly. And Nutch already cre
 
         vi ${APACHE_SOLR_HOME}/example/solr/collection1/conf/schema.xml
 
-    * Comment out the following lines (53-54) in the file by changing this:
+    * Comment out the following lines 54-55 in the file by changing this:
 
-            <filter class="solr.
-            EnglishPorterFilterFactory" protected="protwords.txt"/>
+            <filter class="solr.EnglishPorterFilterFactory" 
+                    protected="protwords.txt"/>
 
      to this 
 
-             <!--   <filter class="solr.
-            EnglishPorterFilterFactory" protected="protwords.txt"/> -->
+             <!--   <filter class="solr.EnglishPorterFilterFactory" 
+                    protected="protwords.txt"/> -->
 
-    * Add the following line right after the line <field name="id" ... /> (probably at line 69-70)
+    * Add the following line right after the line `<field name="id" ... />` (line 88-89)
 
             <field name="_version_" type="long" indexed="true" stored="true"/>
 
-    * If you want to see the raw HTML indexed by Solr, change the content field definition (line 80) to:
+    * If you want to see the raw HTML indexed by Solr, change the content field definition (line 102) to true:
 
             <field name="content" type="text" stored="true" indexed="true"/>
+    
+    * Add the int and double types right after ` <fieldType name="string"...`:
 
-* Save the file and restart Solr under ${APACHE_SOLR_HOME}/example:
+            <fieldType name="int" class="solr.TrieIntField" precisionStep="0" omitNorms="true" positionIncrementGap="0"/>
+            <fieldType name="tdouble" class="solr.TrieDoubleField" precisionStep="8" positionIncrementGap="0"/>
+
+    * Comment out the location lines:
+
+            <!-- <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_coordinate"/> -->
+
+and
+
+            <!-- <copyField source="latLon" dest="location"/> -->
+
+
+* Save the file and restart Solr under ${APACHE\_SOLR\_HOME}/example:
 
         java -jar start.jar
 
-* run the Solr Index command from ${NUTCH_RUNTIME_HOME}:
+* run the Solr Index command from ${NUTCH\_RUNTIME\_HOME}:
 
-        bin/nutch solrindex http://127.0.0.1:8983/solr/ crawl/crawldb -linkdb crawl/linkdb crawl/segments/
+        cd $NUTCH_RUNTIME_HOME
+        bin/nutch solrindex http://127.0.0.1:8983/solr/ crawl/crawldb -linkdb crawl/linkdb crawl/segments/*
 
 __Note:__ If you are familiar with past version of the solrindex, the call signature for running it has changed. The linkdb is now optional, so you need to denote it with a "-linkdb" flag on the command line.
 
 This will send all crawl data to Solr for indexing. For more information please see [bin/nutch solrindex](https://wiki.apache.org/nutch/bin/nutch%20solrindex)
 
-If all has gone to plan, you are now ready to search with http://localhost:8983/solr/admin/.
+If all has gone to plan, you are now ready to search with http://YOUR\_IP\_ADDRESS:8983/solr/#/collection1/query
 
