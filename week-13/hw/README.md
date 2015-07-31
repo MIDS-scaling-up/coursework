@@ -1,1 +1,169 @@
+# 1.0. Computational Genomics - Introduction and reference
+
+This homework and the associated lab will guide you to integrate your knowledge of Spark, Hadoop Yarn and HDFS in order to perform genome analysis with ADAM library/toolkit. ADAM is built on Spark. For Hadoop, the genome analysis can be done with Crossbow and Bowtie (see http://bowtie-bio.sourceforge.net/crossbow/index.shtml).
+
+In this homework, you will find the instructions to get ADAM library, to compile it and to run a sample test.
+
+For references, 
+* From Berkeley, http://ampcamp.berkeley.edu/5/exercises/genome-analysis-with-adam.html
+* From previous W251 class final project, http://9.30.39.167/projects/spark/hack/genomicsPortalDescription.pdf (we need to ash Dima if we can copy this PDF and make it available to the students). 
+
+# 2.0. Preparation of the Spark cluster
+
+You can skip this and reuse your existing Spark cluster. But you may be limited to small genome data set (e.g. the Y chromosome data set is only 164MB). The following instructions set up the cluster with root user to minimize the number of steps. But Spark and Hadoop can run as normal user.
+
+## 2.1. Provision machines
+
+Provision **four** CentOS 7 VSes in SoftLayer with 4 CPUs, 16GB RAM and a 100GB local hard drive. Name them __spark1__, __spark2__, __spark3__ and __spark4__.
+
+## 2.2. Configure connectivity between machines
+
+Configure __spark1__ such that it can SSH to __spark1__, __spark2__, __spark3__ and __spark4__ without passwords using SSH keys, and by name. To do this, you'll need to configure `/etc/hosts`, generate SSH keys using `ssh-keygen`, and write the content of the public key to each box to the file `/root/.ssh/authorized_keys`.
+
+## 2.3. Install Java, Spark on all nodes
+
+Install Java JRE 8:
+
+    yum install -y java-1.8.0-openjdk-headless
+
+Set the proper location of `JAVA_HOME` and test it:
+
+    echo export JAVA_HOME=\"$(readlink -f $(which java) | grep -oP '.*(?=/bin)')\" >> /root/.bash_profile
+    source /root/.bash_profile
+    $JAVA_HOME/bin/java -version
+
+Download and extract a recent, prebuilt version of Spark (link obtained from ):
+
+    curl http://d3kbcqa49mib13.cloudfront.net/spark-1.3.1-bin-hadoop2.6.tgz | tar -zx -C /usr/local --show-transformed --transform='s,/*[^/]*,spark,'
+
+For convenience, set `$SPARK_HOME`:
+
+    echo export SPARK_HOME=\"/usr/local/spark\" >> /root/.bash_profile
+    source /root/.bash_profile
+
+## 2.4. Configure Spark
+
+On __spark1__, create the new file `/usr/local/spark/conf/slaves` and content:
+
+    spark1
+    spark2
+    spark3
+    spark4
+
+From here on out, all commands you execute should be done on __spark1__ only. You may log in to the other boxes to investigate job failures, but you can control the entire cluster from the master.
+
+## 2.5. Start Spark from master
+
+Once youâ€™ve set up the `conf/slaves` file, you can launch or stop your cluster with the following shell scripts, based on Hadoopâ€™s deploy scripts, and available in `$SPARK_HOME/`:
+
+- `sbin/start-master.sh` - Starts a master instance on the machine the script is executed on
+- `sbin/start-slaves.sh` - Starts a slave instance on each machine specified in the conf/slaves file
+- `sbin/start-all.sh` - Starts both a master and a number of slaves as described above
+- `sbin/stop-master.sh` - Stops the master that was started via the bin/start-master.sh script
+- `sbin/stop-slaves.sh` - Stops all slave instances on the machines specified in the conf/slaves file
+- `sbin/stop-all.sh` - Stops both the master and the slaves as described above
+
+Start the master first, then open browser and see `http://<master_ip>:8080/`:
+
+    $SPARK_HOME/sbin/start-master.sh
+
+    starting org.apache.spark.deploy.master.Master, logging to /root/spark/sbin/../logs/spark-root-org.apache.spark.deploy.master.Master-1-spark1.out
+
+Then, run the `start-slaves` script, refresh the window and see the new workers (note that you can execute this from the master).
+
+    $SPARK_HOME/sbin/start-slaves.sh
+
+
+## 2.6. Install (and optionally recompile) ADAM
+
+You can either get the ADAM binary distribution or clone the source of ADAM from GitHub and recompile it with Maven. This needs to be installed only in your master node __spark1__ .
+
+To get the binary distribution
+
+    wget https://repo1.maven.org/maven2/org/bdgenomics/adam/adam-distribution/0.16.0/adam-distribution-0.16.0-bin.tar.gz
+
+To get the source
+
+    git clone https://github.com/bigdatagenomics/adam
+
+From the source, you can follow the GitHub readme for instructions to compile. But you will need to have the Java JDK (not only the JRE). There is the instruction to obtain the Java 1.8 JDK at 
+
+    http://tecadmin.net/install-java-8-on-centos-rhel-and-fedora/
+
+To recompile ADAM
+    wget http://ftp.wayne.edu/apache/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz
+    tar zxvf apache-maven-3.3.3-bin.tar.gz
+    export PATH=$PATH:~/apache-maven-3.3.3/bin
+    wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u45-b14/jdk-8u45-linux-x64.tar.gz"
+    tar xvfz jdk-8u45-linux-x64.tar.gz
+    export JAVA_HOME=jdk1.8.0_45/
+    cd adam
+    export MAVEN_OPTS="-Xmx512m -XX:MaxPermSize=256m"
+    mvn clean package -DskipTests
+
+The source also has the sample data that you will use to run sanity check.
+
+## 2.7. Set up ADAM
+
+Export these pathes if you used the ADAM distribution binary adam-distribution-0.16.0
+
+    export ADAM_HOME=/root/adam-distribution-0.16.0
+    export PATH=$PATH:/root/adam-distribution-0.16.0/bin
+
+Export these pathes if you reompiled ADAM
+
+    export ADAM_HOME=/root/adam
+    export PATH=$PATH:/root/adam/bin
+
+## 2.8. Test your ADAM installation
+
+This sanity test run locally on your master node
+
+    adam-submit transform $ADAM_HOME/adam-core/src/test/resources/small.sam /tmp/small.adam
+    adam-submit flagstat /tmp/small.adam
+    adam-submit count_kmers /tmp/small.adam /tmp/kmers.adam 10
+    head /tmp/kmers.adam/part-*
+
+Should see the below if using the ADAM binary distribution adam-distribution-0.16.0
+
+    AATTGGCACT, 1
+    TTCCGATTTT, 1
+    GAGCAGCCTT, 1
+    CCTGCTGTAT, 1
+    TTTTAAGGTT, 1
+    GGCCAGGACT, 1
+    GCAGTCCCTC, 1
+    AACTTTGAAT, 1
+    GATGACGTGG, 1
+    CTGTCCCTGT, 1
+
+And the following if you recompiled ADAM
+
+    (AATTGGCACT,1)
+    (TTCCGATTTT,1)
+    (GAGCAGCCTT,1)
+    (CCTGCTGTAT,1)
+    (TTTTAAGGTT,1)
+    (GGCCAGGACT,1)
+    (GCAGTCCCTC,1)
+    (AACTTTGAAT,1)
+    (GATGACGTGG,1)
+    (CTGTCCCTGT,1)
+
+
+## 2.9. Try the ADAM transform on Y chromosome data set
+
+The data set is located at (we need to get this to GitHub)
+
+    http://9.30.39.167/class/genedata.tgz
+    tar xvfz genedata.tgz
+
+Then execute the local transformation
+
+    adam-submit --master local vcf2adam genedata/all.y.vcf genedata/all.y.adam
+
+
+## 2.9. Submission
+
+Please submit a document that contains both the logs and command line output from execution of the commands you submitted to Spark.
 
