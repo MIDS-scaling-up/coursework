@@ -6,7 +6,7 @@ In this homework, you will find the instructions to get ADAM library, to compile
 
 For references, 
 * From Berkeley, http://ampcamp.berkeley.edu/5/exercises/genome-analysis-with-adam.html
-* From previous W251 class final project, http://9.30.39.167/projects/spark/hack/genomicsPortalDescription.pdf (we need to ash Dima if we can copy this PDF and make it available to the students). 
+* In the files section, we shared the Project Papers zip file containing papers written in the Spring semester.  One team did a project on Adam. 
 
 # 2.0. Preparation of the Spark cluster
 
