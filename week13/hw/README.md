@@ -153,15 +153,14 @@ And the following if you recompiled ADAM
 
 ## 2.9. Try the ADAM transform on Y chromosome data set
 
-The data set is located at (we need to get this to GitHub)
+The data set is located at:
 
-    http://9.30.39.167/class/genedata.tgz
-    tar xvfz genedata.tgz
+    mkdir genedata
+    wget -O- http://50.97.195.76/ALL.chrY.phase3_integrated_v1a.20130502.genotypes.vcf.gz | gzip -d - > genedata/all.y.vcf
 
 Then execute the local transformation
 
     adam-submit --master local vcf2adam genedata/all.y.vcf genedata/all.y.adam
-
 
 ## 2.9. Submission
 
