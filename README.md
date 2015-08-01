@@ -107,3 +107,9 @@ _There will be no in-class lab for this assignment_
 ### Homework
 
 0. [Elasticsearch](week12/hw)
+
+## Week 13: Genomics
+
+### Homework
+
+0. [Genomics with ADAM](week13/hw)
