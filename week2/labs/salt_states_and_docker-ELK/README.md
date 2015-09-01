@@ -52,7 +52,7 @@ Create the fileserver and pillar directories and restart the daemon:
 
     mkdir -p /srv/{salt,pillar} && systemctl restart salt-master
 
-Salt SSH uses the file `/etc/salt/roster` to configure minions. Browse the documentation (http://docs.saltstack.com/en/latest/topics/ssh/) and configure a roster file for use with _dhost_ and _logger_. Note that the file’s YAML (cf. http://yaml.org/) format requires leading spaces on indented lines and not tab characters. You may use either the password for the root account or configure SSH keys with `ssh-keygen`. If you choose to use passwords, you might find the tool [print_vs_details](https://github.com/MIDS-scaling-up/tools/softlayer/print_vs_details) useful.
+Salt SSH uses the file `/etc/salt/roster` to configure minions. Browse the documentation (http://docs.saltstack.com/en/latest/topics/ssh/) and configure a roster file for use with _dhost_ and _logger_. Note that the file’s YAML (cf. http://yaml.org/) format requires leading spaces on indented lines and not tab characters. You may use either the password for the root account or configure SSH keys with `ssh-keygen`. If you choose to use passwords, remember the convenience of `slcli vs credentials <id>`.
 
 Once you’ve completed this step, check your work by executing a remote command from the Salt Master.
 
@@ -92,7 +92,7 @@ Now browse to the Kibana UI at `http://localhost:5601/`, create an index, and ex
 
 ## Part 3: Deploying a Containerized service
 
-Next you’ll deploy a containerized web application ([loggen](week2_lab_salt_and_docker_elk/loggen/README.md)) on _dhost_ and configure it to securely send log messages to logger using lumberjack over TLS.
+Next you’ll deploy a containerized web application ([loggen](https://github.com/michaeldye/loggen)) on _dhost_ and configure it to securely send log messages to logger using lumberjack over TLS.
 
 ### Build a Docker Image for Loggen
 
