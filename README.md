@@ -2,6 +2,12 @@
 
 This is an index of coursework for the MIDS class "Scaling Up! Really Big Data". Please submit corrections if you find problems in the assignments. Submissions should be well-formed git pull requests.
 
+## Week 1: Introduction
+
+### Labs
+
+0. [Provisioning in SoftLayer](week1/labs/softlayer_provisioning)
+
 ## Week 2: Cloud Computing 101
 
 ### Labs
