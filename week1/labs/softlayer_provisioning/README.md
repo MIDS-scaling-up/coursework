@@ -65,7 +65,7 @@ SoftLayer virtual servers can be provisioned through slcli. The tool can order s
 
 Provision a new VS with a command like the following (note that you should replace the content in `<>`'s with your own values):
 
-    slcli vs create --datacenter=dal09 --domain=<somedomain> --hostname=<some hostname> --os=CENTOS7_64 --cpu=1 --memory=1024 --billing=hourly
+    slcli vs create --datacenter=dal09 --domain=<somedomain> --hostname=<some hostname> --os=CENTOS_7_64 --cpu=1 --memory=1024 --billing=hourly
 
 (To understand available VS ordering options, consult `slcli vs create-options`; for help with CLI arguments, execute `slcli vs create --help`).
 
