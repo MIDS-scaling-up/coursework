@@ -111,7 +111,7 @@ Write a cloud provider configuration file. Note that you must replace the values
       apikey: <ZZZZZZZZZZZZZZZZZZZZZ>
       provider: softlayer
       script: bootstrap-salt
-      script_args: -Z
+      script_args: -Z git 2015.5
       delete_sshkeys: True
       display_ssh_output: False
       wait_for_ip_timeout: 1800
