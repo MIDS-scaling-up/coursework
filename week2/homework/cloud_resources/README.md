@@ -138,7 +138,7 @@ Write a cloud profiles configuration file:
       local_disk: True
       hourly_billing: True
       domain: <somewhere.net>
-      location: <dal06>
+      location: dal06
 
 ### Provision a new VS with Salt Cloud
 
