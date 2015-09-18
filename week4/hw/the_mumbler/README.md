@@ -60,7 +60,7 @@ For instance (from a real data set):
 In this example, there are three two-grams that start with the word ‘financial’: financial analysis, 
 financial capacity, financial straights.
 
-Your goal is two write the mumbler application, in any language you choose, as follows:
+Your goal is to write the mumbler application, in any language you choose, as follows:
 
 It should take two parameters:
 
