@@ -78,6 +78,8 @@ On _saltmaster_, execute:
 
 ### Modify state files and update logger
 
+Copy the srv/ directory from the salt_seed directory to the saltmaster /srv/ directory.
+
 Follow the directions in [salt_seed/README.md](salt_seed/README.md) to generate the necessary certificates. Once complete, copy the content of `srv/` to `/srv/` on _saltmaster_. Apply the desired state to the logger VS:
 
     salt-ssh 'logger' state.highstate
