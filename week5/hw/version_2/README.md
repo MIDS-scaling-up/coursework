@@ -69,27 +69,20 @@ Make sure your key directories have correct permissions
     chown -R hadoop.hadoop /data
     chown -R hadoop.hadoop /usr/local/hadoop
 
-### Passwordless SSH
-
-* Add the public key (in `~root/.ssh/id_rsa.pub`) to `~hadoop/.ssh/authorized_keys` on master
-
-        cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
-
-* Copy the key pair and authorized hosts from the root user to the Hadoop user
-
-        mv ~hadoop/.ssh{,-old}
-        cp -a ~/.ssh ~hadoop/
-        chown -R hadoop ~hadoop/.ssh
-
 #### Switch to hadoop user
 
-* From now on, you're working as user __hadoop__. If you logout of your system and log back in again, you'll need to re-run this step.
+From now on, you're working as user __hadoop__. If you logout of your system and log back in again, you'll need to re-run this step.
 
-        su - hadoop
+    su - hadoop
 
-### Configure SSH keys between systems
+### Configure passwordless SSH between systems
 
-On __master__ only, accept all keys by SSHing to each box and typing "yes":
+Create a keypair on __master__ and copy it to the other systems (when prompted by `ssh-keygen`, use defaults):
+
+    ssh-keygen
+    for i in master slave1 slave2; do ssh-copy-id $i; done
+
+Still on the __master__, accept all keys by SSHing to each box and typing "yes":
 
     for i in master slave1 slave2; do ssh $i; done
 
@@ -101,18 +94,18 @@ __You should do this step to avoid problems starting the cluster, and to add the
 
 On each system, update the hadoop user's environment and check it:
 
-        echo "export JAVA_HOME=\"$(readlink -f $(which java) | grep -oP '.*(?=/bin)')\"" >> ~/.profile
+    echo "export JAVA_HOME=\"$(readlink -f $(which java) | grep -oP '.*(?=/bin)')\"" >> ~/.profile
 
-        cat <<\EOF >> ~/.profile
-        export HADOOP_HOME=/usr/local/hadoop
-        export HADOOP_MAPRED_HOME=$HADOOP_HOME
-        export HADOOP_HDFS_HOME=$HADOOP_HOME
-        export YARN_HOME=$HADOOP_HOME
-        export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
-        EOF
+    cat <<\EOF >> ~/.bash_profile
+    export HADOOP_HOME=/usr/local/hadoop
+    export HADOOP_MAPRED_HOME=$HADOOP_HOME
+    export HADOOP_HDFS_HOME=$HADOOP_HOME
+    export YARN_HOME=$HADOOP_HOME
+    export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+    EOF
 
-        source ~/.profile
-        $JAVA_HOME/bin/java -version
+    source ~/.bash_profile
+    $JAVA_HOME/bin/java -version
 
 ## Hadoop configuration
 
@@ -147,48 +140,54 @@ Edit these configuration files on the __master__ only initially; an instruction 
             <value>master</value>
           </property>
           <property>
-            <name>yarn.nodemanager.local-dirs</name>
-            <value>file:///data/</value>
-          </property>
-          <property>
             <name>yarn.nodemanager.aux-services</name>
-            <value>mapreduce.shuffle</value>
+            <value>mapreduce_shuffle</value>
+          </property>
+        </configuration>
+
+* Write the following content to `mapred-site.xml`.
+
+        <?xml version="1.0"?>
+        <configuration>
+          <property>
+            <name>mapreduce.framework.name</name>
+            <value>yarn</value>
           </property>
         </configuration>
 
 * Write the following content to `hdfs-site.xml`.
 
-    <?xml version="1.0"?>
-    <configuration>
-      <property>
-          <name>dfs.datanode.data.dir</name>
-          <value>file:///data/</value>
-          <description>DataNode directory for storing data chunks.</description>
-      </property>
+        <?xml version="1.0"?>
+        <configuration>
+          <property>
+              <name>dfs.datanode.data.dir</name>
+              <value>file:///data/datanode</value>
+              <description>DataNode directory for storing data chunks.</description>
+          </property>
 
-      <property>
-          <name>dfs.namenode.name.dir</name>
-          <value>file:///data/name</value>
-          <description>NameNode directory for namespace and transaction logs storage.</description>
-      </property>
+          <property>
+              <name>dfs.namenode.name.dir</name>
+              <value>file:///data/namenode</value>
+              <description>NameNode directory for namespace and transaction logs storage.</description>
+          </property>
 
-      <property>
-          <name>dfs.namenode.checkpoint.dir</name>
-          <value>file:///data/namesecondary</value>
-          <description>NameNode directory for namespace and transaction logs storage.</description>
-      </property>
-    </configuration>
+          <property>
+              <name>dfs.namenode.checkpoint.dir</name>
+              <value>file:///data/namesecondary</value>
+              <description>NameNode directory for namespace and transaction logs storage.</description>
+          </property>
+        </configuration>
+
+* Copy all your files to the other machines since you need this configuration on all the nodes:
+
+        rsync -a /usr/local/hadoop/etc/hadoop/* hadoop@slave1:/usr/local/hadoop/etc/hadoop/
+        rsync -a /usr/local/hadoop/etc/hadoop/* hadoop@slave2:/usr/local/hadoop/etc/hadoop/
 
 * Write the following content to the file `slaves` (note that you want to remove the values that are already there):
 
         master
         slave1
         slave2
-
-* Copy all your files to the other machines since you need this configuration on all the nodes:
-
-        rsync -a /usr/local/hadoop/etc/hadoop/* hadoop@slave1:/usr/local/hadoop/etc/hadoop/
-        rsync -a /usr/local/hadoop/etc/hadoop/* hadoop@slave2:/usr/local/hadoop/etc/hadoop/
 
 ## Create an HDFS filesystem
 
@@ -212,9 +211,11 @@ Edit these configuration files on the __master__ only initially; an instruction 
         yarn node -list
 
 * To check your cluster, browse to:
-   * http://master-ip:50070/dfshealth.jsp
+   * http://master-ip:50070/dfshealth.html
    * http://master-ip:8088/cluster
    * http://master-ip:19888/jobhistory (for Job History Server)
+
+(Note that not all links in these control UIs will work from your workstation; some
 
 Log files are located under `$HADOOP_HOME/logs`.
 
@@ -224,24 +225,24 @@ You can check the java services running once your cluster is running using `jps`
 
 On _master_, execute the terasort job.
 
-* The example below will generate a 10GB set:
+* The example below will generate a 10GB set and ingest it into the distributed filesystem:
 
 _Note that the input to teragen is the number of 100 byte rows_
 
         cd /usr/local/hadoop/share/hadoop/mapreduce
-        hadoop jar hadoop-mapreduce-examples-2.6.0.jar teragen 100000000 /terasort/in
+        hadoop jar $(ls hadoop-mapreduce-examples-2*.jar) teragen 100000000 /terasort/in
 
-* Now, let's do the sort
+* Now, let's do the sort (this is the :
 
-        hadoop jar hadoop-mapreduce-examples-2.6.0.jar terasort /terasort/in /terasort/out
+        hadoop jar $(ls hadoop-mapreduce-examples-2*.jar) terasort /terasort/in /terasort/out
 
 * Validate that everything completed successfully:
 
-        hadoop jar hadoop-mapreduce-examples-2.6.0.jar teravalidate /terasort/out /terasort/val
+        hadoop jar $(ls hadoop-mapreduce-examples-2*.jar) teravalidate /terasort/out /terasort/val
 
  * Clean up, e.g.
 
-        hdfs dfs -rmr /terasort/\*
+        hdfs dfs -rm -r /terasort/\*
 
 ## Troubleshooting
 
