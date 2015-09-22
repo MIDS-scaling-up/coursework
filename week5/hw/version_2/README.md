@@ -2,387 +2,250 @@
 
 ## VM Provisioning
 
-Set up 3 VM instances on Softlayer- master, slave1, slave2.
+Set up 3 VM instances on Softlayer: __master__, __slave1__, __slave2__.
 
-Please add your public key while provisioning the VMs (`slcli vs create ... --key KEYID`) so that you can login 
-from your PC/Mac/laptop without a password.  You could use UBUNTU_LATEST_64 or REDHAT_LATEST_64 while 
-provisioning (although ubuntu is a little cheaper).
+Please add your public key while provisioning the VMs (`slcli vs create ... --key KEYID`) so that you can login from your client without a password.
 
-Get **2 CPUs**, **4G of RAM**, **1G private / public NICS** and **two disks: 25G and 100G local** the idea is to use 
+Get **2 CPUs**, **4G of RAM**, **1G private / public NICS** and **two disks: 25G and 100G local** the idea is to use
 the 100G disk for HDFS data and the 25G disk for the OS and housekeeping.
 
-## VM Configuration  - for each node unless otherwise stated
+For the master, you might do something like this:
+
+    slcli vs create --datacenter=sjc01 --hostname=master --domain=mids --billing=hourly --key=<mykey> --cpu=2 --memory=4096 --disk=25 --disk=100 --network=1000 --os=CENTOS_LATEST_64
+
+## VM Configuration
+
+Note: Instructions in this section are to be performed on each node unless otherwise stated.
 
 ### Hosts file
- * Login into VMs (all 3 of them) and update `/etc/hosts/` for instance (add your own private IP addresses):
+* Log into VMs (all 3 of them) and update `/etc/hosts/` for instance (add your own private IP addresses):
 
-```
-10.122.152.76 master  
-10.122.152.77 slave1  
-10.122.152.75 slave2  
-```
+        10.122.152.76 master
+        10.122.152.77 slave1
+        10.122.152.75 slave2
 
-## 100G Disk Formatting
+### 100G Disk Formatting
+* You need to find out the name of your disk, e.g
 
- * You need to find out the name of your disk, e.g
-
-```
-fdisk -l |grep Disk |grep GB
-OR
-cat /proc/partitions
-```
+        fdisk -l |grep Disk |grep GB
+        - OR -
+        cat /proc/partitions
 
 Assuming your disk is called `/dev/xvdc` as it is for me,
 
-```
-mkdir -m 777 /data
-mkfs.ext4 /dev/xvdc
-```
+        mkdir -m 777 /data
+        mkfs.ext4 /dev/xvdc
 
- * Add this line to `/etc/fstab` (with the appropriate disk path):
+* Add this line to `/etc/fstab` (with the appropriate disk path):
 
-```
-/dev/xvdc /data                   ext4    defaults,noatime        0 0
-```
+        /dev/xvdc /data                   ext4    defaults,noatime        0 0
 
- * Mount your disk
+* Mount your disk
 
-```
-mount /data
-```
+        mount /data
 
-## Hadoop Install
+## System setup
 
-### Prerequisites 
+Note: Instructions in this section are to be performed on each node unless otherwise stated.
 
- * Install JDK
+Install packages:
 
-**UBUNTU**
+    yum install -y rsync net-tools java-1.8.0-openjdk-headless http://pkgs.repoforge.org/nmon/nmon-14g-1.el7.rf.x86_64.rpm
 
-```
-apt-get install -y default-jre default-jdk
-```
+### User setup preparation
 
-**RHEL**
+* Create a user hadoop
 
-```
-yum install -y java-1.6.0-openjdk*
-```
-
- * Install nmon
-
-**UBUNTU**
-
-```
-apt-get install -y nmon
-```
-
-**RHEL**
-
-```
-yum install -y nmon
-```
+        adduser hadoop
 
 ### Hadoop Download
 
-Download the files into `/usr/local` and extract it
+Download hadoop v2 to `/usr/local` and extract it:
 
-```
-cd /usr/local
-wget http://apache.claz.org/hadoop/core/hadoop-2.6.0/hadoop-2.6.0.tar.gz
-tar xzf hadoop-2.6.0.tar.gz
-mv hadoop-2.6.0 hadoop
-```
+    curl http://apache.claz.org/hadoop/core/hadoop-2.7.0/hadoop-2.7.0.tar.gz | tar -zx -C /usr/local --show-transformed --transform='s,/*[^/]*,hadoop,'
 
-### Hadoop Install preparation
+Make sure your key directories have correct permissions
 
- * Create a user hadoop (all 3 nodes)
+    chown -R hadoop.hadoop /data
+    chown -R hadoop.hadoop /usr/local/hadoop
 
-```
-adduser hadoop
-```
+#### Switch to hadoop user
 
- * Make sure your key directories have correct permissions
+From now on, you're working as user __hadoop__. If you logout of your system and log back in again, you'll need to re-run this step.
 
-```
-chown -R hadoop.hadoop /data
-chown -R hadoop.hadoop /usr/local/hadoop
-```
+    su - hadoop
 
-#### Passwordless SSH 
+### Configure passwordless SSH between systems
 
- * Add the public key (in `~root/.ssh/id_rsa.pub`) to `~hadoop/.ssh/authorized_keys` on master
+Create a keypair on __master__ and copy it to the other systems (when prompted by `ssh-keygen`, use defaults):
 
-```
-cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys 
-```
+    ssh-keygen
+    for i in master slave1 slave2; do ssh-copy-id $i; done
 
- * Copy the key pair and authorized hosts from the root user to the Hadoop user
+Still on the __master__, accept all keys by SSHing to each box and typing "yes":
 
-```
-mv ~hadoop/.ssh{,-old}
-cp -a ~/.ssh ~hadoop/.ssh
-chown -R hadoop ~hadoop/.ssh
-```
+    for i in master slave1 slave2; do ssh $i; done
 
- * Setup passwordless ssh from hadoop@master to hadoop@master, hadoop@slave1 and hadoop@slave2 by copying the files in `~hadoop/.ssh` between them.  __From your workstation, substituting MASTER-IP, etc with your VM IPs__
+* Test your work by trying to ssh __from user hadoop, on master__ to __master (itself)__, slave1 and slave2.  If you've succeeded, you can ssh to each box from __master__ without entering a password.
 
-First accept all keys
+__You should do this step to avoid problems starting the cluster, and to add the slave nodes to the known hosts__.
 
-```
-for IP in MASTER-IP SLAVE1-IP SLAVE2-IP; do ssh-keyscan -H $IP >> ~/.ssh/known_hosts; done
-```
+### Configure Hadoop environment, storage, and cluster
 
-Then copy the files around, preserving permissions
+On each system, update the hadoop user's environment and check it:
 
-```
-ssh root@MASTER-IP 'tar -czvp /home/hadoop/.ssh' | ssh root@SLAVE1-IP 'cd /; tar -xzvp'
-ssh root@SLAVE1-IP 'tar -czvp /home/hadoop/.ssh' | ssh root@SLAVE2-IP 'cd /; tar -xzvp'
-```
+    echo "export JAVA_HOME=\"$(readlink -f $(which java) | grep -oP '.*(?=/bin)')\"" >> ~/.profile
 
- * Test your work by trying to ssh __from user hadoop, on master__ to __master (itself)__, slave1 and slave2.  You should issue commands and see output like this:
+    cat <<\EOF >> ~/.bash_profile
+    export HADOOP_HOME=/usr/local/hadoop
+    export HADOOP_MAPRED_HOME=$HADOOP_HOME
+    export HADOOP_HDFS_HOME=$HADOOP_HOME
+    export YARN_HOME=$HADOOP_HOME
+    export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+    EOF
 
-__The administrative scripts use ssh to start the namenode(s), tasktrackers and datanodes on each, including master__
+    source ~/.bash_profile
+    $JAVA_HOME/bin/java -version
 
-```
-root@master:~# su - hadoop
-hadoop@master:~$ ssh master
-The authenticity of host 'master (10.76.68.69)' can't be established.
-ECDSA key fingerprint is 98:da:1e:45:cf:d4:6f:51:b4:c3:ee:fe:d8:1c:ee:ad.
-Are you sure you want to continue connecting (yes/no)? yes
-Warning: Permanently added 'master,10.76.68.69' (ECDSA) to the list of known hosts.
-...
-hadoop@master:~$ logout
-Connection to slave1 closed.
-hadoop@master:~$
-```
+## Hadoop configuration
 
-```
-root@master:~# su - hadoop
-hadoop@master:~$ ssh slave1
-The authenticity of host 'slave1 (10.76.68.81)' can't be established.
-ECDSA key fingerprint is 98:da:1e:45:cf:d4:6f:51:b4:c3:ee:fe:d8:1c:ee:ad.
-Are you sure you want to continue connecting (yes/no)? yes
-Warning: Permanently added 'slave1,10.76.68.81' (ECDSA) to the list of known hosts.
-...
-hadoop@slave1:~$ logout
-Connection to slave1 closed.
-hadoop@master:~$
-```
+Edit these configuration files on the __master__ only initially; an instruction to copy these files to the slave systems is provided later.
 
-```
-hadoop@master:~$ ssh slave2
-The authenticity of host 'slave2 (10.76.68.106)' can't be established.
-ECDSA key fingerprint is 17:b3:54:cc:b8:ef:82:9c:e3:cd:43:91:1c:15:c7:e6.
-Are you sure you want to continue connecting (yes/no)? yes
-Warning: Permanently added 'slave2,10.76.68.106' (ECDSA) to the list of known hosts.
-...
-hadoop@slave2:~$ logout
-Connection to slave2 closed.
-hadoop@master:~$
-```
+### Edit Configuration Files
 
-__You should do this step to avoid problems starting the cluster, and to add the slave nodes to the known hosts__ 
+* Go to the hadoop home directory `/usr/local/hadoop/etc/hadoop`
 
-### Switch to hadoop user
+        cd $HADOOP_HOME/etc/hadoop
 
- * From now on, you're working as user hadoop.
+* Create JAVA_HOME variable in `hadoop_env.sh`:
 
-```
-su – hadoop
-```
+        echo "export JAVA_HOME=\"$JAVA_HOME\"" > ./hadoop-env.sh
 
- * Add this line to the end of `.profile` in hadoop's home directory:
+* Write this content to `core-site.xml`:
 
-```
-export PATH=$PATH:/usr/local/hadoop/bin
-```
+        <?xml version="1.0"?>
+        <configuration>
+          <property>
+            <name>fs.defaultFS</name>
+            <value>hdfs://master/</value>
+          </property>
+        </configuration>
 
- * Source these changes in to the open shell
+* Write this content to `yarn-site.xml`:
 
-```
-source .profile
-```
+        <?xml version="1.0"?>
+        <configuration>
+          <property>
+            <name>yarn.resourcemanager.hostname</name>
+            <value>master</value>
+          </property>
+          <property>
+            <name>yarn.nodemanager.aux-services</name>
+            <value>mapreduce_shuffle</value>
+          </property>
+        </configuration>
 
-### Edit Configuration Files 
+* Write the following content to `mapred-site.xml`.
 
- * Go to the hadoop home directory `/usr/local/hadoop/etc/hadoop`
+        <?xml version="1.0"?>
+        <configuration>
+          <property>
+            <name>mapreduce.framework.name</name>
+            <value>yarn</value>
+          </property>
+        </configuration>
 
-```
-cd /usr/local/hadoop/etc/hadoop
-```
+* Write the following content to `hdfs-site.xml`.
 
- * Change `./masters` and `./slaves` files (on the master node only)
+        <?xml version="1.0"?>
+        <configuration>
+          <property>
+              <name>dfs.datanode.data.dir</name>
+              <value>file:///data/datanode</value>
+              <description>DataNode directory for storing data chunks.</description>
+          </property>
 
-In the `./masters` file, list your master by name
+          <property>
+              <name>dfs.namenode.name.dir</name>
+              <value>file:///data/namenode</value>
+              <description>NameNode directory for namespace and transaction logs storage.</description>
+          </property>
 
-```
-master
-```
+          <property>
+              <name>dfs.namenode.checkpoint.dir</name>
+              <value>file:///data/namesecondary</value>
+              <description>NameNode directory for namespace and transaction logs storage.</description>
+          </property>
+        </configuration>
 
- * In the `./slaves` file, list your slaves by name, one per line.```
+* Copy all your files to the other machines since you need this configuration on all the nodes:
 
-```
-master
-slave1
-slave2
-```
+        rsync -a /usr/local/hadoop/etc/hadoop/* hadoop@slave1:/usr/local/hadoop/etc/hadoop/
+        rsync -a /usr/local/hadoop/etc/hadoop/* hadoop@slave2:/usr/local/hadoop/etc/hadoop/
 
-__We need to edit the following configuration files in `/usr/local/hadoop/etc/hadoop`.__
+* Write the following content to the file `slaves` (note that you want to remove the values that are already there):
 
- * `hadoop-env.sh`
+        master
+        slave1
+        slave2
 
-(Add the java home for your freshly installed java, e.g on ubuntu):
+## Create an HDFS filesystem
 
-```
-export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/jre
-```
+ * On the _master_ node, format your namenode before the first time you set up your cluster. __If you format a running Hadoop filesystem, you will lose all the data stored in HDFS.__
 
- * `yarn-env.sh`
-
-(Add the java home here too)
-
-```
-export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/jre
-```
-
- * `core-site.xml`
-
-Add this configuration, make sure to use the name of the master node
-in the value.
-
-```
-<configuration>
-<property>
-<name>fs.default.name</name>
-<value>hdfs://master:9000</value>
-</property>
-</configuration>
-```
-
- * `mapred-site.xml`
-
-```
-<configuration>
-<property>
-<name>mapreduce.framework.name</name>
-<value>yarn</value>
-</property>
-</configuration>
-```
-
-
- * `hdfs-site.xml`
-
-The `dfs.replication` value tells Hadoop how many copies of the data
-it should make. With 3 nodes, we can set it to 3.
-
-```
-<configuration>
-<property>
-<name>dfs.replication</name>
-<value>3</value>
-</property>
-<property>
-<name>dfs.data.dir</name>
-<value>/data</value>
-</property>
-</configuration>
-```
-
- * `yarn-site.xml`
-
-```
-<configuration>
-<property>
-<name>yarn.nodemanager.aux-services</name>
-<value>mapreduce_shuffle</value>
-</property>
-<property>
-<name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</
-name>
-<value>org.apache.hadoop.mapred.ShuffleHandler</value>
-</property>
-<property>
-<name>yarn.resourcemanager.resource-tracker.address</name>
-<value>master:8025</value>
-</property>
-<property>
-<name>yarn.resourcemanager.scheduler.address</name>
-<value>master:8030</value>
-</property>
-<property>
-<name>yarn.resourcemanager.address</name>
-<value>master:8050</value>
-</property>
-</configuration>
-```
-
- * Copy all your files to the other machines since you need this configuration on all the nodes:
-
-```
-scp –r /usr/local/hadoop/etc/hadoop/* hadoop@slave1:/usr/local/hadoop/etc/hadoop/
-scp –r /usr/local/hadoop/etc/hadoop/* hadoop@slave2:/usr/local/hadoop/etc/hadoop/
-```
-
- * Format your namenode before the first time you set up your cluster. __If you format a running Hadoop filesystem, you will lose all the data stored in HDFS.__
-
-```
-hadoop namenode -format
-```
+        hdfs namenode -format
 
 ## Starting The Cluster
 
- * For master node, start everything. 
+* On _master_ node only, execute these startup scripts:
 
-```
-/usr/local/hadoop/sbin/hadoop-daemon.sh --config /usr/local/hadoop/etc/hadoop --script hdfs start namenode
-/usr/local/hadoop/sbin/yarn-daemon.sh --config /usr/local/hadoop/etc/hadoop/ start resourcemanager
-/usr/local/hadoop/sbin/yarn-daemon.sh start proxyserver --config /usr/local/hadoop/etc/hadoop/
-/usr/local/hadoop/sbin/mr-jobhistory-daemon.sh start historyserver --config /usr/local/hadoop/etc/hadoop
-```
+        start-dfs.sh
+        start-yarn.sh
 
- * For slave nodes, only start DataNode and NodeManager.
+* Check the status of HDFS:
 
-```
-/usr/local/hadoop/sbin/yarn-daemon.sh --config /usr/local/hadoop/etc/hadoop/ start nodemanager
-/usr/local/hadoop/sbin/hadoop-daemon.sh --config /usr/local/hadoop/etc/hadoop --script hdfs start datanode
-```
+        hdfs dfsadmin -report
 
- * To check your cluster, go to:
-   * http://master-ip:50070/dfshealth.jsp
+* Check YARN status:
+
+        yarn node -list
+
+* To check your cluster, browse to:
+   * http://master-ip:50070/dfshealth.html
    * http://master-ip:8088/cluster
    * http://master-ip:19888/jobhistory (for Job History Server)
 
-Log files are located under `/usr/local/hadoop/logs`
+(Note that not all links in these control UIs will work from your workstation; some
+
+Log files are located under `$HADOOP_HOME/logs`.
 
 You can check the java services running once your cluster is running using `jps`
 
 ## Run Terasort
 
- * The example below will generate a 10GB set:
+On _master_, execute the terasort job.
+
+* The example below will generate a 10GB set and ingest it into the distributed filesystem:
 
 _Note that the input to teragen is the number of 100 byte rows_
 
-```
-cd /usr/local/hadoop/share/hadoop/mapreduce
-hadoop jar hadoop-mapreduce-examples-2.6.0.jar teragen 100000000 /terasort/in
-```
+        cd /usr/local/hadoop/share/hadoop/mapreduce
+        hadoop jar $(ls hadoop-mapreduce-examples-2*.jar) teragen 100000000 /terasort/in
 
- * Now, let's do the sort
+* Now, let's do the sort (this is the :
 
-```
-hadoop jar hadoop-mapreduce-examples-2.6.0.jar terasort /terasort/in /terasort/out
-```
+        hadoop jar $(ls hadoop-mapreduce-examples-2*.jar) terasort /terasort/in /terasort/out
 
- * Validate that everything completed successfully:
+* Validate that everything completed successfully:
 
-```
-hadoop jar hadoop-mapreduce-examples-2.6.0.jar teravalidate /terasort/out /terasort/val
-```
+        hadoop jar $(ls hadoop-mapreduce-examples-2*.jar) teravalidate /terasort/out /terasort/val
 
  * Clean up, e.g.
 
-```
-hdfs dfs -rmr /terasort/\*
-```
+        hdfs dfs -rm -r /terasort/\*
+
+## Troubleshooting
+
+* To debug connectivity problems, try connecting over SSH as the hadoop user from the master node to the others, each in turn.
+
+* To inspect open ports and services running on them, execute `netstat -ntlp`.

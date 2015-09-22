@@ -41,7 +41,6 @@ _There will be no in-class lab for this assignment_
 
 ### Homework
 
-0. [Part 1- Hadoop v1 Setup](week5/hw/version_1)
 0. [Part 2- Hadoop v2 Setup](week5/hw/version_2)
 
 ### Labs
