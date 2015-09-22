@@ -37,7 +37,7 @@ _This is a graded homework_
 
 _There will be no in-class lab for this assignment_
 
-## Week 5: Distributed Filesystems
+## Week 5: Map Reduce and Hadoop
 
 ### Homework
 
