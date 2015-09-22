@@ -18,11 +18,12 @@ For the master, you might do something like this:
 Note: Instructions in this section are to be performed on each node unless otherwise stated.
 
 ### Hosts file
-* Log into VMs (all 3 of them) and update `/etc/hosts/` for instance (add your own private IP addresses):
+* Log into VMs (all 3 of them) and update `/etc/hosts/` with each system's public IP addresses (note that it's preferred to use private IPs for this communication instead, but that complicates use of Hadoop's UIs. For this assignment, public IPs will do. Here's my hosts file:
 
-        10.122.152.76 master
-        10.122.152.77 slave1
-        10.122.152.75 slave2
+        127.0.0.1 localhost.localdomain localhost
+        50.22.13.216 master.hadoop.mids.lulz.bz master
+        50.22.13.194 slave1.hadoop.mids.lulz.bz slave1
+        50.22.13.217 slave2.hadoop.mids.lulz.bz slave
 
 ### 100G Disk Formatting
 * You need to find out the name of your disk, e.g
@@ -33,24 +34,25 @@ Note: Instructions in this section are to be performed on each node unless other
 
 Assuming your disk is called `/dev/xvdc` as it is for me,
 
-        mkdir -m 777 /data
+        mkdir /data
         mkfs.ext4 /dev/xvdc
 
 * Add this line to `/etc/fstab` (with the appropriate disk path):
 
         /dev/xvdc /data                   ext4    defaults,noatime        0 0
 
-* Mount your disk
+* Mount your disk and set the appropriate perms:
 
         mount /data
+        chmod 1777 /data
 
 ## System setup
 
 Note: Instructions in this section are to be performed on each node unless otherwise stated.
 
-Install packages:
+Install packages (installing the entire JDK rather than the JRE is necessary to get `jps` and other tools):
 
-    yum install -y rsync net-tools java-1.8.0-openjdk-headless http://pkgs.repoforge.org/nmon/nmon-14g-1.el7.rf.x86_64.rpm
+    yum install -y rsync net-tools java-1.8.0-openjdk-devel http://pkgs.repoforge.org/nmon/nmon-14g-1.el7.rf.x86_64.rpm
 
 ### User setup preparation
 
@@ -58,11 +60,15 @@ Install packages:
 
         adduser hadoop
 
+* Set a password for the `hadoop` user (you'll need this in the `ssh-copy-id` step in a moment):
+
+        passwd hadoop
+
 ### Hadoop Download
 
 Download hadoop v2 to `/usr/local` and extract it:
 
-    curl http://apache.claz.org/hadoop/core/hadoop-2.7.0/hadoop-2.7.0.tar.gz | tar -zx -C /usr/local --show-transformed --transform='s,/*[^/]*,hadoop,'
+    curl http://apache.claz.org/hadoop/core/hadoop-2.7.1/hadoop-2.7.1.tar.gz | tar -zx -C /usr/local --show-transformed --transform='s,/*[^/]*,hadoop,'
 
 Make sure your key directories have correct permissions
 
@@ -82,11 +88,11 @@ Create a keypair on __master__ and copy it to the other systems (when prompted b
     ssh-keygen
     for i in master slave1 slave2; do ssh-copy-id $i; done
 
-Still on the __master__, accept all keys by SSHing to each box and typing "yes":
+Still on the __master__, accept all keys by SSHing to each box and typing "yes" and, once you're logged into the remote box, typing `CTRL-d`:
 
-    for i in master slave1 slave2; do ssh $i; done
+    for i in 0.0.0.0 master slave1 slave2; do ssh $i; done
 
-* Test your work by trying to ssh __from user hadoop, on master__ to __master (itself)__, slave1 and slave2.  If you've succeeded, you can ssh to each box from __master__ without entering a password.
+If the above command logged you in on each box without being prompted for a password, you've succeeded and you can move on. If not, investigate problems with your SSH passwordless configuration.
 
 __You should do this step to avoid problems starting the cluster, and to add the slave nodes to the known hosts__.
 
@@ -94,7 +100,7 @@ __You should do this step to avoid problems starting the cluster, and to add the
 
 On each system, update the hadoop user's environment and check it:
 
-    echo "export JAVA_HOME=\"$(readlink -f $(which java) | grep -oP '.*(?=/bin)')\"" >> ~/.profile
+    echo "export JAVA_HOME=\"$(readlink -f $(which java) | grep -oP '.*(?=/bin)')\"" >> ~/.bash_profile
 
     cat <<\EOF >> ~/.bash_profile
     export HADOOP_HOME=/usr/local/hadoop
@@ -162,19 +168,16 @@ Edit these configuration files on the __master__ only initially; an instruction 
           <property>
               <name>dfs.datanode.data.dir</name>
               <value>file:///data/datanode</value>
-              <description>DataNode directory for storing data chunks.</description>
           </property>
 
           <property>
               <name>dfs.namenode.name.dir</name>
               <value>file:///data/namenode</value>
-              <description>NameNode directory for namespace and transaction logs storage.</description>
           </property>
 
           <property>
               <name>dfs.namenode.checkpoint.dir</name>
               <value>file:///data/namesecondary</value>
-              <description>NameNode directory for namespace and transaction logs storage.</description>
           </property>
         </configuration>
 
@@ -219,7 +222,7 @@ Edit these configuration files on the __master__ only initially; an instruction 
 
 Log files are located under `$HADOOP_HOME/logs`.
 
-You can check the java services running once your cluster is running using `jps`
+You can check the java services running once your cluster is running using `jps`.
 
 ## Run Terasort
 
@@ -232,7 +235,7 @@ _Note that the input to teragen is the number of 100 byte rows_
         cd /usr/local/hadoop/share/hadoop/mapreduce
         hadoop jar $(ls hadoop-mapreduce-examples-2*.jar) teragen 100000000 /terasort/in
 
-* Now, let's do the sort (this is the :
+* Now, let's do the sort:
 
         hadoop jar $(ls hadoop-mapreduce-examples-2*.jar) terasort /terasort/in /terasort/out
 
@@ -240,7 +243,7 @@ _Note that the input to teragen is the number of 100 byte rows_
 
         hadoop jar $(ls hadoop-mapreduce-examples-2*.jar) teravalidate /terasort/out /terasort/val
 
- * Clean up, e.g.
+* Clean up, e.g.:
 
         hdfs dfs -rm -r /terasort/\*
 
