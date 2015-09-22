@@ -1,4 +1,4 @@
-# Homework: Setting up Hadoop 2
+# Homework: Hadoop Distributed Sort with YARN and HDFS
 
 ## VM Provisioning
 
