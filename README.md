@@ -37,11 +37,11 @@ _This is a graded homework_
 
 _There will be no in-class lab for this assignment_
 
-## Week 5: Distributed Filesystems
+## Week 5: Map Reduce and Hadoop
 
 ### Homework
 
-0. [Part 2- Hadoop v2 Setup](week5/hw/version_2)
+0. [Hadoop Distributed Sort with YARN and HDFS](week5/hw/hadoop_yarn_sort)
 
 ### Labs
 
