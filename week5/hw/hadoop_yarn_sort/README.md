@@ -34,8 +34,8 @@ Note: Instructions in this section are to be performed on each node unless other
 
 Assuming your disk is called `/dev/xvdc` as it is for me,
 
-        mkdir /data
-        mkfs.ext4 /dev/xvdc
+    mkdir /data
+    mkfs.ext4 /dev/xvdc
 
 * Add this line to `/etc/fstab` (with the appropriate disk path):
 
