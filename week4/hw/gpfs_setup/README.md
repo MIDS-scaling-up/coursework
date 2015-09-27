@@ -44,35 +44,38 @@ As root on your node, download this tarball into /root, then unpack and install:
     ./gpfs_install-4.1.0-0_x86_64 --silent
     cd /usr/lpp/mmfs/4.1
 
-Install pre-requisites:
+Upgrade the kernel if a package is available:
+
+    yum install -y kernel
+
+If a new kernel was installed you must **reboot now** before continuing.
+
+Now install kernel compilation packages and other tools:
 
     yum -y install ksh gcc-c++ compat-libstdc++-33 kernel-devel redhat-lsb net-tools libaio
 
-The instructions below are specific to the version of the kernel running on your RedHat machine.  Verify what kernel you have by issuing:
+The instructions below are specific to the version of the kernel you're running. Discover the version you're using by executing:
 
-    uname -a
+    uname -r
 
 Here's mine:
 
-    [root@gpfs1 gpfsfpo]# uname -a
-    Linux gpfs1.bigdataclass.sftlyr.ws 2.6.32-504.3.3.el6.x86_64 #1 SMP Fri Dec 12 16:05:43 EST 2014
-    x86_64 x86_64 x86_64 GNU/Linux
+    [root@gpfs1 gpfsfpo]# uname -r
+    2.6.32-504.3.3.el6.x86_64
 
-__If the kernel version has updated in the package repositories since the image was built, such that you have just installed a new kernel package, you should reboot before continuing.__
+__For the remainder of the guide, I'll use this kernel version in commands. Make sure you use your kernel version in the example commands below.__
 
-So replacing the below with your kernel version we will symlink the kernel module dir into a tree in GPFS for building GPFS kernel modules:
+Kernel modules are a common feature of normal filesystems and distributed/cluster filesystems alike. You will compile modules for your kernel using the following instructions. First, create a symlink to the kernel source dir from the modules dir:
 
     cd /lib/modules/2.6.32-504.3.3.el6.x86_64
     rm -f build
     ln -sf /usr/src/kernels/2.6.32-504.8.1.el6.x86_64 build
 
-_Kernel modules are a common feature of normal filesystems and distributed/cluster filesystems alike_
-
-Then install the rpms:
+Then install GPFS rpms:
 
     rpm -ivh /usr/lpp/mmfs/4.1/gpfs*.rpm
 
-And build the GPFS kernel modules:
+Next, build the GPFS kernel modules:
 
     cd /usr/lpp/mmfs/src
     make Autoconfig
