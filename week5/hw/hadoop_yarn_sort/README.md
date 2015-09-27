@@ -232,8 +232,8 @@ On _master_, execute the terasort job.
 
 _Note that the input to teragen is the number of 100 byte rows_
 
-        cd /usr/local/hadoop/share/hadoop/mapreduce
-        hadoop jar $(ls hadoop-mapreduce-examples-2*.jar) teragen 100000000 /terasort/in
+    cd /usr/local/hadoop/share/hadoop/mapreduce
+    hadoop jar $(ls hadoop-mapreduce-examples-2*.jar) teragen 100000000 /terasort/in
 
 * Now, let's do the sort:
 
@@ -263,6 +263,7 @@ You can safely ignore these warnings. However, if you're interested in building 
         curl http://apache.cs.utah.edu/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz | tar xz -C /usr/local --show-transformed --transform='s,/*[^/]*,maven,'
 
 * Become the `hadoop` user again and update the environment:
+
         sudo su - hadoop
         echo "export MAVEN_HOME=\"/usr/local/maven\"" >> ~/.bash_profile
         echo "export PATH=\"\$MAVEN_HOME/bin:\$PATH\"" >> ~/.bash_profile
@@ -271,16 +272,20 @@ You can safely ignore these warnings. However, if you're interested in building 
 If the foregoing commands have succeeded, `git --version` and `mvn -version` should report version information.
 
 * Download the source code for the Hadoop version you have installed as `~hadoop/hadoop`. You might try the following Bash/grep insanity (note the output of `hadoop version` as of this writing contains the silly output string `Subversion https://git-wip-us.apache.org/repos/asf/hadoop.git -r 15ecc87ccf4a0228f35af08fc56de536e6ce657a`, which contains useful information but is misleading).
+
         HADOOP_CO=($(hadoop version | grep -oP '(?(?<=Subversion )[^ ]+|(?<=-r )(.+))')); \
         git clone ${HADOOP_CO[0]} && cd hadoop && git checkout ${HADOOP_CO[1]}
 
 * Build Hadoop with the native option (note: this takes several minutes to complete, you might fetch some coffee or a snack while it compiles):
+
         mvn package -Pdist,native -DskipTests
 
 * Copy the newly-built native libs to your Hadoop installation directory on each system running Hadoop:
+
         for i in master slave1 slave2; do rsync -avz --stats --progress ./hadoop-dist/target/hadoop-*/lib/native/* $i:$HADOOP_HOME/lib/native/; done
 
 * If running, restart Hadoop:
+
         stop-dfs.sh && stop-yarn.sh && start-dfs.sh && start-yarn.sh
 
 ## Troubleshooting
