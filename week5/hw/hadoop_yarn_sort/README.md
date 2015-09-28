@@ -23,7 +23,9 @@ Note: Instructions in this section are to be performed on each node unless other
         127.0.0.1 localhost.localdomain localhost
         50.22.13.216 master.hadoop.mids.lulz.bz master
         50.22.13.194 slave1.hadoop.mids.lulz.bz slave1
-        50.22.13.217 slave2.hadoop.mids.lulz.bz slave
+        50.22.13.217 slave2.hadoop.mids.lulz.bz slave2
+
+Note that the admin UIs for Hadoop create hyperlinks using hostnames and not IPs; if you want to use all features of the UIs, add the public IPs of the systems to your workstation's `hosts` file too.
 
 ### 100G Disk Formatting
 * You need to find out the name of your disk, e.g

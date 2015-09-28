@@ -5,9 +5,9 @@ This lab assumes you have a Hadoop cluster set up **and** that you've completed 
 
 ## Part 1: Create a data-filtering map script
 
-In `/home/hadoop`, write the __map__ function to filter the 2-gram dataset stored in HDFS:
+In `/home/hadoop`, write the __mapper__ function to filter the 2-gram dataset stored in HDFS:
 
-    cat <<\EOF > mapper.py
+    cat <<\EOF > mapper-filter.py
     #!/usr/bin/python2
 
     import sys
@@ -23,10 +23,7 @@ In `/home/hadoop`, write the __map__ function to filter the 2-gram dataset store
 
             word1= a[0]
             word2= a[1]
-            if not a[0].isalpha():
-                    continue;
-
-            if not a[1].isalpha():
+            if not a[0].isalpha() or not a[1].isalpha():
                     continue;
 
             word = a[0] + " " + a[1];
@@ -39,9 +36,10 @@ In `/home/hadoop`, write the __map__ function to filter the 2-gram dataset store
 
 This step merely filters non-alphanumeric words from lines of data.
 
-Finally set the permissions:
+Finally set the permissions and copy the file into HDFS:
 
-    chmod ugo+rx reducer.py
+    chmod ugo+rx mapper-filter.py
+    hadoop fs -cp file:///home/hadoop/mapper-filter.py hdfs:///mumbler
 
 ## Part 2: Create a reducer script
 
@@ -61,7 +59,7 @@ A mumbler algorithm cares about the total number of occurrences of the word "tas
 To accomplish this, we'll apply the following function in Hadoop's __reduce__ step:
 
     cat <<\EOF > reducer.py
-    #!/usr/bin/python
+    #!/usr/bin/python2
 
     import sys
 
@@ -91,15 +89,27 @@ To accomplish this, we'll apply the following function in Hadoop's __reduce__ st
             print lastword, lastwc
     EOF
 
-Again, set the permissions:
+Again, set the permissions and copy the script into HDFS:
 
     chmod ugo+rx reducer.py
+    hadoop fs -cp file:///home/hadoop/reducer.py hdfs:///mumbler
 
-# Part 3: Run the map, reduce scripts with Hadoop
+# Part 3: Execute Mumbler data pre-processing job
 
-Note that this will take a while. Note also that this assumes you're using Hadoop v1; if you're using Hadoop v2, substitute the following jar path: `/usr/local/hadoop/share/hadoop/tools/lib/hadoop-streaming-2.6.0.jar`:
+Execute the __mapper__ and __reducer__ scripts on the Google 2gram data written to HDFS previously (note, this will take a significant amount of time to complete):
 
-    hadoop jar /usr/local/hadoop/contrib/streaming/hadoop-streaming-1.2.1.jar -D mapred.reduce.tasks=6 \
-    -D mapred.output.compress=true -D mapred.compress.map.output=true -input /mumbler/pass \
-    -output /mumbler/results -mapper mapper.py -reducer reducer.py \
-    -file /home/hadoop/mapper.py -file /home/hadoop/reducer.py
+    hadoop jar $(ls $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-*.jar) \
+    -Dmapreduce.job.reduces=6 \
+    -Dmapreduce.output.fileoutputformat.compress=true \
+    -Dmapreduce.map.output.compress=true \
+    -files hdfs:///mumbler/mapper-filter.py,hdfs:///mumbler/reducer.py \
+    -input hdfs:///mumbler/pass \
+    -output hdfs:///mumbler/results \
+    -mapper mapper-filter.py \
+    -reducer reducer.py
+
+## Part 4: Investigate results
+
+You can view the compressed output of the reduce operation with hadoop commands like this:
+
+    hadoop fs -text hdfs:///mumbler/results/part-00000.deflate
