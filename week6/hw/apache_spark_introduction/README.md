@@ -1,12 +1,14 @@
 # Apache Spark Introduction
 
+There are numerous ways to run Apache Spark, even multiple cluster options. In this guide you'll use the simplest clustered configuration, Spark in a standalone cluster. Other options include Spark on a YARN cluster (we used YARN in /week5/hw/hadoop_yarn_sort) and Spark on a Mesos cluster. If you're interested in learning about these other clustered options, please ask about them in class.
+
 ## Provision machines
 
 Provision **three** Centos 7 VSes in SoftLayer with 2 CPUs, 4GB RAM and a 100GB local hard drive. Name them __spark1__, __spark2__, and __spark3__.
 
 ## Configure connectivity between machines
 
-Configure __spark1__ such that it can SSH to __spark1__, __spark2__, and __spark3__ without passwords using SSH keys, and by name. To do this, you'll need to configure `/etc/hosts`, generate SSH keys using `ssh-keygen`, and write the content of the public key to each box to the file `/root/.ssh/authorized_keys`.
+Configure __spark1__ such that it can SSH to __spark1__, __spark2__, and __spark3__ without passwords using SSH keys, and by name. To do this, you'll need to configure `/etc/hosts`, generate SSH keys using `ssh-keygen`, and write the content of the public key to each box to the file `/root/.ssh/authorized_keys` (`ssh-copy-id` helps with key distribution; if you need assistance with these parts of the process, consult earlier homework assignments).
 
 ## Install Java, Spark on all nodes
 
@@ -22,7 +24,7 @@ Set the proper location of `JAVA_HOME` and test it:
 
 Download and extract a recent, prebuilt version of Spark (link obtained from ):
 
-    curl http://d3kbcqa49mib13.cloudfront.net/spark-1.3.1-bin-hadoop2.6.tgz | tar -zx -C /usr/local --show-transformed --transform='s,/*[^/]*,spark,'
+    curl http://d3kbcqa49mib13.cloudfront.net/spark-1.5.0-bin-hadoop2.6.tgz | tar -zx -C /usr/local --show-transformed --transform='s,/*[^/]*,spark,'
 
 For convenience, set `$SPARK_HOME`:
 
@@ -31,13 +33,13 @@ For convenience, set `$SPARK_HOME`:
 
 ## Configure Spark
 
-On __spark1__, create the new file `/usr/local/spark/conf/slaves` and content:
+On __spark1__, create the new file `$SPARK_HOME/conf/slaves` and content:
 
     spark1
     spark2
     spark3
 
-From here on out, all commands you execute should be done on __spark1__ only. You may log in to the other boxes to investigate job failures, but you can control the entire cluster from the master.
+From here on out, all commands you execute should be done on __spark1__ only. You may log in to the other boxes to investigate job failures, but you can control the entire cluster from the master. If you plan to use the Spark UI, it's convenient to modify your workstation's `hosts` file so that Spark-generated URLs for investigating nodes resolve properly.
 
 ## Start Spark from master
 
@@ -112,7 +114,7 @@ Exit the Spark shell with `CTRL-D`.
 
 ## Example 3: Submitting a Scala program to Spark
 
-You can process data in an RDD by providing a function to execute on it. Spark will schedule execution of that function, collect results and process them as instructed. This is a common use case for Spark and often it is accomplished by submitting Scala programs to a Spark cluster. You'll write a small Scala program and submit it to the master. Note that we're going to package the simple program using Scala Build Tool(SBT), http://www.scala-sbt.org/0.13/tutorial/index.html.
+You can process data in an RDD by providing a function to execute on it. Spark will schedule execution of that function, collect results and process them as instructed. This is a common use case for Spark and often it is accomplished by submitting Scala programs to a Spark cluster. You'll write a small Scala program and submit it to the master. Note that we're going to package the simple program using Scala Build Tool(SBT), http://www.scala-sbt.org/0.13/tutorial/index.html. Note that the version of Spark we're using expects applications written for Scala 2.10 and is incompatible with Scala 2.11.
 
 ### Install SBT
 
@@ -136,16 +138,17 @@ Write the following content into `SimpleApp.scala`:
           val data = sc.textFile(file, 2).cache()
           val numAs = data.filter(line => line.contains("a")).count()
           val numBs = data.filter(line => line.contains("b")).count()
-          println(s"Lines with a: $numAs, Lines with b: $numBs")
+
+          println("+++++++++++ Lines with a: %s, Lines with b: %s ++++++++++".format(numAs, numBs))
       }
     }
 
-Create a simple SBT build file in the same directory as the source file you created earlier. Write the following content to `build.sbt`:
+Create a simple SBT build file in the same directory as the source file you created earlier. Write the following content to `build.sbt` (note the version of the `spark-core` dependency: this should match the Spark version from your cluster):
 
     name := "Simple Project"
     version := "1.0"
     scalaVersion := "2.10.4"
-    libraryDependencies += "org.apache.spark" %% "spark-core" % "1.3.1"
+    libraryDependencies += "org.apache.spark" %% "spark-core" % "1.5.0"
     resolvers += "Akka Repository" at "http://repo.akka.io/releases/"
 
 Package your program into a jar file (a standard Java archive) for submission to the Spark cluster:
@@ -162,7 +165,7 @@ Once you've located the archive, submit the program to the Spark cluster for exe
     --master spark://spark1:7077 \
     $(find . -iname "*.jar")
 
-You might check the web UI to see that the application execution completed.
+You might check the web UI (http://{spark1_ip}:8080/) to see that the application execution completed.
 
 (If you have trouble executing this program in your cluster, you might try debugging with the switch `--master local[4]` instead).
 
