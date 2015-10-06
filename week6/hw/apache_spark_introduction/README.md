@@ -157,13 +157,13 @@ Package your program into a jar file (a standard Java archive) for submission to
 
 This step should have produced a jar file in a subdir of the `target` directory. Execute the following command to locate it:
 
-    find . -iname "*.jar"
+    find target -iname "*.jar"
 
 Once you've located the archive, submit the program to the Spark cluster for execution:
 
     $SPARK_HOME/bin/spark-submit --class "SimpleApp" \
     --master spark://spark1:7077 \
-    $(find . -iname "*.jar")
+    $(find target -iname "*.jar")
 
 You might check the web UI (http://{spark1_ip}:8080/) to see that the application execution completed.
 
