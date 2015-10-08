@@ -15,26 +15,24 @@ The main advantage of using Spark's **_MLLib package_** is that it's machine lea
 
 ## Preconditions
 
-You must have a Spark cluster setup including the MLLib library (see [Apache Spark Introduction](../../hw/apache_spark_introduction) if you need to set up a Spark cluster).  You will also need Python 2.7 with Numpy 1.7 on each machine.  You will need Git on the master It is assumed that you have had prior exposure to machine learning algorithms (this lab will not cover the details of how these algorithms work).
+You must have a Spark cluster setup including the MLLib library (see [Apache Spark Introduction](../../hw/apache_spark_introduction) if you need to set up a Spark cluster).  You will also need Python 2.7 with Numpy 1.7 on each machine.  You will need Git on the master. It is assumed that you have had prior exposure to machine learning algorithms (this lab will not cover the details of how these algorithms work).
 
 To install Numpy and Git use yum:
 
-	$ yum update  
-	$ yum install numpy  
-	
+	$ yum install -y numpy
+
 On the master only:
 
-	$ yum install git
-	
+	$ yum install -y git
+
 You will then need to clone the course GitHub repo:
 
 	$ git clone https://github.com/MIDS-scaling-up/coursework.git
-	
+
 After cloning you need to copy the data directory, hamster.py, and spamFilter.py to the root directory
 
 	$ cp -r coursework/week6/labs/Spam/data ~/
-	$ cp coursework/week6/labs/Spam/hamster.py ~/
-	$ cp coursework/week6/labs/Spam/spamFilter.py ~/
+	$ cp coursework/week6/labs/Spam/*.py ~/
 
 ## Scenario: Spam Filter
 
@@ -44,11 +42,11 @@ The spam data are available here https://spamassassin.apache.org/publiccorpus/20
 
 The ham data are available here https://spamassassin.apache.org/publiccorpus/20030228_easy_ham_2.tar.bz2
 
-**EXERCISE:** Run the spamFilter.py script available in the GitHub project.  You should see an error rate for the spam filter in the output.  
+**EXERCISE:** Run the spamFilter.py script available in the GitHub project.  You should see an error rate for the spam filter in the output.
 
 First run hamster.py and then copy the data to the worker nodes.  This needs to be done because we do not have a distributed file system or a database setup:
 
-	$ python hamster
+	$ python hamster.py
 	$ scp -r data/ root@spark2:/root
 	$ scp -r data/ root@spark3:/root
 
@@ -75,7 +73,7 @@ The training and test data need to be in a format that can be easily used to gen
 
 ### Consolidating Emails to a Single Data Source ([Data Munging](http://en.wikipedia.org/wiki/Data_wrangling))
 
-The textFile method will make an RDD from a text file.  It will by default treat each line of the text file as a one data point.  So we need to transform each email such that it will appear as a single line of text (no returns / line feeds) and combine all the emails of a given class (spam or ham) into a single input file for that class.  Since we will use this process twice we will define it as a separate function and run it in a separate script, as we did above (hamster.py).
+The textFile method will make an RDD from a text file.  It will by default treat each line of the text file as one data point.  So we need to transform each email such that it will appear as a single line of text (no returns / line feeds) and combine all the emails of a given class (spam or ham) into a single input file for that class.  Since we will use this process twice we will define it as a separate function and run it in a separate script, as we did above (hamster.py).
 
 	def makeDataFileFromEmails( dir_path, out_file_path ):
 		"""
@@ -96,8 +94,8 @@ The textFile method will make an RDD from a text file.  It will by default treat
 					text = text + "\n"
 					# Write each email out to a single file
 					out_file.write( text )
-					
-With larger data sets we would want to load the data in to a database and then have Spark interact with the database.  SparkSQL is a good way to interact with databases in Spark, which you can read about [here](https://spark.apache.org/docs/1.1.0/sql-programming-guide.html#other-sql-interfaces).  NoSQL databases can be interfaced with through configuration of the RDD using the conf property.  [Here](https://github.com/apache/spark/blob/master/examples/src/main/python/cassandra_inputformat.py) is an example
+
+With larger data sets we would want to load the data into a database and then have Spark interact with the database.  SparkSQL is a good way to interact with databases in Spark, which you can read about [here](https://spark.apache.org/docs/1.1.0/sql-programming-guide.html#other-sql-interfaces).  NoSQL databases can be interfaced with through configuration of the RDD using the conf property.  [Here](https://github.com/apache/spark/blob/master/examples/src/main/python/cassandra_inputformat.py) is an example.
 
 ### Loading Data in Spark
 
@@ -112,16 +110,17 @@ The simplest way to create an RDD is by loading data in from a text file:
 	# Read the ham data file created above into an RDD
 	ham = sc.textFile( "ham.txt" )
 
-There are alternative methods by which we might load the separate data files into an RDD in a way that would not require using the function we wrote.  Consider the these two functions.
-
-	myRDD = sc.parallelize( some_data_structure )
-[parallelize reference](https://spark.apache.org/docs/1.0.2/api/python/pyspark.context.SparkContext-class.html#parallelize)
+If you wished to create an RDD per-file from a collection of files on disk, you would use this function:
 
 	myRDD = sc.wholeTextFiles( some_directory )
 [wholeTextFiles reference](https://spark.apache.org/docs/1.0.2/api/python/pyspark.context.SparkContext-class.html#wholeTextFiles)
 
-**Be careful** as you change how you load the data into an RDD it may also require changes to how you process the RDD later.
+It's also possible to create RDDs out of in-RAM data structures. For this purpose, use:
 
+	myRDD = sc.parallelize( some_data_structure )
+[parallelize reference](https://spark.apache.org/docs/1.0.2/api/python/pyspark.context.SparkContext-class.html#parallelize)
+
+**Be careful** as you change how you load the data into an RDD it may also require changes to how you process the RDD later.
 
 ### Feature Generation Techniques in MLLib
 
@@ -186,7 +185,7 @@ Now that we have trained a model with an acceptable error rate, we need to save 
 	# Serialize the model for presistance
 	pickle.dump( model, open( "spamFilter.pkl", "wb" ))
 
-There is [work being done](https://issues.apache.org/jira/browse/SPARK-1406) to add support in MLLib for [PMML](http://en.wikipedia.org/wiki/Predictive_Model_Markup_Language), which is a serialization format specifically for statistical and machine learning models.
+Some [work has been done](https://issues.apache.org/jira/browse/SPARK-1406) to add support in MLLib for [PMML](http://en.wikipedia.org/wiki/Predictive_Model_Markup_Language), which is a serialization format specifically for statistical and machine learning models.
 
 ## Addendum: Original Code
 
@@ -207,14 +206,14 @@ Note the import statements at the beginning and the call to stop on the SparkCon
 
 		# Create the Spark Context for parallel processing
 		sc = SparkContext( appName="Spam Filter")
-		
+
 		# Load the spam and ham data files into RDDs
 		spam = sc.textFile( "data/spam.txt" )
 		ham = sc.textFile( "data/ham.txt" )
 
 		# Create a HashingTF instance to map email text to vectors of 10,000 features.
 		tf = HashingTF(numFeatures = 10000)
-	
+
 		# Each email is split into words, and each word is mapped to one feature.
 		spamFeatures = spam.map(lambda email: tf.transform(email.split(" ")))
 		hamFeatures = ham.map(lambda email: tf.transform(email.split(" ")))
@@ -255,8 +254,4 @@ Note the import statements at the beginning and the call to stop on the SparkCon
 
 	if __name__ == "__main__":
 		main()
-
-
-
-
 
