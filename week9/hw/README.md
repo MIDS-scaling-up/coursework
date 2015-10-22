@@ -52,7 +52,7 @@ If the system reports that all tests have passed, you may proceed. One of the be
 
 ## Part 2: Build a Twitter popular topic and user reporting system
 
-Design and build a system for collecting data about 'popular' hashtags and users related to tweets containing them. The popularity of hashtags is determined by the frequency of occurrence of those hashtags in tweets over a sampling period. Record popular hashtags and **both** the users who authored tweets containing them as well as other users mentioned in them. For example, if @solange tweets "@jayZ is performing #theblackalbum tonight at Madison Square Garden!! @beyonce will be there!", '#theblackalbum' is a popular topic, and all of theusers related to the tweet, 'beyonce, solange, and jayZ' should be recorded.
+Design and build a system for collecting data about 'popular' hashtags and users related to tweets containing them. The popularity of hashtags is determined by the frequency of occurrence of those hashtags in tweets over a sampling period. Record popular hashtags and **both** the users who authored tweets containing them as well as other users mentioned in them. For example, if @solange tweets "@jayZ is performing #theblackalbum tonight at Madison Square Garden!! @beyonce will be there!", '#theblackalbum' is a popular topic, and all of the users related to the tweet, 'beyonce', 'solange', and 'jayZ' should be recorded.
 
 The output of your program should be lists of hashtags that were determined to be popular during the program's execution, as well as lists of users, per-hashtag, who were related to them. Think of this output as useful to marketers who want to target people to sell products to: the ones who surround conversations about particular events, products, and brands are more likely to purchase them than a random user.
 
@@ -87,7 +87,7 @@ The Scala Build Tool (SBT) can be used to build a bytecode package (JAR file) fo
     ├── build.sbt
     ├── project
     │   └── plugins.sbt
-    └── tweetproc.scala
+    └── twitter_popularity.scala
 
 ##### `build.sbt`
 
@@ -98,7 +98,6 @@ The Scala Build Tool (SBT) can be used to build a bytecode package (JAR file) fo
       libraryDependencies ++= Seq(
         "org.apache.spark" %% "spark-streaming" % "1.5.0" % "provided",
         "org.apache.spark" %% "spark-streaming-twitter" % "1.5.0",
-        "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0",
         "com.typesafe" % "config" % "1.3.0"
       ),
       mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
@@ -109,24 +108,32 @@ The Scala Build Tool (SBT) can be used to build a bytecode package (JAR file) fo
       }
     )
 
-    lazy val tweetproc = (project in file("tweetproc")).
+    lazy val twitter_popularity = (project in file(".")).
       settings(common: _*).
       settings(
-        name := "tweetproc",
-        mainClass in (Compile, run) := Some("tweetproc.Main"))
+        name := "twitter_popularity",
+        mainClass in (Compile, run) := Some("twitter_popularity.Main"))
 
 ##### `project/plugins.sbt`
 
     addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "3.0.0")
     addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.13.0")
 
-##### `tweetproc.scala`
+##### `twitter_popularity.scala`
 
     object Main extends App {
-      println(s"I got executed with args: $main.args")
+      println(s"I got executed with ${args size} args, they are: ${args mkString ", "}")
 
       // your code goes here
     }
+
+#### Building and Executing your code
+
+From spark1 in the root of the project directory, execute:
+
+    sbt clean package && $SPARK_HOME/bin/spark-submit --class "Main" --master spark://spark1:7077 $(find target -iname "*.jar") foof goof spoof
+
+(Note that the 'clean' build target is only necessary if you remove files or dependencies from a project; if you've merely changed or added files previously built, you can execute only the `package` target for a speedier build).
 
 ## Grading and Submission
 

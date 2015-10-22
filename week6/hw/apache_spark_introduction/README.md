@@ -10,11 +10,12 @@ Provision **three** Centos 7 VSes in SoftLayer with 2 CPUs, 4GB RAM and a 100GB 
 
 Configure __spark1__ such that it can SSH to __spark1__, __spark2__, and __spark3__ without passwords using SSH keys, and by name. To do this, you'll need to configure `/etc/hosts`, generate SSH keys using `ssh-keygen`, and write the content of the public key to each box to the file `/root/.ssh/authorized_keys` (`ssh-copy-id` helps with key distribution; if you need assistance with these parts of the process, consult earlier homework assignments).
 
-## Install Java, Spark on all nodes
+## Install Java, SBT, and Spark on all nodes
 
-Install JDK 8:
+Install packages:
 
-    yum install -y java-1.8.0-openjdk-headless
+    curl https://bintray.com/sbt/rpm/rpm | sudo tee /etc/yum.repos.d/bintray-sbt-rpm.repo
+    yum install -y java-1.8.0-openjdk-headless sbt
 
 Set the proper location of `JAVA_HOME` and test it:
 
@@ -118,10 +119,7 @@ You can process data in an RDD by providing a function to execute on it. Spark w
 
 ### Install SBT
 
-    curl https://bintray.com/sbt/rpm/rpm | sudo tee /etc/yum.repos.d/bintray-sbt-rpm.repo
-    sudo yum install sbt
-
-Upon first execution, SBT will download a number of dependent packages. Execute `sbt` to start this process. If the program gives you shell prompt (`>`), you're all set. Type `CTRL-D` to exit the shell and continue creating a program to run in Spark.
+You installed SBT in a previous step. Upon first execution, SBT will download a number of dependent packages. Execute `sbt` to start this process. If the program gives you shell prompt (`>`), you're all set. Type `CTRL-D` to exit the shell and continue creating a program to run in Spark.
 
 Write the following content into `SimpleApp.scala`:
 
