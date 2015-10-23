@@ -14,7 +14,9 @@ Provision 3 VSes to comprise a Spark cluster. You may set up the cluster manuall
 
 One of the benefits of Apache Spark's architecture is its use of RAM rather than disk storage to move calculated data between phases of execution. This feature yields improved performance for many programs. But the need to persist data from intermediate calculations is not totally obviated by Spark's paradigm: many long-running programs use results from calculations made in previous sampling periods in subsequent ones. Note that this is a need of a different sort than the distributed application framework's need: in this scenario, it is a matter of application requirements to make use of previous calculations in a program.
 
-Spark can make use of many persistence solutions for both intermediate calculations and long-term storage. Often, Spark users will use HDFS or a lower-level disk-backed storage solution for this task. But this can create performance bottlenecks not unlike those that determined Apache Spark's RAM-based architecture for its own storage needs. One compelling in-RAM distributed storage solution is Apache Tachyon, a system that is often used as a high-performance caching layer for file-based storage. In this lab, you'll use Tachyon to aggregate results between sampling periods for a program that runs for 30 minutes.
+Spark can make use of many persistence solutions for both intermediate calculations and long-term storage. Often, Spark users will use HDFS or a lower-level disk-backed storage solution for this task. But this can create performance bottlenecks not unlike those that determined Apache Spark's RAM-based architecture for its own storage needs. One compelling in-RAM distributed storage solution is Apache Tachyon, a system that is often used as a high-performance caching layer for file-based storage.
+
+In this assignment, you may use Tachyon to aggregate results between sampling periods for a program that runs for approximately 30 minutes. **Note**: You are **not required** to use Tachyon in this assignment, but you may find it useful.
 
 ### Tachyon installation
 
@@ -52,7 +54,7 @@ If the system reports that all tests have passed, you may proceed. One of the be
 
 ## Part 2: Build a Twitter popular topic and user reporting system
 
-Design and build a system for collecting data about 'popular' hashtags and users related to tweets containing them. The popularity of hashtags is determined by the frequency of occurrence of those hashtags in tweets over a sampling period. Record popular hashtags and **both** the users who authored tweets containing them as well as other users mentioned in them. For example, if @solange tweets "@jayZ is performing #theblackalbum tonight at Madison Square Garden!! @beyonce will be there!", '#theblackalbum' is a popular topic, and all of the users related to the tweet, 'beyonce', 'solange', and 'jayZ' should be recorded.
+Design and build a system for collecting data about 'popular' hashtags and users related to tweets containing them. The popularity of hashtags is determined by the frequency of occurrence of those hashtags in tweets over a sampling period. Record popular hashtags and **both** the users who authored tweets containing them as well as other users mentioned in them. For example, if @solange tweets "@jayZ is performing #theblackalbum tonight at Madison Square Garden!! @beyonce will be there!", 'theblackalbum' is a popular topic, and all of the users related to the tweet—'beyonce', 'solange', and 'jayZ'—should be recorded.
 
 The output of your program should be lists of hashtags that were determined to be popular during the program's execution, as well as lists of users, per-hashtag, who were related to them. Think of this output as useful to marketers who want to target people to sell products to: the ones who surround conversations about particular events, products, and brands are more likely to purchase them than a random user.
 
@@ -81,7 +83,7 @@ If you'd like to understand how a Twitter4J `Status` object ends up in your Spar
 
 #### Building with SBT
 
-The Scala Build Tool (SBT) can be used to build a bytecode package (JAR file) for execution in a Spark cluster. You bundled such a JAR and executed it on a Spark cluster in the previous assignment, [Apache Spark Introduction](../../week6/hw/apache_spark_introduction). You can follow the same pattern established there for building a project and executing it. For convenience, start with the following project details:
+The Scala Build Tool (SBT) can be used to build a bytecode package (JAR file) for execution in a Spark cluster. You bundled such a JAR and executed it on a Spark cluster in the previous assignment, [Apache Spark Introduction](../../week6/hw/apache_spark_introduction). You can follow the same pattern established there for building a project and executing it. For convenience, you might start with the following project structure and files.
 
     ./twitter_popularity
     ├── build.sbt
@@ -114,6 +116,8 @@ The Scala Build Tool (SBT) can be used to build a bytecode package (JAR file) fo
         name := "twitter_popularity",
         mainClass in (Compile, run) := Some("twitter_popularity.Main"))
 
+Note the specification of Spark library versions. Ensure that these version numbers match the version of Spark you have installed in your cluster or scary and terrible things may occur that prevent you from achieving Zen-like project execution bliss.
+
 ##### `project/plugins.sbt`
 
     addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "3.0.0")
@@ -131,7 +135,7 @@ The Scala Build Tool (SBT) can be used to build a bytecode package (JAR file) fo
 
 From spark1 in the root of the project directory, execute:
 
-    sbt clean package && $SPARK_HOME/bin/spark-submit --class "Main" --master spark://spark1:7077 $(find target -iname "*.jar") foof goof spoof
+    sbt clean package && $SPARK_HOME/bin/spark-submit --master spark://spark1:7077 $(find target -iname "*.jar") foof goof spoof
 
 (Note that the 'clean' build target is only necessary if you remove files or dependencies from a project; if you've merely changed or added files previously built, you can execute only the `package` target for a speedier build).
 
