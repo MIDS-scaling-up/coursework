@@ -44,7 +44,7 @@ Execute the following steps only on __spark1__.
 
         cd /usr/local/tachyon
         ./bin/tachyon format
-        ./bin/tachyon-start.sh
+        ./bin/tachyon-start.sh all Mount
 
 * Run Tachyon's tests to ensure you've correctly set up the system:
 
@@ -133,11 +133,13 @@ Note the specification of Spark library versions. Ensure that these version numb
 
 #### Building and Executing your code
 
-From spark1 in the root of the project directory, execute:
+From spark1 in the root of the project directory, execute the following where 'foof', 'goof' and 'spoof' are args to the Spark program:
 
-    sbt clean assembly && $SPARK_HOME/bin/spark-submit --master spark://spark1:7077 $(find target -iname "*assembly*.jar") foof goof spoof
+    sbt clean assembly && $SPARK_HOME/bin/spark-submit \
+      --master spark://spark1:7077 $(find target -iname "*assembly*.jar") \
+      foof goof spoof
 
-(Note that the 'clean' build target is only necessary if you remove files or dependencies from a project; if you've merely changed or added files previously built, you can execute only the `package` target for a speedier build).
+Note that the 'clean' build target is only necessary if you remove files or dependencies from a project; if you've merely changed or added files previously built, you can execute only the `package` target for a speedier build.
 
 ## Grading and Submission
 
