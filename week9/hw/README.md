@@ -34,6 +34,11 @@ On each system, perform the following steps.
         spark3
         EOF
 
+* Create `/usr/local/tachyon/conf/tachyon-env.sh` and set the master's IP (note that mine is 50.25.112.2, yours will be different):
+
+        cp /usr/local/tachyon/conf/tachyon-env.sh.template /usr/local/tachyon/conf/tachyon-env.sh
+        sed -i 's#export TACHYON_MASTER_ADDRESS=localhost#export TACHYON_MASTER_ADDRESS=50.25.112.2#g' /usr/local/tachyon/conf/tachyon-env.sh
+
 * Create the checkpoint directory:
 
         mkdir -p /usr/local/tachyon/underFSStorage/tmp/tachyon/data
@@ -45,6 +50,8 @@ Execute the following steps only on __spark1__.
         cd /usr/local/tachyon
         ./bin/tachyon format
         ./bin/tachyon-start.sh all Mount
+
+* Ensure all worker nodes have reported to the master by examining the UI output at http://{master_node_ip}:19999/workers
 
 * Run Tachyon's tests to ensure you've correctly set up the system:
 
