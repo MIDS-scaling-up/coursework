@@ -83,7 +83,7 @@ If you'd like to understand how a Twitter4J `Status` object ends up in your Spar
 
 #### Building with SBT
 
-The Scala Build Tool (SBT) can be used to build a bytecode package (JAR file) for execution in a Spark cluster. You bundled such a JAR and executed it on a Spark cluster in the previous assignment, [Apache Spark Introduction](../../week6/hw/apache_spark_introduction). You can follow the same pattern established there for building a project and executing it. For convenience, you might start with the following project structure and files.
+The Scala Build Tool (SBT) can be used to build a bytecode package (JAR file) for execution in a Spark cluster. You bundled such a JAR and executed it on a Spark cluster in the previous assignment, [Apache Spark Introduction](../../week6/hw/apache_spark_introduction). You can follow pattern similiar to the one established there for building a project and executing it. For convenience, you might start with the following project structure and files.
 
     ./twitter_popularity
     ├── build.sbt
@@ -135,7 +135,7 @@ Note the specification of Spark library versions. Ensure that these version numb
 
 From spark1 in the root of the project directory, execute:
 
-    sbt clean package && $SPARK_HOME/bin/spark-submit --master spark://spark1:7077 $(find target -iname "*.jar") foof goof spoof
+    sbt clean assembly && $SPARK_HOME/bin/spark-submit --master spark://spark1:7077 $(find target -iname "*assembly*.jar") foof goof spoof
 
 (Note that the 'clean' build target is only necessary if you remove files or dependencies from a project; if you've merely changed or added files previously built, you can execute only the `package` target for a speedier build).
 
