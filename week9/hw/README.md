@@ -51,7 +51,7 @@ Execute the following steps only on __spark1__.
         ./bin/tachyon format
         ./bin/tachyon-start.sh all Mount
 
-* Ensure all worker nodes have reported to the master by examining the UI output at http://184.173.64.38:19999/workers
+* Ensure all worker nodes have reported to the master by examining the UI output at http://{tachyon master ip}:19999/workers
 
 * Run Tachyon's tests to ensure you've correctly set up the system:
 
