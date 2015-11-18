@@ -15,7 +15,7 @@ object TweetEat extends App {
   def getAlchemyResults( tweet:String, call:String ): String = {
     //insert apikey here
     val apikey = ""
-    
+
     val alchemyurl = "http://access.alchemyapi.com/calls/text/"
     val baseurl = alchemyurl + call
     val tweetParsed = tweet.replaceAll("[^0-9a-zA-Z_\\s]", "").replaceAll(" ","%20");
@@ -30,7 +30,7 @@ object TweetEat extends App {
 
   //xml parser
   def parseAlchemyResponseEntity(alchemyResponse:String,typeResponse:String) : Array[String] = {
-      
+
       var entitiesText = ""
       if ((alchemyResponse contains "<entities>") && (alchemyResponse contains "<entity>")){
         val entitiesBegin = alchemyResponse indexOf "<entities>"
@@ -41,10 +41,10 @@ object TweetEat extends App {
       {
         return new Array[String](0)
       }
-      
+
       val numEntities = "<entity>".r.findAllIn(entitiesText).length
       var entityTextArray = new Array[String](numEntities)
-      
+
       var i = 0
       for (i <- 0 to numEntities-1)
       {
@@ -60,7 +60,7 @@ object TweetEat extends App {
     }
 
    def parseAlchemyResponseIndividual(alchemyResponse:String,typeResponse:String) : String = {
-     
+
      if(alchemyResponse contains "<" + typeResponse + ">"){
        val scoreBegin = alchemyResponse indexOf "<" + typeResponse + ">"
        val scoreEnd = alchemyResponse indexOf "</" + typeResponse + ">"
@@ -74,7 +74,7 @@ object TweetEat extends App {
     var entityMap = collection.mutable.Map[String, collection.mutable.Map[String,Double]]()
     //handle aggregation
     //{ <entity> : { numObservations: <Double>, scoreTotal: <Double>, average:<Double>} }
-    def aggregateWrapper(entityArray:Array[String],sentimentScore:String) = 
+    def aggregateWrapper(entityArray:Array[String],sentimentScore:String) =
     {
       var entityString = ""
       for (entityString <- entityArray)
@@ -82,11 +82,11 @@ object TweetEat extends App {
         aggregateSingleEntityAndSentiments(entityString,sentimentScore)
       }
     }
-  
-    def aggregateSingleEntityAndSentiments(entity:String,sentimentScore:String) = 
+
+    def aggregateSingleEntityAndSentiments(entity:String,sentimentScore:String) =
     {
       var newMap = collection.mutable.Map[String,Double]()
-      
+
       //never seen the entity
       if (!(entityMap contains entity))
       {
@@ -130,34 +130,34 @@ object TweetEat extends App {
 
   rawTweets.foreachRDD(rdd => {
     // data aggregated in the driver
-    
+
     println(" ")
 
-    
+
     for(tweet <- rdd.collect().toArray) {
 
-        val alchemyResponseSentiment = getAlchemyResults(tweet, "TextGetTextSentiment" ) 
-        val alchemyResponseEntity = getAlchemyResults(tweet, "TextGetRankedNamedEntities" )  
+        val alchemyResponseSentiment = getAlchemyResults(tweet, "TextGetTextSentiment" )
+        val alchemyResponseEntity = getAlchemyResults(tweet, "TextGetRankedNamedEntities" )
         println( " " )
         println(tweet);
         println( " " )
         println( alchemyResponseSentiment )
         println( alchemyResponseEntity )
         println( " " )
-        
+
         val sentimentScore = parseAlchemyResponseIndividual(alchemyResponseSentiment,"score")
         val sentimentType = parseAlchemyResponseIndividual(alchemyResponseSentiment,"type")
         val language = parseAlchemyResponseIndividual(alchemyResponseSentiment,"language")
         val entities = parseAlchemyResponseEntity(alchemyResponseEntity,"text")
-        
+
         println("sentiment type: " + sentimentType)
-        println("sentiment score: " + sentimentScore) 
+        println("sentiment score: " + sentimentScore)
         println("language: " + language)
         println("entities: " + entities.mkString(", "))
-        
+
         aggregateWrapper(entities,sentimentScore)
-        
-        entityMap.keys.foreach{ i =>  
+
+        entityMap.keys.foreach{ i =>
                      print( "Key = " + i )
                      println(" Value = " + entityMap(i) )}
     }
