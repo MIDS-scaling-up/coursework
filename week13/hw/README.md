@@ -91,6 +91,8 @@ From the source, you can follow the GitHub readme for instructions to compile. B
     http://tecadmin.net/install-java-8-on-centos-rhel-and-fedora/
 
 To recompile ADAM
+
+
     wget http://ftp.wayne.edu/apache/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz
     tar zxvf apache-maven-3.3.3-bin.tar.gz
     export PATH=$PATH:~/apache-maven-3.3.3/bin
@@ -100,6 +102,7 @@ To recompile ADAM
     cd adam
     export MAVEN_OPTS="-Xmx512m -XX:MaxPermSize=256m"
     mvn clean package -DskipTests
+
 
 The source also has the sample data that you will use to run sanity check.
 
