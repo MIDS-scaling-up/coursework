@@ -1,7 +1,7 @@
 ## 1.0. Introduction and reference
 
 This lab is to familiarize you with the process of NGS -- next generation sequencing -- whereby already sequenced genomic fragments are aligned using a 
-reference genome and then SNPs are identified.  We will be using the [crossbow tool](http://bowtie-bio.sourceforge.net/crossbow/index.shtml) for this task
+reference genome and then SNPs are identified.  We will be using the [crossbow tool](http://bowtie-bio.sourceforge.net/crossbow/index.shtml) for this lab
 
 
 ## 2.0. Preparing the cluster
@@ -64,5 +64,35 @@ We are now able to run it, e.g.
 
 This should take just under two hours.
 
-You should see /crossbow/example/mouse17/output_full/17.gz  of 3.32MB in size  if all goes well.
+You should see /crossbow/example/mouse17/output_full/17.gz  of 3.32MB in size  in HDFS if all goes well.
+     hadoop dfs -get /crossbow/example/mouse17/output_full/17.gz .
+Each individual record is in the [SOAPsnp](http://soap.genomics.org.cn/soapsnp.html) output format. SOAPsnp's format consists of 1 SNP per line with several tab-separated fields per SNP. The fields are:
 
+    Chromosome ID
+    1-based offset into chromosome
+    Reference genotype
+    Subject genotype
+    Quality score of subject genotype
+    Best base
+    Average quality score of best base
+    Count of uniquely aligned reads corroborating the best base
+    Count of all aligned reads corroborating the best base
+    Second best base
+    Average quality score of second best base
+    Count of uniquely aligned reads corroborating second best base
+    Count of all aligned reads corroborating second best base
+    Overall sequencing depth at the site
+    Sequencing depth of just the paired alignments at the site
+    Rank sum test P-value
+    Average copy number of nearby region
+    Whether the site is a known SNP from the file specified with -s
+    Note that field 15 was added in Crossbow and is not output by unmodified SOAPsnp.
+
+    For further details, see the [SOAPsnp](http://soap.genomics.org.cn/soapsnp.html) manual.
+
+## 2.0. Assembling a full human genome
+This is a significant compute task (~500 core-hours) , so it'll take forever unless your cluster is up to par.  The cluster also needs to have at least 1 TB of space for temporary files.  We prepared two scripts for you that make is look easy.  The first one downloads the reference genome and the manifest and inserts it into HDFS.  IT only takes a few minutes to run:
+    ./hg19-prep.sh
+    
+Once that's completed, all we need to do is kick off the processing and sit back / enjoy the show.  
+    ./hg19-run.sh
