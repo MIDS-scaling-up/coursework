@@ -95,7 +95,9 @@ Note that field 15 was added in Crossbow and is not output by unmodified SOAPsnp
 
 ## 2.0. Assembling a full human genome
 This is a significant compute task (~500 core-hours) , so it'll take forever unless your cluster is up to par.  The cluster also needs to have at least 1 TB of space for temporary files.  We prepared two scripts for you that make is look easy.  The first one downloads the reference genome and the manifest and inserts it into HDFS.  IT only takes a few minutes to run:
+
     ./hg19-prep.sh
     
 Once that's completed, all we need to do is kick off the processing and sit back / enjoy the show.  
+
     ./hg19-run.sh
