@@ -86,9 +86,8 @@ Each individual record is in the [SOAPsnp](http://soap.genomics.org.cn/soapsnp.h
     Rank sum test P-value
     Average copy number of nearby region
     Whether the site is a known SNP from the file specified with -s
-    Note that field 15 was added in Crossbow and is not output by unmodified SOAPsnp.
-
-    For further details, see the [SOAPsnp](http://soap.genomics.org.cn/soapsnp.html) manual.
+    
+Note that field 15 was added in Crossbow and is not output by unmodified SOAPsnp. For further details, see the [SOAPsnp](http://soap.genomics.org.cn/soapsnp.html) manual.
 
 ## 2.0. Assembling a full human genome
 This is a significant compute task (~500 core-hours) , so it'll take forever unless your cluster is up to par.  The cluster also needs to have at least 1 TB of space for temporary files.  We prepared two scripts for you that make is look easy.  The first one downloads the reference genome and the manifest and inserts it into HDFS.  IT only takes a few minutes to run:
