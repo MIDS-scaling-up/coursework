@@ -81,3 +81,6 @@ Then run your Spark job
 ## 2.5. Submission
 
 Please submit a document that contains both the logs and command line output from execution of the commands you submitted to Spark.
+
+## 2.6.  Closing remarks
+This was just an introductory lab that barely scratches the surface of what's possible with Adam and Spark, but hopefully it gives you an idea.  If you are interested, you can do the [more involved lab](http://bdgenomics.org/blog/2015/02/02/scalable-genomes-clustering-with-adam-and-spark/)
