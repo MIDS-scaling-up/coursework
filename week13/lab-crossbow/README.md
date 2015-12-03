@@ -46,10 +46,9 @@ To connect to the master node as use hadoop, do
 To be sure, let's validate crossbow:
 
 
-cd crossbow
-./cb_local --test
+cd crossbow && ./cb_local --test
 
-# it should pass as OK.  If not , you'll need to go back..
+It should pass as OK.  If not , you'll need to go back..
 
 [c] Get the mouse chromosome 17 example working, as described here:
 http://bowtie-bio.sourceforge.net/crossbow/manual.shtml#cb-example-mouse17-hadoop
