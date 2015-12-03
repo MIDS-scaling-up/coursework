@@ -4,7 +4,7 @@ This lab is to familiarize you with the process of NGS -- next generation sequen
 reference genome and then SNPs are identified.  We will be using the [crossbow tool](http://bowtie-bio.sourceforge.net/crossbow/index.shtml) for this lab
 
 
-## 2.0. Preparing the cluster
+## 2.0. Prepare the cluster
 
 Pick a machine where you have the SoftLayer CLI installed.  Clone the simple cluster repo:
 
@@ -40,7 +40,7 @@ This section follows [this guide](http://bowtie-bio.sourceforge.net/crossbow/man
 
     cd $CROSSBOW_HOME/reftools
 
-This will prepare the reference genome for the chromosome  and the manifest file.  It will take ~ 10 min
+This will prepare the reference genome for the chromosome  and the manifest file. The manifest file containe links to sequences of all incoming sequenced (but not assembled) DNA fragments.  This is the incoming data set; it needs to be downloaded and inserted ito HDFS. It will take a few min to run
 
     ./mm9_chr17_jar
 
@@ -62,7 +62,11 @@ We are now able to run it, e.g.
     --output=hdfs:///crossbow/example/mouse17/output_full \
     --reference=hdfs:///crossbow-refs/mm9_chr17.jar
 
-This should take just under two hours.
+This should take just under two hours.  You will see four jobs in hadoop:
+* pre-processing downloads (using the manifest) incoming DNA fragments and inserts them into HDFS.
+* alignment aligns the fragment using the reference genome.  This is the longest part of the computation
+* variant calling creates the snps
+* the final part is cleanup and the creation of chromosome SNP  zip files
 
 You should see /crossbow/example/mouse17/output_full/17.gz  of 3.32MB in size  in HDFS if all goes well.
      hadoop dfs -get /crossbow/example/mouse17/output_full/17.gz .
