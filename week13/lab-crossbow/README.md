@@ -1,7 +1,7 @@
 # 1.0. Introduction and reference
 
 This lab is to familiarize you with the process of NGS -- next generation sequencing -- whereby already sequenced genomic fragments are aligned using a 
-reference genome and then SNPs are identified.  We will be using the crossbow tool for this task
+reference genome and then SNPs are identified.  We will be using the [crossbow tool](http://bowtie-bio.sourceforge.net/crossbow/index.shtml) for this task
 
 
 
@@ -43,7 +43,9 @@ To connect to the master node as use hadoop, do
 ./sshmaster.sh
 
 
-# validate crossbow:
+To be sure, let's validate crossbow:
+
+
 cd crossbow
 ./cb_local --test
 
