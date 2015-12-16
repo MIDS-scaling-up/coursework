@@ -50,11 +50,11 @@ Or you can use the attached [converter.py] (converter.py) script.
 
 To bulk upload the properly formed business.json file, we do something like:
 
-`curl -v -i -X POST -H 'Content-Type: application/json' -d @business.json https://userid:passwrd@user.cloudant.com/databasename/_bulk_docs`
+`curl -v -i -X POST -H 'Content-Type: application/json' -d @business.json https://userid:passwrd@userid.cloudant.com/databasename/_bulk_docs`
 
 Now check that your documents made it over:
 
-`curl -v -i -X GET -H 'Content-Type: application/json' https://userid:passwrd@user.cloudant.com/yelp`
+`curl -v -i -X GET -H 'Content-Type: application/json' https://userid:passwrd@userid.cloudant.com/yelp`
 
 Here's the design doc that we'd need to create in order to be able to retrieve businesses by business id along with their reviews. This should be done via the GUI.
 
