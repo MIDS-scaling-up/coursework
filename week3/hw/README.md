@@ -60,7 +60,7 @@ Then, edit the following arguments. Be sure to uncomment the HOST_IP and add you
     HOST_IP=198.11.199.177
     # Enable heat services
     enable_service h-eng h-api h-api-cfn h-api-cw
-    IMAGE_URLS+=",http://uec-images.ubuntu.com/releases/14.04/release/ubuntu-14.04-server-cloudimg-amd64-disk1.img,http://cdimage.debian.org/cdimage/openstack/8.0.0/debian-8.0.0-openstack-amd64.qcow2"
+    IMAGE_URLS+=",http://uec-images.ubuntu.com/releases/14.04/release/ubuntu-14.04-server-cloudimg-amd64-disk1.img,http://cdimage.debian.org/mirror/cdimage/openstack/testing/debian-testing-openstack-amd64.qcow2"
 
 Open up firewall access
 
