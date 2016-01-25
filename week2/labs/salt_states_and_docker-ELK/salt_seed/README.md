@@ -4,7 +4,7 @@
 
 Salt state and pillar data to set up a single-box ELK stack. To use this, you'll need to have a saltmaster (ask an instructor if you need help with this).
 
-You'll also need to generate an SSL certificate for the logstash forwarder and **replace** the dummy RSA private key content in `srv/pillar/ssl.sls`.  
+You'll also need to generate an SSL certificate for the logstash forwarder and **replace** the dummy RSA private key content in `srv/pillar/ssl.sls`.  It is located in [Github] (https://github.com/MIDS-scaling-up/coursework/blob/master/week2/labs/salt_states_and_docker-ELK/salt_seed/srv/pillar/ssl.sls).
 
 Your openssl key and cert generation commands may look like this (please review and change fields to match your locale and email address):
 
