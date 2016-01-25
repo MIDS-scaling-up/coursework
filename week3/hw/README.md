@@ -6,7 +6,7 @@ Please use CentOS latest (7); these steps are documented with the current versio
 
 You should already know how to provision a VM. Ensure that you give it a private key when you provision it. 
 
-Recommended resources are 8 cpus, 32GB RAM, 100GB of disk and 4 IP	s. Use ssh to connect once it comes up.
+Recommended resources are 8 cpus, 32GB RAM, 100GB of disk. Once the VM is provisioned, go to the portal and order 16 Portable Private IP addresses on your VLAN by selecting your VM on the Devices list, then clicking "Order IPs" on the Private network section. Use ssh to connect once it comes up.
 
 Enable iptables (to work around a new devstack installer bug)
 
