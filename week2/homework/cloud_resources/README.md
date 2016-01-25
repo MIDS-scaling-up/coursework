@@ -330,15 +330,6 @@ Upload a file from disk (named “another_test_file.txt”) to a new container n
 
     swift upload more_files /tmp/another_test_file.txt
 
-## Ordering VLANs
-
-The word ‘VLAN’ is an acronym for Virtual Local Area Network. A VLAN is logical network that is separate from other VLANs even on the same networking equipment. These are useful to separate network domains for security and other reasons. If, for example, you are building a cluster of compute nodes that need to communicate with each other over a network but needn’t be reachable by systems outside of your cluster, it’s wise to isolate the cluster’s private traffic in a VLAN. You would accomplish this by ordering a private VLAN and provisioning systems with network interface(s) assigned to that private VLAN.
-
-### Explore the VLAN Ordering Form
-
-SoftLayer allows users to order their own VLANs. Browse to https://control.softlayer.com/network/vlans and click on the link labeled “Order VLAN”. Select the radio button “Order by Datacenter” then select a datacenter from the “Location” field. Choose “Private Network Vlan” from the field labeled “Select VLAN Type”. Note that you can provide a VLAN Name in the form. (You needn’t continue the order, merely understand the options provided).
-
-Note that ordered VLANs can be listed with the `slcli` tool. At provisioning time a network interface can be assigned to a VLAN with one of the two options `--vlan-public` or `--vlan-private`.
 
 ## Homework Submission
 
