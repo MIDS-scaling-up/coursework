@@ -10,54 +10,6 @@ For more information, please consult the [Spark Streaming Programming Guide](htt
 
 Provision 3 VSes to comprise a Spark cluster. You may set up the cluster manually following the instructions from the previous assignment, [Apache Spark Introduction](../../week6/hw/apache_spark_introduction).
 
-## Part 2: Set up Apache Tachyon RAM-based clustered storage layer
-
-One of the benefits of Apache Spark's architecture is its use of RAM rather than disk storage to move calculated data between phases of execution. This feature yields improved performance for many programs. But the need to persist data from intermediate calculations is not totally obviated by Spark's paradigm: many long-running programs use results from calculations made in previous sampling periods in subsequent ones. Note that this is a need of a different sort than the distributed application framework's need: in this scenario, it is a matter of application requirements to make use of previous calculations in a program.
-
-Spark can make use of many persistence solutions for both intermediate calculations and long-term storage. Often, Spark users will use HDFS or a lower-level disk-backed storage solution for this task. But this can create performance bottlenecks not unlike those that determined Apache Spark's RAM-based architecture for its own storage needs. One compelling in-RAM distributed storage solution is Apache Tachyon, a system that is often used as a high-performance caching layer for file-based storage.
-
-In this assignment, you may use Tachyon to aggregate results between sampling periods for a program that runs for approximately 30 minutes. **Note**: You are **not required** to use Tachyon in this assignment, but you may find it useful.
-
-### Tachyon installation
-
-On each system, perform the following steps.
-
-* Install Tachyon:
-
-        curl -L https://github.com/amplab/tachyon/releases/download/v0.7.1/tachyon-0.7.1-bin.tar.gz | tar -zx -C /usr/local --show-transformed --transform='s,/*[^/]*,tachyon,'
-
-* List workers in the Tachyon configuration file:
-
-        cat > /usr/local/tachyon/conf/workers <<EOF
-        spark1
-        spark2
-        spark3
-        EOF
-
-* Create `/usr/local/tachyon/conf/tachyon-env.sh` and set the master's IP (note that mine is 50.25.112.2, yours will be different):
-
-        cp /usr/local/tachyon/conf/tachyon-env.sh.template /usr/local/tachyon/conf/tachyon-env.sh
-        sed -i 's#export TACHYON_MASTER_ADDRESS=localhost#export TACHYON_MASTER_ADDRESS=50.25.112.2#g' /usr/local/tachyon/conf/tachyon-env.sh
-
-* Create the checkpoint directory:
-
-        mkdir -p /usr/local/tachyon/underFSStorage/tmp/tachyon/data
-
-Execute the following steps only on __spark1__.
-
-* Initialize and start Tachyon:
-
-        cd /usr/local/tachyon
-        ./bin/tachyon format
-        ./bin/tachyon-start.sh all Mount
-
-* Ensure all worker nodes have reported to the master by examining the UI output at http://{tachyon master ip}:19999/workers
-
-* Run Tachyon's tests to ensure you've correctly set up the system:
-
-        ./bin/tachyon runTests
-
-If the system reports that all tests have passed, you may proceed. One of the benefits of Tachyon is its convenient and familiar API: it provides Java `File` objects for interaction which means using it from Spark amounts to reading and writing from file streams just like you would if you were to write directly the filesystem.
 
 ## Part 2: Build a Twitter popular topic and user reporting system
 
@@ -65,11 +17,13 @@ Design and build a system for collecting data about 'popular' hashtags and users
 
 The output of your program should be lists of hashtags that were determined to be popular during the program's execution, as well as lists of users, per-hashtag, who were related to them. Think of this output as useful to marketers who want to target people to sell products to: the ones who surround conversations about particular events, products, and brands are more likely to purchase them than a random user.
 
-Your implementation should continually process incoming Twitter stream data for the duration of at least **30 minutes** and output a summary of data collected. During processing, your program should collect and aggregate tweets over a user-configurable sampling duration up to at least a few minutes. The number of top most popular hashtags, _n_, to aggregate **at each sampling interval** must be configurable as well. From tweets gathered during sampling periods you should determine:
+Your implementation should continually process incoming Twitter stream data for the duration of at least **30 minutes** and output a summary of data collected. Your program should also sample tweets over a **short** sampling duration in the range of a few minutes. The number of top most popular hashtags, _n_, to aggregate **at each sampling interval up to the total execution time** must be configurable as well. From tweets gathered during both short and long sampling periods you should determine:
 
 - The top _n_ most frequently-occurring hashtags among all tweets during the sampling period
 - The account names of users who authored tweets with popular hashtags in the period
 - The account names of users who were mentioned in popular tweets
+
+Your output should display these facts.
 
 ### Getting Started
 
@@ -77,7 +31,7 @@ Spark is written in Scala, a language that compiles to Java bytecode and runs on
 
 #### Official Twitter Example
 
-There is an official Spark Streaming Twitter example you can learn from. It's available at https://github.com/apache/spark/blob/master/examples/src/main/scala/org/apache/spark/examples/streaming/TwitterPopularTags.scala.
+There is an official Spark Streaming Twitter example you can learn from, but not that fulfilling this assignment isn't about merely extending what is in that example. It's available at https://github.com/apache/spark/blob/master/examples/src/main/scala/org/apache/spark/examples/streaming/TwitterPopularTags.scala.
 
 #### Twitter4J Library
 
@@ -150,6 +104,6 @@ Note that the 'clean' build target is only necessary if you remove files or depe
 
 ## Grading and Submission
 
-This is a graded assignment. Please submit credentials to access your cluster and execute the program. The output can be formatted as you see fit, but must contain lists of popular hashtags and related people.
+This is a graded assignment. Please submit credentials to access your cluster and execute the program. The output can be formatted as you see fit, but must contain lists of popular hashtags and people __related__ to each hashtag.
 
 When submitting credentials to your Spark system, please provide a short description of a particularly interesting decision or two you made about the processing interval, features about collection, or other features of your collection system that make for particularly useful output data.
