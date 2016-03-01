@@ -95,10 +95,10 @@ specific queries) would range partitioning be a good/bad choice?
 
 **Consistent Hashing** 
 
-1. Building on your previous example, implement a consistent hashing approach. Use [this Python file] (http://googleappengine.googlecode.com/svn/trunk/python/google/appengine/api/files/crc32c.py)
+1. Building on your previous example, implement a hashing approach. Use [this Python file] (http://googleappengine.googlecode.com/svn/trunk/python/google/appengine/api/files/crc32c.py)
 as your hash function. 
 
-1. Again, create 26 "shards" but with boundaries linear on the crc32 interval [0, pow(2,32)], and assign objects to shards based on ‘crc32(word)’. 
+1. Again, create 26 "shards" but with equidistant boundaries linear on the crc32 interval [0, pow(2,32)], and assign objects to shards based on ‘crc32(word)’. 
 
 1. Generate a plot or table listing the number of words stored in each shard. 
 
@@ -106,7 +106,8 @@ as your hash function.
 
 1. Suppose that each shard now lives on a separate database server. Under what workloads (e.g., specific queries) would range partitioning be a good/bad choice? 
 
-1. Suppose that you need to grow your "cluster" by adding 10 additional nodes to the distributed consistent-hashing "ring" you built in Exercise 2. By any means you choose, count the total number of objects that would migrate from one shard to a new shard if you were to divide the interval [0,pow(2,32)] into 36 shards instead of the preexisting 26 shards. 
+1. Suppose that you need to grow your "cluster" by adding 10 additional nodes to the distributed hashing "ring" you built in Exercise 2. By any means you choose, count the total number of objects that would migrate from one shard to a new shard if you were to divide the interval [0,pow(2,32)] into 36 equidistant shards instead of the preexisting 26 shards. 
+2. Augment the algorithm to be consistent hashing now.  Instead of equidistant shards, name each node, hash that name and use the number as the shard boundary.  For each node, define a certain number of virtual nodes that represent it on the ring.
 
 1. For a consistent-hashing ring, what is your expectation for the average number of keys that need to be remapped under a table resize if you have ‘K’ keys and ‘n’ shards? How is that value different for standard hash tables? 
 
