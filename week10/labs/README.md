@@ -77,3 +77,5 @@ From this directory, run the following command (make sure you use the public IP 
 **Note that MASTER\_NODE\_IP:7077 is found on the Spark UI in the first line**
 
 You can monitor progress in the Spark UI and on the command line.
+
+##To clear out your servers, select the application and click "Stop" on the Effectors tab. This will break down the app and cancel all servers in SoftLayer
