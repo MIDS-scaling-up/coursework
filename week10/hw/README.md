@@ -1,7 +1,7 @@
 #Orchestrate with Brooklyn
-You'll need a VM with 2 CPUs and 4G of RAM to serve as the brooklyn server, e.g. this is how Dima did it.  Note that the key needs to exist in SoftLayer for this to work (p305 in this case)
+You'll need a VM with 2 CPUs and 4G of RAM to serve as the brooklyn server, e.g. this is how Dima did it.  Note that the key needs to exist in SoftLayer for this to work (YOUR_KEY in this case)
 
-    slcli vs create --datacenter=sjc01 --domain=dima.com  --hostname=brooklyn --os=UBUNTU_LATEST_64 --key=p305 --cpu=2 --memory=4096 --hourly --wait=64000
+    slcli vs create --datacenter=sjc01 --domain=dima.com  --hostname=brooklyn --os=UBUNTU_LATEST_64 --key=YOUR_KEY --cpu=2 --memory=4096 --billing=hourly --wait=64000
 
 
 In general, a good starting point for Brooklyn is here:
@@ -10,45 +10,50 @@ https://brooklyn.incubator.apache.org/v/latest/start/blueprints.html
 ###Connect to your VM and install the latest brooklyn
 
 
-    ###Create a key pair on the brooklyn node.
-    cd .ssh
-    ssh-keygen –t rsa
-    # Leave the passphrase blank.
+    # Install Java
+    apt-get install openjdk-7-jre-headless
 
-    The public key and private key are saved in ~/.ssh/id_rsa.pub and
-    ~/.ssh/id_rsa respectively.
+    #Add a new user and change to that user
+    adduser brooklyn
+    su - brooklyn
+    
+    ###Create a key pair on the brooklyn node.
+    ssh-keygen
+    
+    # Leave the passphrase blank.
+    # The public key and private key are saved in ~/.ssh/id_rsa.pub 
+    # and ~/.ssh/id_rsa respectively.
 
     # Add the public key (in ~/.ssh/id_rsa.pub) to /root/.ssh/authorized_keys on the node.
+    
+    cat .ssh/id_rsa.pub >> .ssh/authorized_keys
 
-    # Validate that this works by doing this
-    ssh localhost
+    # Validate that this works by doing this ssh
     # it should be able to log you in without a password.
+    ssh localhost
 
+    
+    
 ### Now install Brooklyn
 
     #Change to your home directory
     cd
 
     #Download the Brooklyn source code tarball
-    wget http://apache.mesi.com.ar/incubator/brooklyn/0.7.0-M2-incubating/apache-brooklyn-0.7.0-M2-incubating.tar.gz
+    wget https://repository.apache.org/service/local/repositories/snapshots/content/org/apache/brooklyn/brooklyn-dist/0.9.0-SNAPSHOT/brooklyn-dist-0.9.0-20160307.090929-159-dist.tar.gz
 
     #unpack the tarball
-    tar zxvf apache-brooklyn-0.7.0-M2-incubating.tar.gz
+    tar zxf brooklyn-dist-0.9.0-20160307.090929-159-dist.tar.gz
 
-    #chane working directory to the unpacked code
-    cd apache-brooklyn-0.7.0-M2-incubating
+    #change working directory to the unpacked code
+    cd brooklyn-dist-0.9.0-SNAPSHOT
 
-    #install Maven
-    apt-get install maven
-
-    #build brooklyn
-    mvn clean install -DskipTests
-
+    
 ### Configure SoftLayer Location
 Brooklyn uses a properties file (~/.brooklyn/brooklyn.properties) to define things like Cloud Endpoints (SoftLayer in our case) and portal security.
 
-    mkdir /root/.brooklyn
-edit /root/.brooklyn/brooklyn.properties  and add the following lines:
+    mkdir ~/.brooklyn
+edit ~/.brooklyn/brooklyn.properties  and add the following lines:
 
     brooklyn.location.jclouds.softlayer.identity=YOUR_SOFTLAYER_USERNAME
     brooklyn.location.jclouds.softlayer.credential=YOUR_SOFTLAYER_API_KEY
@@ -63,6 +68,8 @@ edit /root/.brooklyn/brooklyn.properties  and add the following lines:
     brooklyn.datadir=~/.brooklyn/
     # known good image, available in all regions
     # brooklyn.location.jclouds.softlayer.imageId=13945
+    # ssh private key
+    brooklyn.location.jclouds.privateKeyFile=~/.ssh/id_rsa
     # locations
     brooklyn.location.named.Softlayer\ Seattle=jclouds:softlayer:sea01
     brooklyn.location.named.Softlayer\ Washington=jclouds:softlayer:wdc01
@@ -74,6 +81,8 @@ edit /root/.brooklyn/brooklyn.properties  and add the following lines:
     brooklyn.location.named.Softlayer\ Amsterdam\ 1=jclouds:softlayer:ams01
     brooklyn.location.named.Softlayer\ London\ 2=jclouds:softlayer:lon02
     brooklyn.location.named.Softlayer\ Hong\ Kong\ 2=jclouds:softlayer:hkg02
+    brooklyn.location.jclouds.privateKeyFile=~/.ssh/id_rsa
+
 
 
 Change the permissions on the new properties file
@@ -83,15 +92,15 @@ Change the permissions on the new properties file
 
 ###Start it:
 
-    cd /root/apache-brooklyn-0.7.0-M2-incubating/usage/dist/target/brooklyn-dist
+    cd ~/cd brooklyn-dist-0.9.0-SNAPSHOT/
     bin/brooklyn launch -b <your external ip>
 
 
 ###Now connect to the web console
-Point your browser to https://yourvmip:8081 and log in with the creds you specififed in the brooklyn.properties file
+Point your browser to https://your_vm_ip:8443 and log in with the creds you specififed in the brooklyn.properties file (default is admin/devcl0ud).
 
 ###Deploy a sample blueprint.
-Go to the applications tab, click on the + icon, then on the yaml tab and paste the following blueprint:
+The UI will show a deployment window. Click on the YAML tab, then paste the following blueprint:
 
     name: My Web Cluster
 
