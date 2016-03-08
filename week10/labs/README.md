@@ -38,6 +38,7 @@ services:
 * Click on the Controlled Dynamic Web AppCluster, Effectors tab  
 * Invoke the resize policy and use a value of two  
 * Observe reprovisioning
+* After a couple minutes with no traffic, the pool will automatically resize to 1
 
 
 
