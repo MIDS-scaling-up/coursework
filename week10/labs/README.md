@@ -1,44 +1,44 @@
 #Lab 1 --  fun with policies... 
 ### Deploy this into your brooklyn:
-    name: appserver-w-policy-all
-    location: jclouds:softlayer:ams01
+In your brooklyn UI, navigate to Applications and click the plus sign next to the word "Applications" on the upper left side of the screen. Then select the YAML tab on the resulting screen.
 
+Copy and paste this definition into the text entry area.
 
-    services:
-    - type: brooklyn.entity.webapp.ControlledDynamicWebAppCluster
-      initialSize: 1
-      memberSpec:
-        $brooklyn:entitySpec:
-          type: brooklyn.entity.webapp.jboss.JBoss7Server
-          brooklyn.config:
-            wars.root: http://search.maven.org/remotecontent?filepath=io/brooklyn/example/brooklyn-example-hello-world-sql-webapp/0.6.0/brooklyn-example-hello-world-sql-webapp-0.6.0.war
-            http.port: 8080+
-            java.sysprops: 
-              brooklyn.example.db.url: $brooklyn:formatString("jdbc:%s%s?user=%s\\&password=%s",
-                  component("db").attributeWhenReady("datastore.url"), "visitors", "brooklyn", "br00k11n")
-      brooklyn.enrichers:
-      - type: brooklyn.policy.ha.ServiceFailureDetector
-      brooklyn.policies:
-      - type: brooklyn.policy.ha.ServiceReplacer
-        brooklyn.config:
-          failureSensorToMonitor: $brooklyn:sensor("brooklyn.policy.ha.HASensors", "ha.entityFailed")  
-      - policyType: brooklyn.policy.autoscaling.AutoScalerPolicy
-        brooklyn.config:
-          metric: $brooklyn:sensor("brooklyn.entity.webapp.DynamicWebAppCluster", "webapp.reqs.perSec.windowed.perNode")
-          metricLowerBound: 10
-          metricUpperBound: 100
-          minPoolSize: 1
-          maxPoolSize: 5
-    - type: brooklyn.entity.database.mysql.MySqlNode
-      id: db
-      name: DB HelloWorld Visitors
+```
+name: appserver-w-policy
+location: jclouds:softlayer:tor01
+services:
+- type: org.apache.brooklyn.entity.webapp.ControlledDynamicWebAppCluster
+  initialSize: 1
+  memberSpec:
+    $brooklyn:entitySpec:
+      type: org.apache.brooklyn.entity.webapp.jboss.JBoss7Server
       brooklyn.config:
-        datastore.creation.script.url: https://github.com/brooklyncentral/brooklyn/raw/master/usage/launcher/src/test/resources/visitors-creation-script.sql
+        wars.root: http://search.maven.org/remotecontent?filepath=io/brooklyn/example/brooklyn-example-hello-world-sql-webapp/0.6.0/brooklyn-example-hello-world-sql-webapp-0.6.0.war
+        http.port: 8080+
+        java.sysprops: 
+          brooklyn.example.db.url: $brooklyn:formatString("jdbc:%s%s?user=%s\\&password=%s",
+              component("db").attributeWhenReady("datastore.url"), "visitors", "brooklyn", "br00k11n")
+  brooklyn.policies:
+  - policyType: org.apache.brooklyn.policy.autoscaling.AutoScalerPolicy
+    brooklyn.config:
+      metric: $brooklyn:sensor("org.apache.brooklyn.entity.webapp.DynamicWebAppCluster", "webapp.reqs.perSec.windowed.perNode")
+      metricLowerBound: 10
+      metricUpperBound: 100
+      minPoolSize: 1
+      maxPoolSize: 5
+- type: org.apache.brooklyn.entity.database.mysql.MySqlNode
+  id: db
+  name: DB HelloWorld Visitors
+  brooklyn.config:
+    datastore.creation.script.url: https://raw.githubusercontent.com/apache/brooklyn-library/02abbab09ab514524bb9a9edbd0a525447d15c99/examples/simple-web-cluster/src/main/resources/visitors-creation-script.sql
+```
 
 * Wait for this blueprint to come up  
-* Click on the Controlled Dynamic Web AppCluster, policies tab  
-* The autoscaler policy - minpool size -- change to two  
+* Click on the Controlled Dynamic Web AppCluster, Effectors tab  
+* Invoke the resize policy and use a value of two  
 * Observe reprovisioning
+* After a couple minutes with no traffic, the pool will automatically resize to 1
 
 
 
@@ -52,70 +52,20 @@ This assumes that you've done the homework first...
 * ensure that ~/.brooklyn/brooklyn.properties is set up as described in the homework
 
 
-### Configure the VM
-    #Install the JDK
-    apt-get install -y default-jdk git
+### Add Spark to the Catalog
 
-    # pull the spark blueprint code bundled with a release of brooklyn
-    cd
-    git clone https://github.com/brooklyncentral/brooklyn-spark.git
-    cd brooklyn-spark
+From the Brooklyn UI, go to the Catalog tab and click the plus sign next to the word Catalog on the upper left portion of the page. Select YAML, then copy and paste the [catalog.bom] (https://github.com/brooklyncentral/brooklyn-spark/blob/master/catalog.bom) to the text edit field. Submit the form.
 
-###Configure pom.xml; add the following to it just before \</project\>
-
-    
-    <repositories>
-        <!-- enable snapshots from sonatype -->
-        <repository>
-          <id>sonatype-nexus-snapshots</id>
-          <name>Sonatype Nexus Snapshots</name>
-          <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-          <releases>
-            <enabled>false</enabled>
-          </releases>
-          <snapshots>
-            <enabled>true</enabled>
-          </snapshots>
-        </repository>
-        <!-- enable snapshots from apache -->
-        <repository>
-          <id>apache-nexus-snapshots</id>
-          <name>Apache Nexus Snapshots</name>
-          <url>https://repository.apache.org/content/repositories/snapshots</url>
-          <releases>
-            <enabled>false</enabled>
-          </releases>
-          <snapshots>
-            <enabled>true</enabled>
-          </snapshots>
-        </repository>
-      </repositories>
-
-###Run a build
-
-    # build
-    mvn clean install -DskipTests
-
-### After it cleanly builds...
-
-
-    cd target/brooklyn-spark-dist/brooklyn-spark 
-    ./start.sh launch -l jclouds:softlayer:ams01 --spark
- 
-###This will start brooklyn on https://youripaddress:8443/
-
-e.g.
-https://198.11.207.91:8443
+Select the Applications tab and click the plus sign next to the word Applications on the upper left side of the page. Select "Spark Cluster" from the catalog and click "Next". Select the location and name the cluster, then click "Finish".
 
 Go to the applications tab and observe your Spark provisioning in real time.
-Once its up , click on the master node and sensor tab and get its ip address.  Connect to the Spark UI like this
-http://MASTER_NODE_IP:8080
+Once its up , click on the master node and Summary tab and click the link to connect to the Spark UI (it will look like http://MASTER\_NODE\_IP:8080).
 
 Login to the master node (via ssh) and update /etc/hosts to replace 127.0.0.1 with the public IP of the master node. This is to compensate for a bug in brooklyn's deployment of Spark.
 
-From the master node, cd to the spark directory:
+Ssh to the master node (you can see the ssh address from the Brooklyn UI at Applications -> Your Application -> Master Node -> Sensors -> host.sshAddress and use the ssh key you identified in your brooklyn properties file). Then cd to the spark directory:
 
-    cd .brooklyn/apps/HhIBwRQd/entities/SparkNode_Q6ULr5gk/spark-1.1.0/
+    cd .brooklyn/apps/HhIBwRQd/entities/SparkNode_Q6ULr5gk/spark-1.6.0-bin-hadoop2.6/
    
 
 **Note that HhIBwRQd and SparkNode_Q6ULr5gk are dynamically generated and will be different on your install.**
@@ -124,4 +74,8 @@ From this directory, run the following command (make sure you use the public IP 
 
     MASTER=spark://MASTER_NODE_IP:7077 ./bin/run-example SparkPi 100
 
+**Note that MASTER\_NODE\_IP:7077 is found on the Spark UI in the first line**
+
 You can monitor progress in the Spark UI and on the command line.
+
+##To clear out your servers, select the application and click "Stop" on the Effectors tab. This will break down the app and cancel all servers in SoftLayer
