@@ -40,10 +40,12 @@ https://brooklyn.incubator.apache.org/v/latest/start/blueprints.html
     cd
 
     #Download the Brooklyn source code tarball
-    wget https://repository.apache.org/service/local/repositories/snapshots/content/org/apache/brooklyn/brooklyn-dist/0.9.0-SNAPSHOT/brooklyn-dist-0.9.0-20160308.031323-160-dist.tar.gz
+    wget "https://repository.apache.org/service/local/artifact/maven/redirect?r=snapshots&g=org.apache.brooklyn&a=brooklyn-dist&v=0.9.0-SNAPSHOT&c=dist&e=tar.gz"
+    
+    mv redirect\?r\=snapshots\&g\=org.apache.brooklyn\&a\=brooklyn-dist\&v\=0.9.0-SNAPSHOT\&c\=dist\&e\=tar.gz brooklyn-dist-0.9.0.tar.gz
 
     #unpack the tarball
-    tar zxf brooklyn-dist-0.9.0-20160307.090929-159-dist.tar.gz
+    tar zxf brooklyn-dist-0.9.0.tar.gz
 
     #change working directory to the unpacked code
     cd brooklyn-dist-0.9.0-SNAPSHOT
