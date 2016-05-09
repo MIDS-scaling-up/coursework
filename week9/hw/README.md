@@ -31,7 +31,8 @@ Spark is written in Scala, a language that compiles to Java bytecode and runs on
 
 #### Official Twitter Example
 
-There is an official Spark Streaming Twitter example you can learn from, but not that fulfilling this assignment isn't about merely extending what is in that example. It's available at https://github.com/apache/spark/blob/master/examples/src/main/scala/org/apache/spark/examples/streaming/TwitterPopularTags.scala.
+There is an official Spark Streaming Twitter example you can learn from, but not that fulfilling this assignment isn't about merely extending what is in that example. It's available at https://github.com/apache/spark/blob/branch-1.6/examples/src/main/scala/org/apache/spark/examples/streaming/TwitterPopularTags.scala
+
 
 #### Twitter4J Library
 
