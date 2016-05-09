@@ -8,7 +8,9 @@ For more information, please consult the [Spark Streaming Programming Guide](htt
 
 ## Part 1: Set up a 3-node Spark Cluster
 
-Provision 3 VSes to comprise a Spark cluster. You may set up the cluster manually following the instructions from the previous assignment, [Apache Spark Introduction](../../week6/hw/apache_spark_introduction).
+Provision 3 VSes to comprise a Spark cluster. You may set up the cluster manually following the instructions from the previous assignment, [Apache Spark Introduction](../../week6/hw/apache_spark_introduction). 
+
+***Note that we are using Spark 1.6.1. This homework will not work with Spark 2.0***
 
 
 ## Part 2: Build a Twitter popular topic and user reporting system
