@@ -62,8 +62,8 @@ The Scala Build Tool (SBT) can be used to build a bytecode package (JAR file) fo
       version := "0.1.0",
       scalaVersion := "2.10.6",
       libraryDependencies ++= Seq(
-        "org.apache.spark" %% "spark-streaming" % "1.5.0" % "provided",
-        "org.apache.spark" %% "spark-streaming-twitter" % "1.5.0",
+        "org.apache.spark" %% "spark-streaming" % "1.6.1" % "provided",
+        "org.apache.spark" %% "spark-streaming-twitter" % "1.6.1",
         "com.typesafe" % "config" % "1.3.0"
       ),
       mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
