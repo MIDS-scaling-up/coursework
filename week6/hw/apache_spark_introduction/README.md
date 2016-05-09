@@ -25,7 +25,7 @@ Set the proper location of `JAVA_HOME` and test it:
 
 Download and extract a recent, prebuilt version of Spark (link obtained from ):
 
-    curl http://d3kbcqa49mib13.cloudfront.net/spark-1.5.0-bin-hadoop2.6.tgz | tar -zx -C /usr/local --show-transformed --transform='s,/*[^/]*,spark,'
+    curl http://www.gtlib.gatech.edu/pub/apache/spark/spark-1.6.1/spark-1.6.1-bin-hadoop2.6.tgz | tar -zx -C /usr/local --show-transformed --transform='s,/*[^/]*,spark,'
 
 For convenience, set `$SPARK_HOME`:
 
@@ -146,7 +146,7 @@ Create a simple SBT build file in the same directory as the source file you crea
     name := "Simple Project"
     version := "1.0"
     scalaVersion := "2.10.4"
-    libraryDependencies += "org.apache.spark" %% "spark-core" % "1.5.0"
+    libraryDependencies += "org.apache.spark" %% "spark-core" % "1.6.1"
     resolvers += "Akka Repository" at "http://repo.akka.io/releases/"
 
 Package your program into a jar file (a standard Java archive) for submission to the Spark cluster:
