@@ -8,7 +8,9 @@ For more information, please consult the [Spark Streaming Programming Guide](htt
 
 ## Part 1: Set up a 3-node Spark Cluster
 
-Provision 3 VSes to comprise a Spark cluster. You may set up the cluster manually following the instructions from the previous assignment, [Apache Spark Introduction](../../week6/hw/apache_spark_introduction).
+Provision 3 VSes to comprise a Spark cluster. You may set up the cluster manually following the instructions from the previous assignment, [Apache Spark Introduction](../../week6/hw/apache_spark_introduction). 
+
+***Note that we are using Spark 1.6.1. This homework will not work with Spark 2.0***
 
 
 ## Part 2: Build a Twitter popular topic and user reporting system
@@ -31,7 +33,8 @@ Spark is written in Scala, a language that compiles to Java bytecode and runs on
 
 #### Official Twitter Example
 
-There is an official Spark Streaming Twitter example you can learn from, but not that fulfilling this assignment isn't about merely extending what is in that example. It's available at https://github.com/apache/spark/blob/master/examples/src/main/scala/org/apache/spark/examples/streaming/TwitterPopularTags.scala.
+There is an official Spark Streaming Twitter example you can learn from, but not that fulfilling this assignment isn't about merely extending what is in that example. It's available at https://github.com/apache/spark/blob/branch-1.6/examples/src/main/scala/org/apache/spark/examples/streaming/TwitterPopularTags.scala
+
 
 #### Twitter4J Library
 
@@ -59,8 +62,8 @@ The Scala Build Tool (SBT) can be used to build a bytecode package (JAR file) fo
       version := "0.1.0",
       scalaVersion := "2.10.6",
       libraryDependencies ++= Seq(
-        "org.apache.spark" %% "spark-streaming" % "1.5.0" % "provided",
-        "org.apache.spark" %% "spark-streaming-twitter" % "1.5.0",
+        "org.apache.spark" %% "spark-streaming" % "1.6.1" % "provided",
+        "org.apache.spark" %% "spark-streaming-twitter" % "1.6.1",
         "com.typesafe" % "config" % "1.3.0"
       ),
       mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
