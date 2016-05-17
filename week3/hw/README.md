@@ -4,7 +4,7 @@
 This homework should be pretty easy and consists mostly of reading. The concept of the Internet of Things deals with a large number of devices that communicate largely through messaging.
 
 ###MQTT 
-MQTT - http://mqtt.org/ is a lightweight protocol for the Internet of Things.  Please spend some time to read up on it.  In your homework submission, please write a one liner about the QoS 0,1, and 2 that MQTT enables.
+MQTT - http://mqtt.org/ is a lightweight messaging protocol for the Internet of Things.  Please spend some time to read up on it.  In your homework submission, please write a one liner about the QoS 0,1, and 2 that MQTT enables.
 
 ###Mosquitto
 Perhaps the most popular OpenSource MQTT toolkit is called Mosquitto.  Let's get it installed.  You should already know how to provision a VM. Use this knowledge to spin up a VM with 2G of RAM, 2 vCPUs, and the latest Ubuntu on it.  Next, ssh into your new VM and install mosquitto-clients:
@@ -12,7 +12,7 @@ Perhaps the most popular OpenSource MQTT toolkit is called Mosquitto.  Let's get
 apt-get install mosquitto-clients
 ```
 ### Blue Horizon
-Blue Horizon - http://bluehorizon.network - is our exprimental decentralized distributed Internet of Things platform.  Please spend some time reading through the introduction. Notice that the participating devices continuously send data into the cloud portion of the project.  You are welcome to join the project as well although it's not required :-)  Please review the Ethereum white paper located at https://github.com/ethereum/wiki/wiki/White-Paper   In a few sentences, why are block chains relevant for the Internet of Things?
+Blue Horizon - http://bluehorizon.network - is our exprimental decentralized distributed Internet of Things platform.  Please spend some time reading through the introduction. Notice that the participating devices continuously send data into the cloud portion of the project.  You are welcome to join the project as well although it's not required :-)  Please review the Ethereum white paper located at https://github.com/ethereum/wiki/wiki/White-Paper .  In a few sentences, how are block chains relevant for the Internet of Things?
 
 
 ### Subscribing to messages on the development  Blue Horizon MQTT Cloud Broker
