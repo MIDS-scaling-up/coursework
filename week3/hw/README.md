@@ -1,4 +1,4 @@
-#Assignment 3: Internet of Things and MQTT processing
+#Assignment 3: Internet of Things 101 and MQTT processing
 
 ##Instructions
 This homework should be pretty easy and consists mostly of reading. The concept of the Internet of Things deals with a large number of devices that communicate largely through messaging.
