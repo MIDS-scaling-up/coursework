@@ -18,3 +18,7 @@ At this point, we will use our new VM to subscribe to the public topic tree on t
 ```
 mosquitto_sub -t /applications/in/+/public/# -h 198.23.89.34
 ```
+In your homework submission, please explain what the + and # in the line above stand for, as well as provide a few lines of output that you see on screen.
+
+### IBM Internet of Things Foundation
+The 
