@@ -1,7 +1,8 @@
 #Assignment 3: MQTT processing
 
 ##Instructions
-This homework should be pretty easy and consists mostly of reading. 
+This homework should be pretty easy and consists mostly of reading. The concept of the Internet of Things deals with a large number of devices that communicate largely through messaging.
+
 ###MQTT 
 MQTT - http://mqtt.org/ is a lightweight protocol for the Internet of Things.  Please spend some time to read up on it.  In your homework submission, please write a one liner about the QoS 0,1, and 2 that MQTT enables.
 
@@ -11,7 +12,7 @@ Perhaps the most popular OpenSource MQTT toolkit is called Mosquitto.  Let's get
 apt-get install mosquitto-clients
 ```
 ### Blue Horizon
-Blue Horizon - http://bluehorizon.network - is our exprimental decentralized distributed Internet of Things platform.  Please spend some time reading through the introduction. Notice that the participating devices continuously send data into the cloud portion of the project.  You are welcome to join the project as well although it's not required :-)  Please review the Ethereum white paper located at https://github.com/ethereum/wiki/wiki/White-Paper
+Blue Horizon - http://bluehorizon.network - is our exprimental decentralized distributed Internet of Things platform.  Please spend some time reading through the introduction. Notice that the participating devices continuously send data into the cloud portion of the project.  You are welcome to join the project as well although it's not required :-)  Please review the Ethereum white paper located at https://github.com/ethereum/wiki/wiki/White-Paper   In a few sentences, why are block chains relevant for the Internet of Things?
 
 
 ### Subscribing to messages on the development  Blue Horizon MQTT Cloud Broker
