@@ -10,7 +10,7 @@ Perhaps the most popular OpenSource MQTT toolkit is called Mosquitto.  Let's get
 apt-get install mosquitto-clients
 ```
 ### Blue Horizon
-Blue Horizon - http://bluehorizon.network - is our exprimental decentralized distributed Internet of Things platform.  Please spend some time reading through the introduction. Notice that the participating devices continuously send data into the cloud portion of the project.  You are welcome to join the project as well although it's not required :-)
+Blue Horizon - http://bluehorizon.network - is our exprimental decentralized distributed Internet of Things platform.  Please spend some time reading through the introduction. Notice that the participating devices continuously send data into the cloud portion of the project.  You are welcome to join the project as well although it's not required :-)  Please review the Ethereum white paper located at https://github.com/ethereum/wiki/wiki/White-Paper
 
 
 ### Subscribing to messages on the development  Blue Horizon MQTT Cloud Broker
@@ -18,7 +18,6 @@ At this point, we will use our new VM to subscribe to the public topic tree on t
 ```
 mosquitto_sub -t /applications/in/+/public/# -h 198.23.89.34
 ```
-In your homework submission, please explain what the + and # in the line above stand for, as well as provide a few lines of output that you see on screen.  
+In your homework submission, please explain what the + and # in the line above stand for, as well as provide a few lines of output that you see on screen.  Can you recognize some of the messages?  What is their meaning?
 
-### The Internet of Things Foundation
-Now let us turn our attention to a Platform as a Service example.  IBM IoTF can consume MQTT inputs so let us try that.  Proceed to http://internetofthings.ibmcloud.com and sign up for a free account.  Log in and select an organization from the menu in the upper right corner. If you are asked, create a bluemix account  as well -  https://console.ng.bluemix.net/
+
