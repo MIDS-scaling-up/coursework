@@ -61,20 +61,18 @@ Select the Applications tab and click the plus sign next to the word Application
 Go to the applications tab and observe your Spark provisioning in real time.
 Once its up , click on the master node and Summary tab and click the link to connect to the Spark UI (it will look like http://MASTER\_NODE\_IP:8080).
 
-Login to the master node (via ssh) and update /etc/hosts to replace 127.0.0.1 with the public IP of the master node. This is to compensate for a bug in brooklyn's deployment of Spark.
-
 Ssh to the master node (you can see the ssh address from the Brooklyn UI at Applications -> Your Application -> Master Node -> Sensors -> host.sshAddress and use the ssh key you identified in your brooklyn properties file). Then cd to the spark directory:
 
-    cd .brooklyn/apps/HhIBwRQd/entities/SparkNode_Q6ULr5gk/spark-1.6.0-bin-hadoop2.6/
+    cd brooklyn-managed-processes/apps/yQiuvpwb/entities/VanillaSoftwareProcess_iEf3l3J0/spark-1.6.0-bin-hadoop2.6/
    
 
-**Note that HhIBwRQd and SparkNode_Q6ULr5gk are dynamically generated and will be different on your install.**
+**Note that yQiuvpwb and VanillaSoftwareProcess_iEf3l3J0 are dynamically generated and will be different on your install.**
 
 From this directory, run the following command (make sure you use the public IP of your master node):
 
     MASTER=spark://MASTER_NODE_IP:7077 ./bin/run-example SparkPi 100
 
-**Note that MASTER\_NODE\_IP:7077 is found on the Spark UI in the first line**
+**Note that MASTER\_NODE\_IP:7077 is found on the Spark UI in the first line. It is most likely the private (10.) IP address.**
 
 You can monitor progress in the Spark UI and on the command line.
 

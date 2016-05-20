@@ -40,15 +40,13 @@ https://brooklyn.incubator.apache.org/v/latest/start/blueprints.html
     cd
 
     #Download the Brooklyn source code tarball
-    wget "https://repository.apache.org/service/local/artifact/maven/redirect?r=snapshots&g=org.apache.brooklyn&a=brooklyn-dist&v=0.9.0-SNAPSHOT&c=dist&e=tar.gz"
-    
-    mv redirect\?r\=snapshots\&g\=org.apache.brooklyn\&a\=brooklyn-dist\&v\=0.9.0-SNAPSHOT\&c\=dist\&e\=tar.gz brooklyn-dist-0.9.0.tar.gz
+    wget "http://apache.mirrors.ionfish.org/brooklyn/apache-brooklyn-0.9.0/apache-brooklyn-0.9.0-bin.tar.gz"
 
     #unpack the tarball
-    tar zxf brooklyn-dist-0.9.0.tar.gz
+    tar zxf apache-brooklyn-0.9.0-bin.tar.gz
 
     #change working directory to the unpacked code
-    cd brooklyn-dist-0.9.0-SNAPSHOT
+    cd  apache-brooklyn-0.9.0-bin
 
     
 ### Configure SoftLayer Location
@@ -94,15 +92,15 @@ Change the permissions on the new properties file
 
 ###Start it:
 
-    cd ~/cd brooklyn-dist-0.9.0-SNAPSHOT/
-    bin/brooklyn launch -b <your external ip>
+    cd ~/apache-brooklyn-0.9.0-bin
+    nohup ./bin/brooklyn launch -b <your external ip> &
 
 
 ###Now connect to the web console
 Point your browser to https://your_vm_ip:8443 and log in with the creds you specififed in the brooklyn.properties file (default is admin/devcl0ud).
 
 ###Deploy a sample blueprint.
-The UI will show a deployment window. Click on the YAML tab, then paste the following blueprint:
+The UI will show a deployment window. Click on the YAML Composer button, then paste the following blueprint:
 
     name: My Web Cluster
 
@@ -126,6 +124,8 @@ The UI will show a deployment window. Click on the YAML tab, then paste the foll
 
 This will take a few minutes to provision.  Once the blueprint is up, you should be able to click on the My Web entity on the left and it'll display URL for the newly provisioned application on the right , e.g.
 http://169.53.137.237:8000/
+
+##To clear out your servers, select the application and click "Stop" on the Effectors tab. This will break down the app and cancel all servers in SoftLayer
 
 ##This homework is not graded. It is complete/incomplete only.
 ###Submit the URL for your brooklyn admin UI as well as the ID and Password to access it.
