@@ -103,3 +103,8 @@ first let us set up our node red environment.
 Steps are documented in this recipe
 https://console.ng.bluemix.net/docs/services/IoT/nodereddevice_sample.html#devices
 
+Please notice the node-RED implementation to use is:
+http://bh.mybluemix.net/red/#
+
+
+
