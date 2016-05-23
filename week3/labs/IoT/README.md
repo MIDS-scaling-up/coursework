@@ -66,3 +66,34 @@ that it works.
 It is totally fine to play with a standalone MQTT bus, but we want jetpacks!  Let's connect to IBM's hosted IOT foundation 
 system.  It is fairly representative of the state of the industry in that it provides a hosted MQTT broker 
 plus a useful structure for working with devices and gateways.
+
+Esteban plese add stuff here.
+
+#####Adding a new device
+Click "add device" and when prompted, create a new device type called "temp_sensor" with no metadata.  then, create a new device
+and give it a name.  I named mine "bernie".  At this point, you will be presented with the credentials that you can use to connect to your new device e.g.
+```
+Organization ID qlsgr4
+Device Type temp_sensor
+Device ID bernie
+Authentication Method token
+Authentication Token Zj)Ogh616VfODFdae+
+```
+go to the devices dash and check on the health of your device:
+```
+https://yourorg.internetofthings.ibmcloud.com/dashboard/#/devices/browse
+```
+Now, let us publish a hello universe message to our device input topic.  Let us agree to call our application "temp_filter" - see how it enters the topic we are using:
+```
+mosquitto_pub -m "hello universe" -h qlsgr4.messaging.internetofthings.ibmcloud.com -p 1883 -t iot-2/evt/temp_filter/fmt/json -u use-token-auth -P "Zj)Ogh616VfODFdae+" -i d:qlsgr4:temp_sensor:bernie
+```
+**Quick Assignment:** modify the above script to send to this topic in a loop and start it.
+Your device now should appear online and you should see its data coming in.
+
+####Creating a NodeRed application
+Now, let us create a visual event-driven application that can consume this data and do something with it.
+first let us set up our node red environment.
+ESTEBAN PLEASE ADD HERE
+
+Now 
+
