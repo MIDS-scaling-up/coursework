@@ -31,11 +31,37 @@ hello world
 ```
 As you can see, it is incredibly easy to get started with MQTT. The tools are lightweight and easy to understand. Mosquitto can 
 process thousands of messages per second; and if you need more scalability, you could use a HiveMQ or VerneMQ cluster.
-Let us now kill the background listener:
+
+Now, let us create a test endpoint that will imitate a temperature sensor. Create a file called temp_sensor.sh and add these lines:
+```
+#!/bin/bash
+
+while [ true ]
+do
+  temp=10
+  echo {"temp": $temp}
+  sleep 0.3
+done
+```
+Don't forget to make the file runnable
+```
+chmod a+x temp_sensor.sh
+```
+mosquitto_pub will terminate its connection to the broker after each message is published unless you ask it not to.  
+The -l option below will keep the connection open:
+```
+./temp_sensor.sh | mosquitto_pub -l -h localhost -p 1883 -t test
+```
+You should see our imitated sensor sending data!  Once you have verified that everything works, Control-C the script.
+
+Let us also kill the background listener:
 ```
 fg
-Control-Control-C
+Control-C
 ```
+**Quick Assignment:** modify the above script so that it emits the temperature of 20 with the probability of about 10% . Verify
+that it works.
+
 ####Connecting to the IBM Internet of Things Foundation
 It is totally fine to play with a standalone MQTT bus, but we want jetpacks!  Let's connect to IBM's hosted IOT foundation 
 system.  It is fairly representative of the state of the industry in that it provides a hosted MQTT broker 
