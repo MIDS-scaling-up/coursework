@@ -1,1 +1,42 @@
 ### Event driven processing for the Internet of Things
+This lab builds upon the homework and introduces some of the tools in use today 
+for Internet of Things processing
+
+####Getting the MQTT broker running
+Let us reconnect to the VM we created for the homework.  We installed mosquitto clients but this time, let
+us install the mosquitto broker as well
+```
+apt-get install mosquitto
+```
+Notice that mosquitto clients and the broker itself are extremely lightweight, the total install size is just a few MB.
+Now, let us start mosquitto in daemon mode
+```
+mosquitto -d
+```
+The default MQTT port is 1883. If you prefer to change this port, just use the -p option in your command lines throughout.
+Let us set up a simple listener on our newly created MQTT broker:
+```
+mosquitto_sub -t test -h localhost -p 1883 &
+```
+This command will run in the background and print the messages received on the topic called "test".
+Now, let us publish a message to this topic:
+```
+mosquitto_pub -t test -h localhost -p 1885 -m "hello world"
+```
+You should see the message printed below, e.g.
+```
+1464024282: New connection from 127.0.0.1.
+1464024282: New client connected from 127.0.0.1 as mosq_pub_5063_slapi.
+hello world
+```
+As you can see, it is incredibly easy to get started with MQTT. The tools are lightweight and easy to understand. Mosquitto can 
+process thousands of messages per second; and if you need more scalability, you could use a HiveMQ or VerneMQ cluster.
+Let us now kill the background listener:
+```
+fg
+Control-Control-C
+```
+####Connecting to the IBM Internet of Things Foundation
+It is totally fine to play with a standalone MQTT bus, but we want jetpacks!  Let's connect to IBM's hosted IOT foundation 
+system.  It is fairly representative of the state of the industry in that it provides a hosted MQTT broker 
+plus a useful structure for working with devices and gateways.
