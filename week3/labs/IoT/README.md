@@ -67,7 +67,13 @@ It is totally fine to play with a standalone MQTT bus, but we want jetpacks!  Le
 system.  It is fairly representative of the state of the industry in that it provides a hosted MQTT broker 
 plus a useful structure for working with devices and gateways.
 
-Esteban plese add stuff here.
+Create an Internet of things platform starter app on Bluemix
+The starter application can be done with
+https://console.ng.bluemix.net/docs/services/IoT/index.html#gettingstartedtemplate
+
+Finally register the planned device with the Bluemix App:
+
+https://console.ng.bluemix.net/docs/services/IoT/index.html#iot170
 
 #####Adding a new device
 Click "add device" and when prompted, create a new device type called "temp_sensor" with no metadata.  then, create a new device
