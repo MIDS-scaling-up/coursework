@@ -21,7 +21,7 @@ mosquitto_sub -t test -h localhost -p 1883 &
 This command will run in the background and print the messages received on the topic called "test".
 Now, let us publish a message to this topic:
 ```
-mosquitto_pub -t test -h localhost -p 1885 -m "hello world"
+mosquitto_pub -t test -h localhost -p 1883 -m "hello world"
 ```
 You should see the message printed below, e.g.
 ```
