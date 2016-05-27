@@ -40,7 +40,7 @@ You will need to obtain the GPFS tarball from us.  Check the wall for a post abo
 As root on your node, download this tarball into /root, then unpack and install:
 
     cd
-    tar -xzvf GPFS_4.1_STD_LSX_QSG.tar.gz
+    tar -xvf GPFS_4.1_STD_LSX_QSG.tar
     ./gpfs_install-4.1.0-0_x86_64 --silent
     cd /usr/lpp/mmfs/4.1
 
