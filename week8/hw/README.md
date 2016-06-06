@@ -104,7 +104,7 @@ as your hash function.
 
 1. Is the mapping of objects to shards uniform? 
 
-1. Suppose that each shard now lives on a separate database server. Under what workloads (e.g., specific queries) would range partitioning be a good/bad choice? 
+1. Suppose that each shard now lives on a separate database server. Under what workloads (e.g., specific queries) would consistent hash partitioning be a good/bad choice? 
 
 1. Suppose that you need to grow your "cluster" by adding 10 additional nodes to the distributed hashing "ring" you built in Exercise 2. By any means you choose, count the total number of objects that would migrate from one shard to a new shard if you were to divide the interval [0,pow(2,32)] into 36 equidistant shards instead of the preexisting 26 shards. 
 2. Augment the algorithm to be consistent hashing now.  Instead of equidistant shards, name each node, hash that name and use the number as the shard boundary.  For each node, define a certain number of virtual nodes that represent it on the ring.
