@@ -24,7 +24,7 @@ On the VSI (once provisioned):
         cd
         wget http://ftp.wayne.edu/apache/nutch/1.10/apache-nutch-1.10-bin.zip
         unzip apache-nutch-1.10-bin.zip
-        cd apache-nutch-1.10-bin.zip
+        cd apache-nutch-1.10
         export NUTCH_RUNTIME_HOME=~/apache-nutch-1.10/
 
 * Setup `JAVA_HOME`
