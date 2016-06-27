@@ -47,15 +47,21 @@ system, what do you think is a reasonable choice for write heavy, read heavy, an
 What is the benefit of Consistent Hashing versus other approaches (like Range Partitioning)?
 
 #Exercise 4: Cloudant
+**NOTE:** Ensure that you replace "username" and "password" in the URLs in this section with your Cloudant username and password
+
 1. Sign up for a free Cloudant account [here] (https://cloudant.com/sign-up/).
 1. Run a simple query using curl:
 
-        curl -X GET -H 'Content-Type: application/json' https://username@password:[username].cloudant.com/crud/welcome
+        curl -X GET -H 'Content-Type: application/json' https://username:password@username.cloudant.com/crud/welcome
+1. Run an insert using curl:
+
+        curl -d '{"season": "summer", "weather": "usually warm and sunny"}' -X POST https://username:password@username.cloudant.com/crud/ -H "Content-Type:application/json"
+1. Ensure your new document is in the database:
+
+        curl https://username:password@username.cloudant.com/crud/_all_docs
 
 
-**NOTE:** Ensure that you replace "username" and "password" in the URL above with your Cloudant username and password
-
-Include the output from this request in your homework submission.
+Include the output from these requests in your homework submission.
 
 ##Assignment due date: 24 hours before the Week 8 live session. 
 **To turn in:** 
