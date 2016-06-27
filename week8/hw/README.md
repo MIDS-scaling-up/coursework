@@ -46,6 +46,17 @@ system, what do you think is a reasonable choice for write heavy, read heavy, an
 #Exercise 3: Partitioning Strategies 
 What is the benefit of Consistent Hashing versus other approaches (like Range Partitioning)?
 
+#Exercise 4: Cloudant
+1. Sign up for a free Cloudant account [here] (https://cloudant.com/sign-up/).
+1. Run a simple query using curl:
+
+        curl -X GET -H 'Content-Type: application/json' https://username@password:[username].cloudant.com/crud/welcome
+
+
+**NOTE:** Ensure that you replace "username" and "password" in the URL above with your Cloudant username and password
+
+Include the output from this request in your homework submission.
+
 ##Assignment due date: 24 hours before the Week 8 live session. 
 **To turn in:** 
  
