@@ -4,13 +4,17 @@
 
 ## Part 1: Provision and Configure VSes
 
-Provision two VSes, one in a datacenter in the US and one in a datacenter far away—London, Amsterdam, Singapore, Hong Kong, Australia, or another. Please choose different source and destination datacenters from other groups in your section.
+Provision two Ubuntu VSes, one in a datacenter in the US and one in a datacenter far away—London, Amsterdam, Singapore, Hong Kong, Australia, or another. Please choose different source and destination datacenters from other groups in your section.
 
 Each VS must have 1gb public **and** private virtual nics. Configure an SSH key when you provision for easier management. Other VS configuration details are up to you.
 
 Set up key-based SSH authentication to VSes.
 
 ### Install iperf
+Assuming you've spun up Ubuntu VMs, you can do
+
+    apt-get install iperf
+Otherwise, if you are on RHEL or Centos:
 
     yum install epel-release
     yum install iperf
