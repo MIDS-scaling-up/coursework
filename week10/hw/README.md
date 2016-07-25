@@ -11,7 +11,8 @@ https://brooklyn.incubator.apache.org/v/latest/start/blueprints.html
 
 
     # Install Java
-    apt-get install openjdk-7-jre-headless
+    apt-get update
+    apt-get install openjdk-8-jre-headless
 
     #Add a new user and change to that user
     adduser brooklyn
