@@ -17,12 +17,12 @@ On the VSI (once provisioned):
 
 ###Setup Nutch from a binary distribution
 
-* Download a binary package (apache-nutch-1.10-bin.zip) from [here](http://ftp.wayne.edu/apache/nutch/1.12/apache-nutch-1.12-bin.tar.gz).
+* Download a binary package (apache-nutch-1.10-bin.zip) from [here](http://ftp.wayne.edu/apache/nutch/1.12/apache-nutch-1.12-bin.zip).
 * Unzip your binary Nutch package. There should be a folder apache-nutch-1.12
 * From now on, we are going to use `${NUTCH_RUNTIME_HOME}` to refer to the current directory (apache-nutch-1.10/).
 
         cd
-        wget http://ftp.wayne.edu/apache/nutch/1.12/apache-nutch-1.12-bin.tar.gz
+        wget http://ftp.wayne.edu/apache/nutch/1.12/apache-nutch-1.12-bin.zip
         unzip apache-nutch-1.12-bin.zip
         cd apache-nutch-1.12-bin.zip
         export NUTCH_RUNTIME_HOME=~/apache-nutch-1.12/
