@@ -26,6 +26,8 @@ On the VSI (once provisioned):
         unzip apache-nutch-1.12-bin.zip
         cd apache-nutch-1.12-bin.zip
         export NUTCH_RUNTIME_HOME=~/apache-nutch-1.12/
+        apt update && apt install  openjdk-8-jre
+
 
 * Setup `JAVA_HOME`
 
