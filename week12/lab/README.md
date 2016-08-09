@@ -17,15 +17,15 @@ On the VSI (once provisioned):
 
 ###Setup Nutch from a binary distribution
 
-* Download a binary package (apache-nutch-1.10-bin.zip) from [here](http://ftp.wayne.edu/apache/nutch/1.10/apache-nutch-1.10-bin.zip).
-* Unzip your binary Nutch package. There should be a folder apache-nutch-1.10
+* Download a binary package (apache-nutch-1.10-bin.zip) from [here](http://ftp.wayne.edu/apache/nutch/1.12/apache-nutch-1.12-bin.zip).
+* Unzip your binary Nutch package. There should be a folder apache-nutch-1.12
 * From now on, we are going to use `${NUTCH_RUNTIME_HOME}` to refer to the current directory (apache-nutch-1.10/).
 
         cd
-        wget http://ftp.wayne.edu/apache/nutch/1.10/apache-nutch-1.10-bin.zip
-        unzip apache-nutch-1.10-bin.zip
-        cd apache-nutch-1.10-bin.zip
-        export NUTCH_RUNTIME_HOME=~/apache-nutch-1.10/
+        wget http://ftp.wayne.edu/apache/nutch/1.12/apache-nutch-1.12-bin.zip
+        unzip apache-nutch-1.12-bin.zip
+        cd apache-nutch-1.12-bin.zip
+        export NUTCH_RUNTIME_HOME=~/apache-nutch-1.12/
 
 * Setup `JAVA_HOME`
 
@@ -213,14 +213,14 @@ The crawl script has lot of parameters set, and you can modify the parameters to
 
 ##Setup Solr for search
 
-* Download binary solr 4.10.4 file from [here](http://mirror.reverse.net/pub/apache/lucene/solr/4.10.4/solr-4.10.4.zip)
+* Download binary solr 5.5.2 file from [here](http://mirror.reverse.net/pub/apache/lucene/solr/5.5.2/solr-5.5.2.zip)
 * unzip to $HOME/apache-solr, we will now refer to this as `${APACHE_SOLR_HOME}`
 
 
         cd
-        wget http://mirror.reverse.net/pub/apache/lucene/solr/4.10.4/solr-4.10.4.zip
-        unzip solr-4.10.4.zip
-        export APACHE_SOLR_HOME=~/solr-4.10.4
+        wget http://mirror.reverse.net/pub/apache/lucene/solr/5.5.2/solr-5.5.2.zip
+        unzip solr-5.5.2.zip
+        export APACHE_SOLR_HOME=~/solr-5.5.2
         cd ${APACHE_SOLR_HOME}/example
         nohup java -jar start.jar &
 
