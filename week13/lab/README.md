@@ -12,7 +12,7 @@ In this lab, you will find the instructions to deploy HDFS and YARN (the referen
 ## 2.1. HDFS
 
 Follow the instructions from the HW Week 5 to [deploy Hadoop.]
-(https://github.com/MIDS-scaling-up/coursework/tree/master/week5/hw/version_2)
+(https://github.com/login?return_to=%2FMIDS-scaling-up%2Fcoursework%2Ftree%2Fmaster%2Fweek13%2Flab)
 
 The main files to update are: masters, slaves, core-site.xml, hdfs-site.xml, hadoop-env.sh
 
