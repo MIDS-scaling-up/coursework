@@ -9,6 +9,7 @@ MQTT - http://mqtt.org/ is a lightweight messaging protocol for the Internet of 
 ###Mosquitto
 Perhaps the most popular OpenSource MQTT toolkit is called Mosquitto.  Let's get it installed.  You should already know how to provision a VM. Use this knowledge to spin up a VM with 2G of RAM, 2 vCPUs, and the latest Ubuntu on it.  Next, ssh into your new VM and install mosquitto-clients:
 ```
+apt-get update
 apt-get install mosquitto-clients
 ```
 ### Blue Horizon
