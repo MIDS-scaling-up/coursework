@@ -23,4 +23,4 @@ mosquitto_sub -t /applications/in/+/public/# -h 198.23.89.34
 ```
 In your homework submission, please explain what the + and # in the line above stand for, as well as provide a few lines of output that you see on screen.  Can you recognize some of the messages?  What is their meaning?
 
-Credit / no credit, please submit prior to May 23rd
+Credit / no credit, please submit prior to class 3
