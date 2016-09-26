@@ -34,4 +34,4 @@ Go back to gpfs1. Fire up nmon, pressing "c" and "n" to get CPU and network stat
 time zgrep -h "^$word [A-Za-z]\+" $file
 ```
 Run this for a file located on gpfs1 and also for remote files.  Watch for the CPU and network utilization in nmon.  What do you observe?  Compare to the screenshot below:
-[[nmon.png]]
+![Nmon screenshot](nmon.png "Analyzing a remote file")
