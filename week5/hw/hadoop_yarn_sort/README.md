@@ -215,6 +215,10 @@ Edit these configuration files on the __master__ only initially; an instruction 
 
         yarn node -list
 
+* Start the Job History Server:
+
+        mr-jobhistory-daemon.sh start historyserver
+
 * To check your cluster, browse to:
    * http://master-ip:50070/dfshealth.html
    * http://master-ip:8088/cluster
