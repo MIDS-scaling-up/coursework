@@ -130,7 +130,7 @@ Write the following content into `SimpleApp.scala`:
 
     object SimpleApp {
       def main(args: Array[String]) {
-        val file = "/usr/local/spark/README.md" // Should be some file on your system
+        val file = "file:///usr/local/spark/README.md" // Should be some file on your system
           val conf = new SparkConf().setAppName("Simple Application")
           val sc = new SparkContext(conf)
           val data = sc.textFile(file, 2).cache()
