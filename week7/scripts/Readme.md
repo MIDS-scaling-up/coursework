@@ -1,6 +1,10 @@
 # Data transfer scripts
 
 requirements: slcli, swift cli
+```
+pip install softlayer
+pip install python-swiftclient
+```
 
 The idea is to add the upload.sh script to crontab 
 ```
