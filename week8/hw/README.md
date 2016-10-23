@@ -50,9 +50,9 @@ What is the benefit of Consistent Hashing versus other approaches (like Range Pa
 **NOTE:** Ensure that you replace "username" and "password" in the URLs in this section with your Cloudant username and password
 
 1. Sign up for a free Cloudant account [here] (https://cloudant.com/sign-up/).
-1. Run a simple query using curl:
+2. Create a DB
 
-        curl -X GET -H 'Content-Type: application/json' https://username:password@username.cloudant.com/crud/welcome
+        curl -X PUT -H 'Content-Type: application/json' https://username:password@username.cloudant.com/crud/
 1. Run an insert using curl:
 
         curl -d '{"season": "summer", "weather": "usually warm and sunny"}' -X POST https://username:password@username.cloudant.com/crud/ -H "Content-Type:application/json"
