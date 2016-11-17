@@ -1,21 +1,16 @@
 #!/bin/sh
 
-# this installs NVIDIA DIGITS in a fresh VM using docker.
-
-# install docker
+# this installs Nvidia digits.  Nnote that the Nvidia driver installation requires some user input.  It will try to update itself - the --update flag
 apt-get update
 apt-get install -y curl
 cd /tmp
 
 # we assume here that the drivers are installed. if not, uncomment..
-# curl http://AFED.http.sjc01.cdn.softlayer.net/nvidia/NVIDIA-Linux-x86_64-370.28.run -o /tmp/NVIDIA-Linux-x86_64-370.28.run
-# chmod a+x ./NVIDIA-Linux-x86_64-370.28.run
-# ./NVIDIA-Linux-x86_64-370.28.run -a --update
+curl http://AFED.http.sjc01.cdn.softlayer.net/nvidia/NVIDIA-Linux-x86_64-370.28.run -o /tmp/NVIDIA-Linux-x86_64-370.28.run
+chmod a+x ./NVIDIA-Linux-x86_64-370.28.run
+./NVIDIA-Linux-x86_64-370.28.run -a --update
 
 curl http://AFED.http.sjc01.cdn.softlayer.net/nvidia/nvidia-docker_1.0.0.rc.3-1_amd64.deb -o /tmp/nvidia-docker_1.0.0.rc.3-1_amd64.deb
-
-# the drivers
-chmod a+x ./NVIDIA-Linux-x86_64-370.28.run
 
 # docker
 apt-get install -y apt-transport-https ca-certificates
