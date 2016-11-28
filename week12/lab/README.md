@@ -9,9 +9,6 @@ Provision a VSI:
 
     slcli vs create --datacenter=sjc01 --domain=data.com  --hostname=nutchtest --os=UBUNTU_LATEST_64 --key="YOUR KEY NAME" --cpu=2 --memory=4096 --billing=hourly --disk=100
 
-On the VSI (once provisioned):
-
-    apt-get install -y curl openjdk-7-jre unzip
 
 ##Install Nutch
 
@@ -24,7 +21,7 @@ On the VSI (once provisioned):
         cd
         wget http://ftp.wayne.edu/apache/nutch/1.12/apache-nutch-1.12-bin.zip
         unzip apache-nutch-1.12-bin.zip
-        cd apache-nutch-1.12-bin.zip
+        cd apache-nutch-1.12
         export NUTCH_RUNTIME_HOME=~/apache-nutch-1.12/
         apt update && apt install  openjdk-8-jre
 
