@@ -212,7 +212,7 @@ The crawl script has lot of parameters set, and you can modify the parameters to
 
 ##Setup Solr for search
 
-* Download binary solr 5.5.2 file from [here](http://archive.apache.org/dist/lucene/solr/5.5.2/solr-5.5.2.zip
+* Download binary solr 5.5.2 file from [here](http://archive.apache.org/dist/lucene/solr/5.5.2/solr-5.5.2.zip)
 * unzip to $HOME/apache-solr, we will now refer to this as `${APACHE_SOLR_HOME}`
 
 
@@ -220,9 +220,9 @@ The crawl script has lot of parameters set, and you can modify the parameters to
         wget http://archive.apache.org/dist/lucene/solr/5.5.2/solr-5.5.2.zip
         unzip solr-5.5.2.zip
         export APACHE_SOLR_HOME=~/solr-5.5.2
-        cd ${APACHE_SOLR_HOME}/example
-        nohup java -jar start.jar &
-
+        cd ${APACHE_SOLR_HOME}
+        ./bin/solr start
+        
 ##Verify Solr installation
 
 After you started Solr admin console, you should be able to access the following URL (replace YOUR\_IP\_ADDRESS with your IP address):
