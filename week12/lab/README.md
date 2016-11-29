@@ -212,12 +212,12 @@ The crawl script has lot of parameters set, and you can modify the parameters to
 
 ##Setup Solr for search
 
-* Download binary solr 5.5.2 file from [here](http://mirror.reverse.net/pub/apache/lucene/solr/5.5.2/solr-5.5.2.zip)
+* Download binary solr 5.5.2 file from [here](http://archive.apache.org/dist/lucene/solr/5.5.2/solr-5.5.2.zip
 * unzip to $HOME/apache-solr, we will now refer to this as `${APACHE_SOLR_HOME}`
 
 
         cd
-        wget http://mirror.reverse.net/pub/apache/lucene/solr/5.5.2/solr-5.5.2.zip
+        wget http://archive.apache.org/dist/lucene/solr/5.5.2/solr-5.5.2.zip
         unzip solr-5.5.2.zip
         export APACHE_SOLR_HOME=~/solr-5.5.2
         cd ${APACHE_SOLR_HOME}/example
