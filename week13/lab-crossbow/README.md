@@ -68,8 +68,10 @@ This should take just under two hours.  You will see four jobs in hadoop:
 * variant calling creates the snps
 * the final part is cleanup and the creation of chromosome SNP  zip files
 
-You should see /crossbow/example/mouse17/output_full/17.gz  of 3.32MB in size  in HDFS if all goes well.
-     hadoop dfs -get /crossbow/example/mouse17/output_full/17.gz .
+You should see /crossbow/example/mouse17/output_full/17.gz  of 3.32MB in size  in HDFS if all goes well. Let's pull this file down:
+```
+hadoop dfs -get /crossbow/example/mouse17/output_full/17.gz .
+```
 Each individual record is in the [SOAPsnp](http://soap.genomics.org.cn/soapsnp.html) output format. SOAPsnp's format consists of 1 SNP per line with several tab-separated fields per SNP. The fields are:
 
     Chromosome ID
