@@ -70,7 +70,7 @@ Install packages (installing the entire JDK rather than the JRE is necessary to 
 
 Download hadoop v2 to `/usr/local` and extract it:
 
-    curl http://apache.claz.org/hadoop/core/hadoop-2.7.1/hadoop-2.7.1.tar.gz | tar -zx -C /usr/local --show-transformed --transform='s,/*[^/]*,hadoop,'
+    curl http://apache.claz.org/hadoop/core/hadoop-2.7.3/hadoop-2.7.3.tar.gz | tar -zx -C /usr/local --show-transformed --transform='s,/*[^/]*,hadoop,'
 
 Make sure your key directories have correct permissions
 
@@ -152,7 +152,14 @@ Edit these configuration files on the __master__ only initially; an instruction 
             <value>mapreduce_shuffle</value>
           </property>
         </configuration>
+Note: if you want to use private IPs for your cluster, add this property also:
 
+          <property>
+           <name>yarn.resourcemanager.bind-host</name>
+           <value>0.0.0.0</value>
+          </property>
+          
+          
 * Write the following content to `mapred-site.xml`.
 
         <?xml version="1.0"?>
