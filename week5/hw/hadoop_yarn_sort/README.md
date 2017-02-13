@@ -54,7 +54,7 @@ Note: Instructions in this section are to be performed on each node unless other
 
 Install packages (installing the entire JDK rather than the JRE is necessary to get `jps` and other tools):
 
-    yum install -y rsync net-tools java-1.8.0-openjdk-devel http://pkgs.repoforge.org/nmon/nmon-14g-1.el7.rf.x86_64.rpm
+    yum install -y rsync net-tools java-1.8.0-openjdk-devel ftp://fr2.rpmfind.net/linux/Mandriva/devel/cooker/x86_64/media/contrib/release/nmon-14g-1-mdv2012.0.x86_64.rpm
 
 ### User setup preparation
 
