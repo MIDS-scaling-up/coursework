@@ -15,10 +15,10 @@ Access DIGITS 5.1 at http://169.50.131.114:5001/
 Make sure you are on the DataSets tab. Click on the new data set icon on the right, choose Images -> Classification. Choose Fill as your resize transformation. Select a name for your group name and data set. Set minimum samples per class to 10. Set the URL for the training images to http://169.50.131.114:7002/tset/ and click Create at the bottom.
 
 #### Training a GoogleNet-based model using transfer learning 
-Click on the Models tab and choose New model - > classification. Choose your newly created data set on the left. Select the "custom network" tab. At the bottom, in the pre-trained network field, type "/data/bvlc_googlenet.caffemodel". Leave the number of GPUs used at 1. Use the same group name as you used previously for your data set and select a name for your model. In the Custom Network field paste the model from this link. This is a model with fixed lower layers. Click Create. How long does it take for the model to exceed 90% accuracy?
+Click on the Models tab and choose New model - > classification. Choose your newly created data set on the left. Select the "custom network" tab. At the bottom, in the pre-trained network field, type "/data/bvlc_googlenet.caffemodel". Leave the number of GPUs used at 1. Use the same group name as you used previously for your data set and select a name for your model. In the Custom Network field paste the model from [this link](googlenet-fixed.txt). This is a model with fixed lower layers. Click Create. How long does it take for the model to exceed 90% accuracy?
 
 #### Training a GoogleNet-based model using transfer learning with unfixed lower layer weights 
-Let us repeat the previous steps, but now let us use a network from this link. the only difference is that we unfixed the lower layers. Now, how long does it take for the model to reach 90% accuracy?
+Let us repeat the previous steps, but now let us use a network from [this link](googlenet-unfixed.txt). the only difference is that we unfixed the lower layers. Now, how long does it take for the model to reach 90% accuracy?
 
 #### Training a GoogleNet-based model from random weights. 
 Let's repeat the previous step using the same custom model but this time, let us clear out the "pre-trained model" field. Now, how long does it take for the model to reach 90% accuracy?
