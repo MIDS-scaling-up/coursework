@@ -1,3 +1,5 @@
+#THIS LAB IS OPTIONAL. REPLACED BY labs-nn
+
 #Lab 1 --  fun with policies... 
 ### Deploy this into your brooklyn:
 In your brooklyn UI, navigate to Applications and click the plus sign next to the word "Applications" on the upper left side of the screen. Then select the YAML tab on the resulting screen.

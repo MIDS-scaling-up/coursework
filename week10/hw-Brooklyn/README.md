@@ -1,3 +1,6 @@
+#THIS HOMEWORK IS OPTIONAL
+#THE hw-nn HOMEWORK IS THE OFFICIAL WEEK 10 HOMEWORK
+
 #Orchestrate with Brooklyn
 You'll need a VM with 2 CPUs and 4G of RAM to serve as the brooklyn server, e.g. this is how Dima did it.  Note that the key needs to exist in SoftLayer for this to work (YOUR_KEY in this case)
 
