@@ -1,4 +1,4 @@
-###DIGITS and Object Detection    
+### DIGITS and Object Detection    
 
 #### Intro
 [Digits](https://github.com/NVIDIA/nvidia-docker/wiki/DIGITS) is the leading tool for rapid training of image related networks.
