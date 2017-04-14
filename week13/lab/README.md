@@ -35,6 +35,10 @@ In the yarn-site.xml, add some configurations as follows (feel free to try some 
         <value>2048</value>
       </property>
       <property>
+        <name>yarn.nodemanager.resource.memory-mb</name>
+        <value>16000</value>
+      </property>
+      <property>
         <name>yarn.nodemanager.resource.cpu-vcores</name>
         <value>3</value>
       </property>
