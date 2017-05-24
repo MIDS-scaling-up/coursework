@@ -57,7 +57,7 @@ Python version 2.7 or newer and a complementing pip program are required for thi
     sudo pip install SoftLayer
     slcli config setup
 
-That last command will prompt you for your SoftLayer credentials; the default values for questions that provide them are sufficient.
+That last command will prompt you for your SoftLayer credentials.  Your `Username` is the SL id dispalyed when viewing the API key created in the section [above](#obtain-softlayer-api-key).  The format should be `SL#######`.  For `API Key or Password` enter your API key.  Leave the deafult value for `Endpoint`.
 
 ## Working with SoftLayer VSes
 
