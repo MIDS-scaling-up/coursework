@@ -50,7 +50,7 @@ From here on out, all commands you execute should be done on spark1 only. You ma
 
 ## Copy files to master
 
-From spark1, clone the homework repo into /root.  Locate and note the directory containing the file moby10b.txt and the directory src.
+From spark1, clone the homework repo into /root.  Locate and note the directory containing the file moby10b.txt and the directory src; they should be in the directory /root/coursework/week6/hw/apache_spark_introduction.
 
 
 ## Start Spark from master
@@ -89,10 +89,6 @@ Run the command: $SPARK_HOME/bin/run-example SparkPi
 *Question 1:* What value of PI to you get?  Why is the value not "exact"? For a hint, see $SPARK_HOME/examples/src/main/python/pi.py 
 
 ### Use the Spark shell
-Create the directory /root/hw6 with the following command - mkdir /root/hw6
-To ryan and brad, I'd say move this to the start and just reference.
-Copy or move moby10b.txt to /root/hw6.
-
 Start the spark-shell
 
     $SPARK_HOME/bin/spark-shell
@@ -120,7 +116,7 @@ Finally, execute a Scala collection transformation method on the RDD and then in
 
 Exit the Spark shell with `CTRL-D`.
 
-Using the spark-shell, read the local text file moby10b.txt (see above the location) into a Resilient Distributed Dataset
+Using the spark-shell, read the local text file moby10b.txt (should be /root/coursework/week6/hw/apache_spark_introduction/moby10b.txt) into a Resilient Distributed Dataset
 
 *Question 2:* How many lines does the file have?
 
@@ -145,7 +141,7 @@ From within the source directory, complile SparkJava8Example
 
 Now run the file using moby10b.txt as the input and an output directory of your choice.
 ```
-    java -cp .:$SPARK_HOME/jars/* spark.SparkJava8Example /<yourPathTo>/moby10b.txt /<yourOutputDirectory>
+    java -cp .:$SPARK_HOME/jars/* spark.SparkJava8Example /root/coursework/week6/hw/apache_spark_introduction/moby10b.txt /<yourOutputDirectory>
 ```
 *Question 5:* How many output files (ignore _SUCCESS file) does Spark write when the file RDD 
 (file.saveAsTextFile( outputDirectory)) is written to the output directory?
