@@ -159,6 +159,14 @@ Assumptions: job is run against the cluster
 
 In this part, you will submit a spark job to your cluster.  In addition, you will need a HDFS cluster to act as a shared file system.  You may install HDFS on one or more nodes or resuse your HDFS cluster from the previous homework.  You will need to copy moby10b.txt into HDFS.
 
+If you run into any issues with file permissions in HDFS, one solution is to update the hdfs-site.xml config file to include the following 
+```
+<property>
+  <name>dfs.permissions</name>
+  <value>false</value>
+</property>
+```
+
 To run a job against the cluster, you'll need to package your job as a jar file.  Using SparkJava8Example as an example, you may create a jar using the following:
 ```
    jar cvf job.jar spark/*.class
