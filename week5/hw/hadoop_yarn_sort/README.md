@@ -255,6 +255,9 @@ _Note that the input to teragen is the number of 100 byte rows_
 * Clean up, e.g.:
 
         hdfs dfs -rm -r /terasort/\*
+        
+## To Turn In:
+* A document with the output of the Terasort run.
 
 ## Optional: Build Hadoop native libs
 
