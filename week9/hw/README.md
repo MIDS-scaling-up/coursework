@@ -92,6 +92,8 @@ From spark1 in the root of the project directory, execute the following where 'f
 
 Note that the 'clean' build target is only necessary if you remove files or dependencies from a project; if you've merely changed or added files previously built, you can execute only the package target for a speedier build.  Depending on your approach, you’ll need to make sure the external jars are availabe on each of your spark nodes.  This maybe done using the packages example (see above), the jars options, or even installing the jars on each node.
 
+```
+
   --jars JARS                 Comma-separated list of local jars to include on the driver
                               and executor classpaths.
   --packages                  Comma-separated list of maven coordinates of jars to include
@@ -99,7 +101,7 @@ Note that the 'clean' build target is only necessary if you remove files or depe
                               maven repo, then maven central and any additional remote
                               repositories given by --repositories. The format for the
                               coordinates should be groupId:artifactId:version.
-
+```
 
 
 ## Grading and Submission
