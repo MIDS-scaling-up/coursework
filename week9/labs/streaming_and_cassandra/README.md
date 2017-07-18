@@ -62,13 +62,12 @@ Create a project directory (we'll use `/root/tweeteat` in this guide) and write 
         val stream = TwitterUtils.createStream(ssc, None)
 
         // extract desired data from each status during sample period as class "TweetData", store collection of those in new RDD
-         // val tweetData = stream.map(status => TweetData(status.getId, status.getUser.getScreenName, status.getText.trim))
-        stream.map(status => TweetData(status.getId, status.getUser.getScreenName, status.getText.trim)).saveToCassandra("streaming", "tweetdata", SomeColumns("id", "author", "tweet"))
-         /*tweetData.foreachRDD(rdd => {
+        val tweetData = stream.map(status => TweetData(status.getId, status.getUser.getScreenName, status.getText.trim))
+         tweetData.foreachRDD(rdd => {
         // data aggregated in the driver
          println(s"A sample of tweets I gathered over ${batchInterval_s}s: ${rdd.take(10).mkString(" ")} (total tweets fetched: ${rdd.count()})")
         })
-        */
+        
         // start consuming stream
         ssc.start
         ssc.awaitTerminationOrTimeout(totalRuntime_s * 1000)
@@ -78,7 +77,7 @@ Create a project directory (we'll use `/root/tweeteat` in this guide) and write 
         System.exit(0)
     }
 
-case class TweetData(id: Long, author: String, tweet: String)
+    case class TweetData(id: Long, author: String, tweet: String)
 
 
 
