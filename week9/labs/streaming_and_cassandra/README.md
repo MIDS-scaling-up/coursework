@@ -18,27 +18,15 @@ Create a project directory (we'll use `/root/tweeteat` in this guide) and write 
 ### `/root/tweeteat/build.sbt`
 
     lazy val common = Seq(
-      organization := "mids",
-      version := "0.1.0",
-      scalaVersion := "2.10.5",
-      libraryDependencies ++= Seq(
-        "org.apache.spark" %% "spark-streaming" % "1.3.1" % "provided",
-        "org.apache.spark" %% "spark-streaming-twitter" % "1.3.1",
-        "com.datastax.spark" %% "spark-cassandra-connector" % "1.3.0-M2"
-      ),
-      mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
-         {
-          case PathList("META-INF", xs @ _*) => MergeStrategy.discard
-          case x => MergeStrategy.first
-         }
-      }
-    )
-
-    lazy val tweeteat = (project in file(".")).
-      settings(common: _*).
-      settings(
-        name := "tweeteat",
-        mainClass in (Compile, run) := Some("TweetEat"))
+    name := "Simple Project"
+    version := "1.0"
+    scalaVersion := "2.11.11"
+    libraryDependencies += "org.apache.spark" %% "spark-core" % "2.1.0"
+    libraryDependencies += "org.apache.spark" % "spark-streaming_2.11" % "2.1.0"
+    libraryDependencies += "org.apache.spark" % "spark-sql_2.11" % "2.1.0"
+    libraryDependencies += "org.apache.bahir" %% "spark-streaming-twitter" % "2.1.0"
+    libraryDependencies += "com.datastax.spark" %% "spark-cassandra-connector" % "2.0.3"
+    resolvers += "Akka Repository" at "http://repo.akka.io/releases/"
 
 **Note:** The library dependencies for Spark listed in this file need to have versions that match the version of Spark you're running on your server. Change the version numbers here if necessary.
 
