@@ -48,12 +48,12 @@ Create a project directory (we'll use `/root/tweeteat` in this guide) and write 
         val totalRuntime_s = 32
         //add your creds below
 
-        System.setProperty("twitter4j.oauth.consumerKey", "EkW8fbtyJo9kNZVoIuUpQSZPH")
-        System.setProperty("twitter4j.oauth.consumerSecret", "QuFlprzUo3eKjfCTQlQ6mEQ2WBnuVMDGDg8ZToNsgMjxe30OzO")
-        System.setProperty("twitter4j.oauth.accessToken", "397620161-oLXl8yJvDokm2KOdldP1cp0bVARANVs8CIWtENSZ")
-        System.setProperty("twitter4j.oauth.accessTokenSecret", "3fCZJD1KetzXxdWy5VJlpXxK4sii5nmSWOBoGlfygyK3w")
+        System.setProperty("twitter4j.oauth.consumerKey", "")
+        System.setProperty("twitter4j.oauth.consumerSecret", "")
+        System.setProperty("twitter4j.oauth.accessToken", "")
+        System.setProperty("twitter4j.oauth.accessTokenSecret", "")
         // create SparkConf
-        val conf = new SparkConf().setAppName("mids tweeteat").set("spark.cassandra.connection.host", "127.0.0.1")
+        val conf = new SparkConf().setAppName("mids tweeteat");
 
         // batch interval determines how often Spark creates an RDD out of incoming data
 
@@ -87,19 +87,20 @@ Create a project directory (we'll use `/root/tweeteat` in this guide) and write 
 
 Package the tweeteat app into a jar file suitable for execution on Spark (note that this operation will take a little time to complete the first time you run it because it downloads package dependencies; subsequent builds will be faster):
 
-    sbt clean assembly
+    sbt clean package
 
-You should now have a jar file packaged with Scala 2.10 in a subdir of the `target` directory. You can find it from the project directory with this command:
+You should now have a jar file packaged a subdir of the `target` directory. You can find it from the project directory with this command:
 
-    find . -wholename "*2.10*.jar"
+    find . -iname "*.jar"
 
 Start the Spark cluster and submit the application for execution:
 
-    $SPARK_HOME/bin/spark-submit --master local[4] $(find . -wholename "*2.10*.jar")
+    $SPARK_HOME/bin/spark-submit --master local[4]  --packages org.apache.bahir:spark-streaming-twitter_2.11:2.1.0,com.datastax.spark:spark-cassandra-connector_2.11:2.0.3  --class TweatEat $(find target -iname "*.jar") 
 
+Please note the packages used.  If your versions different, you'll need to update.
 You should see output like this:
 
-    [root@spark1 tweeteat]# $SPARK_HOME/bin/spark-submit --master local[4] $(find . -wholename "*2.10*.jar")
+    [root@spark1 tweeteat]# $SPARK_HOME/bin/spark-submit $SPARK_HOME/bin/spark-submit --master local[4]  --packages org.apache.bahir:spark-streaming-twitter_2.11:2.1.0,com.datastax.spark:spark-cassandra-connector_2.11:2.0.3  --class TweatEat $(find target -iname "*.jar")
     15/07/08 12:34:10 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
     A sample of tweets I gathered over 1s:  (total tweets fetched: 0)
     15/07/08 12:34:14 WARN BlockManager: Block input-0-1436376853800 replicated to only 0 peer(s) instead of 1 peers
@@ -156,7 +157,10 @@ You'll also need to add the following imports:
     import com.datastax.spark.connector.streaming._
     import com.datastax.spark.connector.SomeColumns
 
+
 Since your new application is going to write streaming data directly to Cassandra, you needn't consume the stream with the `foreachRDD` method. Remove that call.
+
+Please note the previous line, failure to remove the foreachRDD call may lead to errors.
 
 Finally, add a call to the `saveToCassandra` method on your transformed input stream. The line of code should look something like this:
 
@@ -166,7 +170,7 @@ There are a few noteworthy elements in this line. First, since we're not going t
 
 ### Run the Modified App
 
-Repackage your application and execute it again in Spark. You should notice that the tweet output from the first execution is missing and that log statements in the output report writes to the Cassandra instance.
+Repackage your application and execute it again in Spark. You should notice that the tweet output from the first execution is missing and that log statements in the output report writes to the Cassandra instance.  Note, we have already included the Cassandra packages in both our build.sbt and in our job submission.
 
 ### Browse the Data in Cassandra
 
