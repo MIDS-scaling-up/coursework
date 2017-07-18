@@ -17,7 +17,6 @@ Create a project directory (we'll use `/root/tweeteat` in this guide) and write 
 
 ### `/root/tweeteat/build.sbt`
 
-    lazy val common = Seq(
     name := "Simple Project"
     version := "1.0"
     scalaVersion := "2.11.11"
@@ -30,56 +29,57 @@ Create a project directory (we'll use `/root/tweeteat` in this guide) and write 
 
 **Note:** The library dependencies for Spark listed in this file need to have versions that match the version of Spark you're running on your server. Change the version numbers here if necessary.
 
-### `/root/tweeteat/project/plugins.sbt`
-
-    addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.13.0")
-
 ### `/root/tweeteat/tweeteat.scala`
 
     import org.apache.spark.streaming.Seconds
-    import org.apache.spark.streaming.StreamingContext
-    import org.apache.spark.streaming.twitter.TwitterUtils
     import org.apache.spark.SparkConf
+    import org.apache.spark.streaming.twitter._
 
-    /**
-     * @author mdye
-     */
-    object TweetEat extends App {
-      val batchInterval_s = 1
-      val totalRuntime_s = 32
+    import com.datastax.spark.connector.streaming._
+    import com.datastax.spark.connector.SomeColumns
 
-      val propPrefix = "twitter4j.oauth."
-      System.setProperty(s"${propPrefix}consumerKey", "")
-      System.setProperty(s"${propPrefix}consumerSecret", "")
-      System.setProperty(s"${propPrefix}accessToken", "")
-      System.setProperty(s"${propPrefix}accessTokenSecret", "")
+    import org.apache.spark._
+    import org.apache.spark.streaming._
+    import org.apache.spark.streaming.StreamingContext._
 
-      // create SparkConf
-      val conf = new SparkConf().setAppName("mids tweeteat")
 
-      // batch interval determines how often Spark creates an RDD out of incoming data
-      val ssc = new StreamingContext(conf, Seconds(batchInterval_s))
+    object TweatEat  extends App {
+        val batchInterval_s = 1
+        val totalRuntime_s = 32
+        //add your creds below
 
-      val stream = TwitterUtils.createStream(ssc, None)
+        System.setProperty("twitter4j.oauth.consumerKey", "EkW8fbtyJo9kNZVoIuUpQSZPH")
+        System.setProperty("twitter4j.oauth.consumerSecret", "QuFlprzUo3eKjfCTQlQ6mEQ2WBnuVMDGDg8ZToNsgMjxe30OzO")
+        System.setProperty("twitter4j.oauth.accessToken", "397620161-oLXl8yJvDokm2KOdldP1cp0bVARANVs8CIWtENSZ")
+        System.setProperty("twitter4j.oauth.accessTokenSecret", "3fCZJD1KetzXxdWy5VJlpXxK4sii5nmSWOBoGlfygyK3w")
+        // create SparkConf
+        val conf = new SparkConf().setAppName("mids tweeteat").set("spark.cassandra.connection.host", "127.0.0.1")
 
-      // extract desired data from each status during sample period as class "TweetData", store collection of those in new RDD
-      val tweetData = stream.map(status => TweetData(status.getId, status.getUser.getScreenName, status.getText.trim))
+        // batch interval determines how often Spark creates an RDD out of incoming data
 
-      tweetData.foreachRDD(rdd => {
+        val ssc = new StreamingContext(conf, Seconds(2))
+
+        val stream = TwitterUtils.createStream(ssc, None)
+
+        // extract desired data from each status during sample period as class "TweetData", store collection of those in new RDD
+         // val tweetData = stream.map(status => TweetData(status.getId, status.getUser.getScreenName, status.getText.trim))
+        stream.map(status => TweetData(status.getId, status.getUser.getScreenName, status.getText.trim)).saveToCassandra("streaming", "tweetdata", SomeColumns("id", "author", "tweet"))
+         /*tweetData.foreachRDD(rdd => {
         // data aggregated in the driver
-        println(s"A sample of tweets I gathered over ${batchInterval_s}s: ${rdd.take(10).mkString(" ")} (total tweets fetched: ${rdd.count()})")
-      })
+         println(s"A sample of tweets I gathered over ${batchInterval_s}s: ${rdd.take(10).mkString(" ")} (total tweets fetched: ${rdd.count()})")
+        })
+        */
+        // start consuming stream
+        ssc.start
+        ssc.awaitTerminationOrTimeout(totalRuntime_s * 1000)
+        ssc.stop(true, true)
 
-      // start consuming stream
-      ssc.start
-      ssc.awaitTerminationOrTimeout(totalRuntime_s * 1000)
-      ssc.stop(true, true)
-
-      println(s"============ Exiting ================")
-      System.exit(0)
+        println(s"============ Exiting ================")
+        System.exit(0)
     }
 
-    case class TweetData(id: Long, author: String, tweet: String)
+case class TweetData(id: Long, author: String, tweet: String)
+
 
 
 **Note:** Ensure that you add your credential strings for the Twitter API to the system properity lines in the scala file above.
