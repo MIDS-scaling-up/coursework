@@ -8,7 +8,7 @@ Digits is currently one of the leading tools to easily train and run neural nets
 
 We prepared an image dataset, it is located here: http://169.50.131.114:7002/tset/ Please take a few minutes to aquaint yourself with it. As you can see, the structure is simple: there is a bunch of directories which correspond to class names, with images underneath that correspond to that class. Note that some directories are empty, and that's OK. Many public data sets share the same structure.
 
-This particular training set is generated via this GUI: hhttp://169.50.131.114:7002/index7.html?c=11071917_foo&date=2017/02/12 This is an experimental project around the surveillance use case. If motion is detected, a simple algorithm localizes it in the frame (draws a bounding box around it) and sends it over to the cloud for manual annotation. Once you have annotated the bounding box, it is added to the training set.
+This particular training set is generated via this GUI: http://169.50.131.114:7002/index7.html?c=11071917_foo&date=2017/02/12 This is an experimental project around the surveillance use case. If motion is detected, a simple algorithm localizes it in the frame (draws a bounding box around it) and sends it over to the cloud for manual annotation. Once you have annotated the bounding box, it is added to the training set.
 
 #### Importing the training set into DIGITS 
 Access DIGITS 5.1 at http://169.50.131.114:5001/ 
