@@ -101,7 +101,7 @@ test.jpg:
     curl -O https://raw.githubusercontent.com/MIDS-scaling-up/coursework/master/week10/lab-tf/bottlenecks2.tar.gz
     curl -O https://raw.githubusercontent.com/MIDS-scaling-up/coursework/master/week10/lab-tf/label_image.py
     curl -O https://raw.githubusercontent.com/MIDS-scaling-up/coursework/master/week10/lab-tf/retrain.py
-    curl -O https://raw.githubusercontent.com/MIDS-scaling-up/coursework/master/week10/lab-tf.test.jpg
+    curl -O https://raw.githubusercontent.com/MIDS-scaling-up/coursework/master/week10/lab-tf/test.jpg
     
 Extract the bottleneck files:
 
