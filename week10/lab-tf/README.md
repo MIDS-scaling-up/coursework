@@ -16,7 +16,7 @@ The following steps assume you are running as root.
 
 Part 1. Install Docker (see https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#install-using-the-repository for more details).
 
-##### `twitter_popularity.scala`
+
 
     object Main extends App {
       println(s"I got executed with ${args size} args, they are: ${args mkString ", "}")
