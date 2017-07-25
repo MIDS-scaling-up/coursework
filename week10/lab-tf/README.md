@@ -95,14 +95,15 @@ and change to that directory
     cd ~/tf_files
     
 You will need to download the following files to your VM: bottlenecks1.tar.gz, bottlenecks2.tar.gz, label_image.py, retrain.py
-test.jpg to the VM. 
+test.jpg:
 
-    curl -O https://github.com/MIDS-scaling-up/coursework/raw/master/week10/lab-tf/bottlenecks1.tar.gz
-    curl -O https://github.com/MIDS-scaling-up/coursework/raw/master/week10/lab-tf/bottlenecks2tar.gz
-    curl -O https://github.com/MIDS-scaling-up/coursework/raw/master/week10/lab-tf/label_image.py
-    curl -O https://github.com/MIDS-scaling-up/coursework/raw/master/week10/lab-tf/retrain.py
-    curl -O https://github.com/MIDS-scaling-up/coursework/raw/master/week10/lab-tf/test.jpg
+    curl -O https://raw.githubusercontent.com/MIDS-scaling-up/coursework/master/week10/lab-tf/bottlenecks1.tar.gz
+    curl -O https://raw.githubusercontent.com/MIDS-scaling-up/coursework/master/week10/lab-tf/bottlenecks2tar.gz
+    curl -O https://raw.githubusercontent.com/MIDS-scaling-up/coursework/master/week10/lab-tf/label_image.py
+    curl -O https://raw.githubusercontent.com/MIDS-scaling-up/coursework/master/week10/lab-tf/retrain.py
+    curl -O https://raw.githubusercontent.com/MIDS-scaling-up/coursework/master/week10/lab-tf.test.jpg
     
+Extract the bottleneck files:
 
 
 
