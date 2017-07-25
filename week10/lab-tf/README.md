@@ -1,12 +1,16 @@
 Tensfor For Poets
+
 This lab is based on https://codelabs.developers.google.com/codelabs/tensorflow-for-poets
 
 Provision VM
+
 You will need to Ubuntu 16.04 VM with at least 2x2 GHz CPUs, 4GB of RAM, and a 20GB local disk.
 Please note the IP address of your VM once it is provisioned.  
 
 Setup TensorFlow
-We will use Docker to run TensorFlow; you may install TensforFlow if wish (see https://www.tensorflow.org/install/) but for this exercise, Docker is simplier.  
+
+We will use Docker to run TensorFlow; you may install TensforFlow if wish (see https://www.tensorflow.org/install/) but for 
+this exercise, Docker is simplier.  
 
 The following steps assume you are running as root.
 
