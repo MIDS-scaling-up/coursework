@@ -27,3 +27,30 @@ Part 1. Install Docker (see https://docs.docker.com/engine/installation/linux/do
     ca-certificates \
     curl \
     software-properties-common
+    
+3. Add Docker’s official GPG key:
+
+ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+ 
+Optional: See detailed instructions on how to verify the key.
+
+4. Configure repository:
+
+ add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+   
+5. Update the apt package index:
+
+ apt-get update 
+ 
+6. Install Docker:
+
+ apt-get install docker-ce
+ 
+7. Verify install:
+ 
+ docker run hello-world
+ 
+ This command downloads a test image and runs it in a container. When the container runs, it prints an informational message and exits.
