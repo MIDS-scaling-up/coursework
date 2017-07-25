@@ -73,11 +73,36 @@ Next check to confirm that your TensorFlow installation works by invoking Python
 
 Once you have a python prompt, >>>, run the following code:
 
-        # python
+      # python
 
-        import tensorflow as tf
-        hello = tf.constant('Hello, TensorFlow!')
-        sess = tf.Session() # It will print some warnings here.
-        print(sess.run(hello))
+      import tensorflow as tf
+      hello = tf.constant('Hello, TensorFlow!')
+      sess = tf.Session() # It will print some warnings here.
+      print(sess.run(hello))
 
 This should print Hello TensorFlow! (and a couple of warnings after the tf.Session line).
+
+Now press Ctrl-d, on a blank line, once to exit python, and a second time to exit the docker image.
+
+## Configure
+
+Create a working directory:
+
+    mkdir tf_files
+
+and change to that directory
+
+    cd ~/tf_files
+    
+You will need to download the following files to your VM: bottlenecks1.tar.gz, bottlenecks2.tar.gz, label_image.py, retrain.py
+test.jpg to the VM. 
+
+    curl -O https://github.com/MIDS-scaling-up/coursework/raw/master/week10/lab-tf/bottlenecks1.tar.gz
+    curl -O https://github.com/MIDS-scaling-up/coursework/raw/master/week10/lab-tf/bottlenecks2tar.gz
+    curl -O https://github.com/MIDS-scaling-up/coursework/raw/master/week10/lab-tf/label_image.py
+    curl -O https://github.com/MIDS-scaling-up/coursework/raw/master/week10/lab-tf/retrain.py
+    curl -O https://github.com/MIDS-scaling-up/coursework/raw/master/week10/lab-tf/test.jpg
+    
+
+
+
