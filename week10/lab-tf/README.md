@@ -1,4 +1,4 @@
-# Tensfor For Poets
+# TensorFlow For Poets
 
 This lab is based on https://codelabs.developers.google.com/codelabs/tensorflow-for-poets
 
