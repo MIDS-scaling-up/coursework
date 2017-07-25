@@ -14,21 +14,12 @@ this exercise, Docker is simplier.
 
 The following steps assume you are running as root.
 
-Part 1. Install Docker (see https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#install-using-the-repository for more details).
+We'll start by installing Docker, see see https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#install-using-the-repository for more details.
 
-
-
-    object Main extends App {
-      println(s"I got executed with ${args size} args, they are: ${args mkString ", "}")
-
-      // your code goes here
-    }
-
-
-1. Update the apt package index:
+Update your apt package index with the following command 
 
     apt-get update
- 
+     
 2. Install packages to allow apt to use a repository over HTTPS:
 
  sudo apt-get install \
