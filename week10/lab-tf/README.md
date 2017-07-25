@@ -57,3 +57,27 @@ And finally, to verify the install:
  
      Hello from Docker!
      This message shows that your installation appears to be working correctly.
+     
+## Validate TensorFlow
+
+With Docker installed, you may now test out the TensorFlow image:
+      
+     docker run -it tensorflow/tensorflow:1.2.1 bash
+    
+After downloading your prompt should change to root@xxxxxxx:/notebooks#.
+
+Next check to confirm that your TensorFlow installation works by invoking Python from the container's command line:
+
+      # Your prompt should be "root@xxxxxxx:/notebooks" 
+        python
+
+Once you have a python prompt, >>>, run the following code:
+
+        # python
+
+        import tensorflow as tf
+        hello = tf.constant('Hello, TensorFlow!')
+        sess = tf.Session() # It will print some warnings here.
+        print(sess.run(hello))
+
+This should print Hello TensorFlow! (and a couple of warnings after the tf.Session line).
