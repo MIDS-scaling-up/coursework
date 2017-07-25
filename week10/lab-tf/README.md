@@ -41,16 +41,19 @@ You'll need add the Docker repository; this is done by:
       $(lsb_release -cs) \
       stable"
    
-5. Update the apt package index:
+You'll need to update the package index again to include the new repository:
 
- apt-get update 
+    apt-get update 
  
-6. Install Docker:
+To install Docker, run the following: 
 
- apt-get install docker-ce
+    apt-get install docker-ce
  
-7. Verify install:
+And finally, to verify the install:
  
- docker run hello-world
+    docker run hello-world
  
- This command downloads a test image and runs it in a container. When the container runs, it prints an informational message and exits.
+ This command downloads a test image and runs it in a container. When the container runs, it prints an informational message and exits.  The text will be similar to:
+ 
+     Hello from Docker!
+     This message shows that your installation appears to be working correctly.
