@@ -119,7 +119,7 @@ This will create the following directory stucture:
         
 These are the classes that we will train.  
 
-A "Bottleneck", is an informal term that the TensorFlow team often use for the layer just before the final output layer that actually does the classification. As, near the output, the representation is much more compact than in the main body of the network.  We've provided the files to speed up training.  See "" at https://codelabs.developers.google.com/codelabs/tensorflow-for-poets/#4 for a detailed description on what bottlenecks do and how they speed up learning. 
+A "Bottleneck", is an informal term that the TensorFlow team often use for the layer just before the final output layer that actually does the classification. As, near the output, the representation is much more compact than in the main body of the network.  We've provided the files to speed up training.  See  https://codelabs.developers.google.com/codelabs/tensorflow-for-poets/#4 for a detailed description on what bottlenecks do and how they speed up learning. 
 
 Then relaunch Docker with that directory shared as your working directory, and port number 6006 published for TensorBoard:
     
