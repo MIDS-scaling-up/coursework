@@ -1,12 +1,12 @@
-#Assignment 3: Internet of Things 101 and MQTT processing
+# Assignment 3: Internet of Things 101 and MQTT processing
 
-##Instructions
+## Instructions
 This homework should be pretty easy and consists mostly of reading. The concept of the Internet of Things deals with a large number of devices that communicate largely through messaging.
 
-###MQTT 
+### MQTT 
 MQTT - http://mqtt.org/ is a lightweight messaging protocol for the Internet of Things.  Please spend some time to read up on it.  In your homework submission, please write a one liner about the QoS 0,1, and 2 that MQTT enables.
 
-###Mosquitto
+### Mosquitto
 Perhaps the most popular OpenSource MQTT toolkit is called Mosquitto.  Let's get it installed.  You should already know how to provision a VM. Use this knowledge to spin up a VM with 2G of RAM, 2 vCPUs, and the latest Ubuntu on it.  Next, ssh into your new VM and install mosquitto-clients:
 ```
 apt-get update
