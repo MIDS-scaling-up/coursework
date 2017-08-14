@@ -87,10 +87,11 @@ Note the specification of Spark library versions. Ensure that these version numb
 From spark1 in the root of the project directory, execute the following where 'foof', 'goof' and 'spoof' are args to the Spark program:
 
     sbt package && $SPARK_HOME/bin/spark-submit \
+      --packages org.apache.spark:spark-streaming_2.11:2.1.0 $(find target -iname "*.jar") \
       --master spark://spark1:7077 $(find target -iname "*.jar") \
       foof goof spoof
 
-Note that the 'clean' build target is only necessary if you remove files or dependencies from a project; if you've merely changed or added files previously built, you can execute only the package target for a speedier build.  Depending on your approach, you’ll need to make sure the external jars are availabe on each of your spark nodes.  This maybe done using the packages example (see above), the jars options, or even installing the jars on each node.
+Note that the 'clean' build target is only necessary if you remove files or dependencies from a project; if you've merely changed or added files previously built, you can execute only the package target for a speedier build.  Depending on your approach, you’ll need to make sure the external jars are availabe on each of your spark nodes.  This maybe done using the packages example (see above), the jars options, or even installing the jars on each node.  Note, in this example, ONLY the spark-streaming libary is included; any additional liberaries such as twitter4j are NOT included.
 
 ```
 
