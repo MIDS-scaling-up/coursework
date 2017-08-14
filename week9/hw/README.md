@@ -87,7 +87,7 @@ Note the specification of Spark library versions. Ensure that these version numb
 From spark1 in the root of the project directory, execute the following where 'foof', 'goof' and 'spoof' are args to the Spark program:
 
     sbt package && $SPARK_HOME/bin/spark-submit \
-      --packages org.apache.spark:spark-streaming_2.11:2.1.0 $(find target -iname "*.jar") \
+      --packages org.apache.spark:spark-streaming_2.11:2.1.0  \
       --master spark://spark1:7077 $(find target -iname "*.jar") \
       foof goof spoof
 
