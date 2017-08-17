@@ -25,7 +25,7 @@ Set the proper location of `JAVA_HOME` and test it:
 
 Download and extract a recent, prebuilt version of Spark (link obtained from ):
 
-    curl http://www.gtlib.gatech.edu/pub/apache/spark/spark-1.6.2/spark-1.6.2-bin-hadoop2.6.tgz | tar -zx -C /usr/local --show-transformed --transform='s,/*[^/]*,spark,'
+    curl http://www.gtlib.gatech.edu/pub/apache/spark/spark-1.6.3/spark-1.6.3-bin-hadoop2.6.tgz | tar -zx -C /usr/local --show-transformed --transform='s,/*[^/]*,spark,'
 
 For convenience, set `$SPARK_HOME`:
 
