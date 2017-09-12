@@ -89,6 +89,10 @@ Use `slcli vs list` and `slcli vs credentials <id>` or the SoftLayer management 
 
 While logged into the VS, execute:
 
+    pip install --upgrade pip
+    pip uninstall -y urllib3
+    yum install -y gcc python-devel openssl-devel 
+    pip install m2crypto
     curl -o /tmp/install_salt.sh -L https://bootstrap.saltstack.com && sh /tmp/install_salt.sh -Z -M git 2015.5
 
     yum install -y python-pip && pip install SoftLayer apache-libcloud
