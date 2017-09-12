@@ -35,7 +35,12 @@ Python version 2.7 or newer and a complementing pip program are required for thi
     pip --version
     pip 6.1.1 from /usr/lib/python3.4/site-packages (python 3.4)
 
-#### Mac OS X Installation Steps
+#### Windows 10 Pro / Mac OS X Installation Steps
+* Install docker from http://docker.io
+* Open up powershell (Windows) or terminal (Mac) and spin up a docker container with Ubuntu in it, e.g. docker run --name slcli -ti ubuntu bash
+* Work inside this container -- e.g. follow the ubuntu Linux steps below
+
+#### Mac OS X Installation Steps (without docker)
 
 * Install Xcode from the Apple store
 * Accept the `gcc` license agreement
