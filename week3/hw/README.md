@@ -4,10 +4,10 @@
 This homework should be pretty easy and consists mostly of reading. The concept of the Internet of Things deals with a large number of devices that communicate largely through messaging.
 
 ### Hardware: Raspberry Pi3
-Read up on the leading IoT device - Raspberry Pi 3: https://www.raspberrypi.org/products/raspberry-pi-3-model-b/  How does it differ performance wise from a regular desktop?
+Read up on the leading IoT device - Raspberry Pi 3: https://www.raspberrypi.org/products/raspberry-pi-3-model-b/  How does it differ performance-wise from a regular desktop?
 
 ### Hardware: Nvidia Jetson family
-Read up on the Nvidia Jetson TX2 module here: http://www.nvidia.com/object/embedded-systems-dev-kits-modules.html  The TX2 is currently the leading DL / AI board on the market. Looking through it specs, how much faster is it compared to a Raspberry Pi3?
+Read up on the Nvidia Jetson TX2 module here: http://www.nvidia.com/object/embedded-systems-dev-kits-modules.html  The TX2 is currently the leading DL / AI board on the market. Note that Nvidia offers an educational discount: the board is available to students for $299. Look through the specs; how much faster is it compared to a Raspberry Pi3?
 
 ### MQTT 
 MQTT - http://mqtt.org/ is a lightweight messaging protocol for the Internet of Things.  Please spend some time to read up on it.  In your homework submission, please write a one liner about the QoS 0,1, and 2 that MQTT enables.
@@ -18,8 +18,11 @@ Perhaps the most popular OpenSource MQTT toolkit is called Mosquitto.  Let's get
 apt-get update
 apt-get install mosquitto-clients
 ```
+Please have this VM ready before class, we will need it for an in-class lab.
+
 ### Blue Horizon
-Blue Horizon - http://bluehorizon.network - is our exprimental decentralized distributed Internet of Things platform.  Please spend some time reading through the introduction. Notice that the participating devices continuously send data into the cloud portion of the project.  You are welcome to join the project as well although it's not required :-)  Please review the Ethereum white paper located at https://github.com/ethereum/wiki/wiki/White-Paper .  In a few sentences, how are block chains relevant for the Internet of Things?
+Blue Horizon - http://bluehorizon.network - is our exprimental decentralized distributed Internet of Things platform.  Please spend some time reading through the introduction. Notice that the participating devices continuously send data into the cloud portion of the project.   
+Please review the Ethereum white paper located at https://github.com/ethereum/wiki/wiki/White-Paper .  In a few sentences, how are block chains relevant for the Internet of Things?
 
 
 ### Subscribing to messages on the development  Blue Horizon MQTT Cloud Broker
