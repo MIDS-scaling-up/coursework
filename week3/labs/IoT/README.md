@@ -2,7 +2,7 @@
 This lab builds upon the homework and introduces some of the tools in use today 
 for Internet of Things processing
 
-####Getting the MQTT broker running
+#### Getting the MQTT broker running
 Let us reconnect to the VM we created for the homework.  We installed mosquitto clients but this time, let
 us install the mosquitto broker as well
 ```
@@ -62,7 +62,7 @@ Control-C
 **Quick Assignment:** modify the above script so that it emits the temperature of 20 with the probability of about 10% . Verify
 that it works.
 
-####Connecting to the IBM Internet of Things Foundation
+#### Connecting to the IBM Internet of Things Foundation
 It is totally fine to play with a standalone MQTT bus, but we want jetpacks!  Let's connect to IBM's hosted IOT foundation 
 system.  It is fairly representative of the state of the industry in that it provides a hosted MQTT broker 
 plus a useful structure for working with devices and gateways.
@@ -75,7 +75,7 @@ Finally register the planned device with the Bluemix App:
 
 https://console.ng.bluemix.net/docs/services/IoT/index.html#iot170
 
-#####Adding a new device
+##### Adding a new device
 Click "add device" and when prompted, create a new device type called "temp_sensor" with no metadata.  then, create a new device
 and give it a name.  I named mine "bernie".  At this point, you will be presented with the credentials that you can use to connect to your new device e.g.
 ```
@@ -96,7 +96,7 @@ mosquitto_pub -m "hello universe" -h qlsgr4.messaging.internetofthings.ibmcloud.
 **Quick Assignment:** modify the above script to send to this topic in a loop and start it.
 Your device now should appear online and you should see its data coming in.
 
-####Creating a NodeRed application
+#### Creating a NodeRed application
 Now, let us create a visual event-driven application that can consume this data and do something with it.
 first let us set up our node red environment.
 
