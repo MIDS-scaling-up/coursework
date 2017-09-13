@@ -91,7 +91,7 @@ edit ~/.brooklyn/brooklyn.properties  and add the following lines (NOTE: make su
 
 Change the permissions on the new properties file
 
-    chmod 600 /root/.brooklyn/brooklyn.properties
+    chmod 600 ~/.brooklyn/brooklyn.properties
 
 
 ###Start it:
