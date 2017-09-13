@@ -44,7 +44,7 @@ https://brooklyn.incubator.apache.org/v/latest/start/blueprints.html
     cd
 
     #Download the Brooklyn source code tarball
-    wget "https://www.apache.org/dyn/closer.lua?action=download&filename=brooklyn/apache-brooklyn-0.11.0/apache-brooklyn-0.11.0-bin.tar.gz"
+    wget "http://mirror.cogentco.com/pub/apache/brooklyn/apache-brooklyn-0.11.0/apache-brooklyn-0.11.0-bin.tar.gz"
 
     #unpack the tarball
     tar zxf apache-brooklyn-0.11.0-bin.tar.gz
