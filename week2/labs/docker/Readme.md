@@ -65,6 +65,8 @@ The container should be gone now.
 Let's get a ubuntu container going:
 ```
 docker run --name my_ubuntu -ti ubuntu bash
+# Your prompt should change to something like
+# root@5cf4cef1b2ee:/#
 ```
 This should have downloaded the docker ubuntu image,  created a container called my_ubuntu, started it, and attached a terminal to it.  At this point, you should be inside the container.  The -ti flag connects the current terminal to the container.  Do something inside this container, e.g. 
 ```
@@ -78,9 +80,60 @@ You should now be back in your VM.  Let's see what's running :
 ```
 docker ps
 # you should see your container is actively running.
+# CONTAINER ID        IMAGE                              COMMAND              CREATED             STATUS              PORTS                               NAMES
+# 30666624229d        ubuntu                             "bash"               17 seconds ago      Up 16 seconds                                           my_ubuntu
+
+```
+Now, let us reconnect to the container:
+```
+docker attach my_ubuntu
+```
+You should be now back inside the container.  You can play around with it; once you are done, just type
+```
+exit
+```
+This should return you from the container and also stop it.  Verify that it is no longer running:
+```
+docker ps
+```
+Now, let's start the container:
+```
+docker start my_ubuntu
+docker ps
+```
+Now, let's re-attach to this container:
+```
+docker attach my_ubuntu
+```
+You are back in the container.  Once you are done, disconnect from it (Control-P Control Q), and then remove it as it is running:
+```
+docker rm -f my_ubuntu
 ```
 
+#### Using Docker images
+Docker containers are spawned from images.  Let's see what images we have locally on our machine:
+```
+docker images
+# should see something like
+# ubuntu                  latest               0ef2e08ed3fa        6 months ago        130MB
+```
+The images are located in docker repositories and are downloaded before the containers are started.  The main docker repository is the Docker Hub: https://hub.docker.com/  Take a moment to browse through the images, do a few searches:
 
+Now, let us download the apache docker image: https://hub.docker.com/_/httpd/
+```
+docker pull httpd
+```
+Validate that the image is now available locally, e.g.
+```
+docker images
+```
+Now let us start apache.  Note that we are passing port 80 inside the container to port 8003 in our VM and also passing our current
+directory to the /usr/local/apache2/htdocs inside the container.
+```
+docker run -d --name my-apache-app -p8003:80 -v "$PWD":/usr/local/apache2/htdocs/ httpd:2.4
+```
+Now, let us edit index.html in our current directory and then point our browser to http://ip-of-my-vm  (you could get it from ifconfig)
+You should be able to see that our http server is running!
 
-
-
+#### Using Dockerfiles
+We always want to automate deployment to the extent possible.  Let's see how we can create our own docker images.
