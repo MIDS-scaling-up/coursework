@@ -136,4 +136,66 @@ Now, let us edit index.html in our current directory and then point our browser 
 You should be able to see that our http server is running!
 
 #### Using Dockerfiles
-We always want to automate deployment to the extent possible.  Let's see how we can create our own docker images.
+We always want to automate deployment to the extent possible.  Let's see how we can create our own docker images.  Create a file called Dockerfile and write to it the following text:
+```
+# FROM nvidia/cuda
+# FROM nvidia/cuda:8.0-cudnn6-devel
+# FROM nvidia/cuda:8.0-cudnn5-devel
+FROM ubuntu
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    git \
+    python-pip \
+    python-setuptools \
+    python-dev \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN pip install h5py pandas
+RUN pip install theano
+
+RUN pip install --upgrade -I setuptools \
+  && pip install --upgrade \
+    keras
+
+RUN pip install  \
+    matplotlib \
+    seaborn
+
+RUN pip install scikit-learn tables
+RUN pip install --upgrade pip
+RUN pip install 'ipython<6'
+
+RUN pip install jupyter
+
+VOLUME /notebook
+WORKDIR /notebook
+EXPOSE 8888
+
+ENV KERAS_BACKEND=theano
+
+#  CMD jupyter notebook --no-browser --ip=0.0.0.0 --NotebookApp.token= --allow-root
+CMD jupyter notebook --no-browser --ip=0.0.0.0 --allow-root
+```
+Let's create an image from it:
+```
+docker build -t test .
+```
+This will take a minute or two and eventually create a new docker image.  List your docker images to ascertain that it was successfully created.
+
+Now, let's start our test image:
+```
+docker run --name test -p 8800:8888  -d jupyter
+```
+In order to access the jupyter notebook, we need to get the access token.  It should be logged to docker stdout, so let's get it:
+```
+docker logs jupyter
+#     Copy/paste this URL into your browser when you connect for the first time,
+#   to login with a token:
+#        http://0.0.0.0:8888/?token=378684ab93ca16a1348ba2cb874cb52dbc18362fe756648f
+```
+Now, point your browser to http://my_vm_ip:8800  and use the token to log in.
+
+Once you are all done, remove the VM to avoid extra charges!
