@@ -1,5 +1,5 @@
 ### Docker 101
-This lab is a primer on docker, which in the past few years emerged as the dominant deployment tool.
+This lab is a primer on docker, which in the past few years emerged as the dominant workload management and deployment tool.
 
 Docker - https://www.docker.com/  - is a collection of tools around Linux Containers [which are a lightweight form of virtualization]. 
 Linux Containers have been part of the Linux kernel for quite some time now, but the user space tooling has lagged, which provided 
@@ -9,13 +9,12 @@ that a linux container shares the kernel with the underlying VM or host; there i
 are very small and light, they are easy to spin up and you can have many of them on devices as small as Raspberry Pi Zero..
 
 #### Installing docker
-Let us reconnect to the VM we created for the homework.  We installed mosquitto clients but this time, let
-us install the mosquitto broker as well
+If you already have docker running, you may skip this step.  However, you may wish to do it if you never installed docker on ubuntu.
+This assumes that you have an slcli installed somewhere, e.g. on a VM in softlayer or in your local environment.
 
-
-
+Let us spin up a clean VM:
 ```
 apt-get install mosquitto
 ```
 
-#### Running something in a container.
+#### Running something in a docker container.
