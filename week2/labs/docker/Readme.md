@@ -187,7 +187,7 @@ This will take a minute or two and eventually create a new docker image.  List y
 
 Now, let's start our test image:
 ```
-docker run --name test -p 8800:8888  -d jupyter
+docker run --name jupyter -p 8800:8888  -d test
 ```
 In order to access the jupyter notebook, we need to get the access token.  It should be logged to docker stdout, so let's get it:
 ```
