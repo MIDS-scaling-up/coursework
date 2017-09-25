@@ -39,10 +39,7 @@ RUN make -j4
 # RUN wget http://pjreddie.com/media/files/tiny-yolo-voc.weights
 # RUN wget http://pjreddie.com/media/files/yolo.weights
 
-RUN mkdir /coco
-RUN cp /darknet/scripts/get_coco_dataset.sh /coco
-WORKDIR /coco
-RUN bash /coco/get_coco_dataset.sh
+RUN wget https://pjreddie.com/media/files/yolo.weights 
 ```
 Save your Dockerfile and build the container:
 ```
@@ -71,6 +68,13 @@ Yolo can be installed on your local machine -- e.g. Macbook -- and will be reaso
 if you have a webcam attached, then you should be able to run Yolo live.  IT will try to open an x window, so ensure that you have your xhost + 
 command issued.
 ```
+docker run --name darknet -ti darknet bash
+cd /darknet
+mkdir /coco
+cp /darknet/scripts/get_coco_dataset.sh /coco
+cd /coco
+./get_coco_dataset.sh
+
 ./darknet detector demo cfg/coco.data cfg/yolo.cfg yolo.weights
 ```
 
