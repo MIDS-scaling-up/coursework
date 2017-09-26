@@ -63,22 +63,26 @@ cd /darknet
 ./darknet detect cfg/yolo.cfg yolo.weights data/horses.jpg
 ./darknet detect cfg/yolo.cfg yolo.weights data/person.jpg
 ```
+How long does it take to process one image? 
 
-Yolo can be installed on your local machine -- e.g. Macbook -- and will be reasonably fast, especially if you have a GPU.
-if you have a webcam attached, then you should be able to run Yolo live.  IT will try to open an x window, so ensure that you have your xhost + 
+#### [Optional] Running Yolo on your laptop / desktop
+If your local machine can run Docker, Yolo could be installed on your local machine -- e.g. Macbook -- and will be reasonably fast, especially if you have a GPU.  If you have a webcam attached, then you should be able to run Yolo live.  It will try to open an x window, so ensure that you have your xhost + 
 command issued.
 ```
 docker run --name darknet -ti darknet bash
 cd /darknet
+# install the coco data set for optimal awesomeness
 mkdir /coco
 cp /darknet/scripts/get_coco_dataset.sh /coco
 cd /coco
 ./get_coco_dataset.sh
 
+cd /darknet
 ./darknet detector demo cfg/coco.data cfg/yolo.cfg yolo.weights
 ```
+What is the framerate printed in the termina window where you started Yolo from?
 
-#### Tiny Yolo
+#### [Optional] Tiny Yolo
 If you want to achieve maximum performance on your tiny IoT device, you may want to opt for Tiny Yolo instead. 
 Tiny Yolo is a much simpler network and much faster as a consequence, but it is less accurate.
 
@@ -92,4 +96,6 @@ This will take a while.  Now run the detector again and observe the difference i
 ```
 ./darknet detector test cfg/voc.data cfg/tiny-yolo-voc.cfg tiny-yolo-voc.weights data/dog.jpg
 ```
-Later in the class, we'll return to Yolo and run it on a GPU
+What is the framerate printed in the main terminal window where you started Yolo?
+
+Later in the class, we'll return to Yolo and run it on a GPU.
