@@ -6,8 +6,12 @@ Set up 3 VM instances on Softlayer: __master__, __slave1__, __slave2__.
 
 Please add your public key while provisioning the VMs (`slcli vs create ... --key KEYID`) so that you can login from your client without a password.
 
+Please note, Hadoop 2.7.4 updated how resources are enforced. The default configuration requires at least 8 CPUs/cores and 8G of RAM per node.  You may choose to deploy with the increased ammount of resources or make some additional configuration updates that will be called out.
+
 Get **2 CPUs**, **4G of RAM**, **1G private / public NICS** and **two disks: 25G and 100G local** the idea is to use
 the 100G disk for HDFS data and the 25G disk for the OS and housekeeping.
+
+Please note, Hadoop 2.7.4 updated how resources are enforced. The default configuration requires at least 8 CPUs/cores and 8G of RAM per node.  You may choose to deploy with the increased ammount of resources or make some additional configuration updates that will be called out.
 
 For the master, you might do something like this:
 
@@ -158,7 +162,17 @@ Note: if you want to use private IPs for your cluster, add this property also:
            <name>yarn.resourcemanager.bind-host</name>
            <value>0.0.0.0</value>
           </property>
-          
+
+If you are using the 2 CPU/4G node configuration, you will need to add the following properties as well:
+
+         <property>
+            <name>yarn.nodemanager.resource.cpu-vcores</name>
+            <value>2</value>
+        </property>
+        <property>
+            <name>yarn.nodemanager.resource.memory-mb</name>
+            <value>4096</value>
+        </property>
           
 * Write the following content to `mapred-site.xml`.
 
