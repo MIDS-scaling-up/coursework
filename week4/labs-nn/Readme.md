@@ -21,7 +21,7 @@ Create a new directory  -- e.g mkdir torchrnn && cd torchrnn and then create a f
 apt-get update && apt-get install -y git
 git clone https://github.com/MIDS-scaling-up/coursework.git
 cd coursework/week4/labs-nn
-docker build -t torchrnn
+docker build -t torchrnn .
 docker run --name torchrnn -ti torchrnn bash
 # if your machine has nvidia-docker and cuda installed, do this instead:
 # cp Dockerfile.cuda Dockerfile
