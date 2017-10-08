@@ -15,7 +15,7 @@ Please note, Hadoop 2.7.4 updated how resources are enforced. The default config
 
 For the master, you might do something like this:
 
-    slcli vs create --datacenter=sjc01 --hostname=master --domain=mids --billing=hourly --key=<mykey> --cpu=2 --memory=4096 --disk=25 --disk=100 --network=1000 --os=CENTOS_LATEST_64
+    slcli vs create --datacenter=sjc01 --hostname=master --domain=mids.com --billing=hourly --key=<mykey> --cpu=2 --memory=4096 --disk=25 --disk=100 --network=1000 --os=CENTOS_LATEST_64
 
 ## VM Configuration
 
