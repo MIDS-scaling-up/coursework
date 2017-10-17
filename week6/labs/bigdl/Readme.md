@@ -49,5 +49,58 @@ linear = Linear(2, 3) # Try to create a Linear layer
 ```
 ### Training LeNet
 LeNet is a classic neural network developed in the late 90's to classify handwritten digits
+Let us pick a directory and clone Intel's BigDL examples directory
+```
+cd /root
+git clone https://github.com/intel-analytics/BigDL
+```
 
+We will need to install a package called six:
+```
+pip install six
+```
 
+Now, create a script file called lenet.sh and write the following into it:
+```
+#!/bin/sh
+
+PYTHONHASHSEED=0
+BIGDL_VERSION=0.3.0-SNAPSHOT
+BigDL_HOME=/usr/local/bigdl
+GITHUB_BIGDL_HOME=/root/BigDL
+SPARK_HOME=/usr/local/spark
+MASTER=local[2]
+
+PYTHON_API_ZIP_PATH=${BigDL_HOME}/lib/bigdl-0.3.0-SNAPSHOT-python-api.zip
+BigDL_JAR_PATH=${BigDL_HOME}/lib/bigdl-SPARK_1.6-0.3.0-SNAPSHOT-jar-with-dependencies.jar
+
+# BigDL_JAR_PATH=${BigDL_HOME}/dist/lib/bigdl-VERSION-jar-with-dependencies.jar
+PYTHONPATH=${PYTHON_API_ZIP_PATH}:$PYTHONPATH
+
+        ${SPARK_HOME}/bin/spark-submit \
+            --master ${MASTER} \
+            --driver-cores  2 \
+            --driver-memory 2g  \
+            --total-executor-cores  2 \
+            --executor-cores 4  \
+            --executor-memory 4g \
+            --py-files ${PYTHON_API_ZIP_PATH},${GITHUB_BIGDL_HOME}/pyspark/bigdl/models/textclassifier/textclassifier.py  \
+            --jars ${BigDL_JAR_PATH} \
+            --conf spark.driver.extraClassPath=${BigDL_JAR_PATH} \
+            --conf spark.executor.extraClassPath=bigdl-SPARK_1.6-0.3.0-SNAPSHOT-jar-with-dependencies.jar \
+            --conf spark.executorEnv.PYTHONHASHSEED=${PYTHONHASHSEED} \
+            ${GITHUB_BIGDL_HOME}/pyspark/bigdl/models/textclassifier/textclassifier.py \
+             --max_epoch 3 \
+             --model cnn
+```
+Let us run it:
+```
+chmod a+x lenet.sh
+./lenet.sh
+```
+IF all goes well, you should see something like:
+```
+2017-10-16 18:41:14 INFO  DistriOptimizer$:374 - [Epoch 3 16000/15958][Iteration 375][Wall Clock 58.496114957s] Epoch finished. Wall clock time is 59357.355329 ms
+2017-10-16 18:41:14 INFO  DistriOptimizer$:626 - [Wall Clock 59.357355329s] Validate model...
+2017-10-16 18:41:15 INFO  DistriOptimizer$:668 - Top1Accuracy is Accuracy(correct: 3878, count: 4039, accuracy: 0.9601386481802426
+```
