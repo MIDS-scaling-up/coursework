@@ -22,7 +22,7 @@ yum install rsync
 ssh spark2 yum install rsync
 ssh spark3 yum install rsync
 ```
-Now, propagate this directory to other nodes
+Now, propagate BigDL directory to other nodes
 ```
 # repeat for all slave nodes
 cd /usr/local
