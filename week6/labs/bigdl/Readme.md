@@ -16,6 +16,12 @@ wget https://oss.sonatype.org/content/groups/public/com/intel/analytics/bigdl/di
 unzip *.zip
 rm *.zip
 ```
+Make sure rsync is installed everywhere
+```
+yum install rsync
+ssh spark2 yum install rsync
+ssh spark3 yum install rsync
+```
 Now, propagate this directory to other nodes
 ```
 # repeat for all slave nodes
@@ -58,6 +64,8 @@ git clone https://github.com/intel-analytics/BigDL
 We will need to install a package called six:
 ```
 pip install six
+ssh spark2 pip install siz
+ssh spark3 pip install six
 ```
 
 Now, create a script file called lenet.sh and write the following into it:
