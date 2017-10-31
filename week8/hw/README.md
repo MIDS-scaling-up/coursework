@@ -13,11 +13,11 @@ Describe the pros & cons of four different NoSQL Data Structure families:
 
 Sometimes NoSQL databases in the same family can be quite different. What are some differences between Couchbase and MongoDB.
 
-#Exercise 2: Quorum and Dynamo Inspired Systems
+# Exercise 2: Quorum and Dynamo Inspired Systems
 
 [Resource] (http://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf)
 
-###Instructions 
+### Instructions 
 1. Name at least three systems that implement quorum protocols. 
 1. Define the following: 
   * ‘W’ 

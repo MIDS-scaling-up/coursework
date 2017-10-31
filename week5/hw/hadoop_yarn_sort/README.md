@@ -6,12 +6,16 @@ Set up 3 VM instances on Softlayer: __master__, __slave1__, __slave2__.
 
 Please add your public key while provisioning the VMs (`slcli vs create ... --key KEYID`) so that you can login from your client without a password.
 
+Please note, Hadoop 2.7.4 updated how resources are enforced. The default configuration requires at least 8 CPUs/cores and 8G of RAM per node.  You may choose to deploy with the increased ammount of resources or make some additional configuration updates that will be called out.
+
 Get **2 CPUs**, **4G of RAM**, **1G private / public NICS** and **two disks: 25G and 100G local** the idea is to use
 the 100G disk for HDFS data and the 25G disk for the OS and housekeeping.
 
+Please note, Hadoop 2.7.4 updated how resources are enforced. The default configuration requires at least 8 CPUs/cores and 8G of RAM per node.  You may choose to deploy with the increased ammount of resources or make some additional configuration updates that will be called out.
+
 For the master, you might do something like this:
 
-    slcli vs create --datacenter=sjc01 --hostname=master --domain=mids --billing=hourly --key=<mykey> --cpu=2 --memory=4096 --disk=25 --disk=100 --network=1000 --os=CENTOS_LATEST_64
+    slcli vs create --datacenter=sjc01 --hostname=master --domain=mids.com --billing=hourly --key=<mykey> --cpu=2 --memory=4096 --disk=25 --disk=100 --network=1000 --os=CENTOS_LATEST_64
 
 ## VM Configuration
 
@@ -70,7 +74,7 @@ Install packages (installing the entire JDK rather than the JRE is necessary to 
 
 Download hadoop v2 to `/usr/local` and extract it:
 
-    curl http://apache.claz.org/hadoop/core/hadoop-2.7.3/hadoop-2.7.3.tar.gz | tar -zx -C /usr/local --show-transformed --transform='s,/*[^/]*,hadoop,'
+    curl http://apache.claz.org/hadoop/core/hadoop-2.7.4/hadoop-2.7.4.tar.gz | tar -zx -C /usr/local --show-transformed --transform='s,/*[^/]*,hadoop,'
 
 Make sure your key directories have correct permissions
 
@@ -158,7 +162,17 @@ Note: if you want to use private IPs for your cluster, add this property also:
            <name>yarn.resourcemanager.bind-host</name>
            <value>0.0.0.0</value>
           </property>
-          
+
+If you are using the 2 CPU/4G node configuration, you will need to add the following properties as well:
+
+         <property>
+            <name>yarn.nodemanager.resource.cpu-vcores</name>
+            <value>2</value>
+        </property>
+        <property>
+            <name>yarn.nodemanager.resource.memory-mb</name>
+            <value>4096</value>
+        </property>
           
 * Write the following content to `mapred-site.xml`.
 
@@ -255,6 +269,9 @@ _Note that the input to teragen is the number of 100 byte rows_
 * Clean up, e.g.:
 
         hdfs dfs -rm -r /terasort/\*
+        
+## To Turn In:
+* A document with the output of the Terasort run.
 
 ## Optional: Build Hadoop native libs
 

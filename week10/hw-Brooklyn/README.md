@@ -44,20 +44,20 @@ https://brooklyn.incubator.apache.org/v/latest/start/blueprints.html
     cd
 
     #Download the Brooklyn source code tarball
-    wget "http://apache.mirrors.ionfish.org/brooklyn/apache-brooklyn-0.9.0/apache-brooklyn-0.9.0-bin.tar.gz"
+    wget "http://mirror.cogentco.com/pub/apache/brooklyn/apache-brooklyn-0.11.0/apache-brooklyn-0.11.0-bin.tar.gz"
 
     #unpack the tarball
-    tar zxf apache-brooklyn-0.9.0-bin.tar.gz
+    tar zxf apache-brooklyn-0.11.0-bin.tar.gz
 
     #change working directory to the unpacked code
-    cd  apache-brooklyn-0.9.0-bin
+    cd  apache-brooklyn-0.11.0-bin
 
     
 ### Configure SoftLayer Location
 Brooklyn uses a properties file (~/.brooklyn/brooklyn.properties) to define things like Cloud Endpoints (SoftLayer in our case) and portal security.
 
     mkdir ~/.brooklyn
-edit ~/.brooklyn/brooklyn.properties  and add the following lines:
+edit ~/.brooklyn/brooklyn.properties  and add the following lines (NOTE: make sure to provide your api key/username):
 
     brooklyn.location.jclouds.softlayer.identity=YOUR_SOFTLAYER_USERNAME
     brooklyn.location.jclouds.softlayer.credential=YOUR_SOFTLAYER_API_KEY
@@ -91,12 +91,12 @@ edit ~/.brooklyn/brooklyn.properties  and add the following lines:
 
 Change the permissions on the new properties file
 
-    chmod 600 /root/.brooklyn/brooklyn.properties
+    chmod 600 ~/.brooklyn/brooklyn.properties
 
 
 ###Start it:
 
-    cd ~/apache-brooklyn-0.9.0-bin
+    cd ~/apache-brooklyn-0.11.0-bin
     nohup ./bin/brooklyn launch -b <your external ip> &
 
 
