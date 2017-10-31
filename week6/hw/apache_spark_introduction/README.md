@@ -4,33 +4,39 @@ There are numerous ways to run Apache Spark, even multiple cluster options. In t
 
 ## Provision machines
 
-Provision **three** Centos 7 VSes in SoftLayer with 2 CPUs, 4GB RAM and a 100GB local hard drive. Name them __spark1__, __spark2__, and __spark3__.
+Provision three Centos 7 VSes in SoftLayer with 2 CPUs, 4GB RAM and a 100GB local hard drive. Name them spark1, spark2, and spark3.
 
 ## Configure connectivity between machines
 
-Configure __spark1__ such that it can SSH to __spark1__, __spark2__, and __spark3__ without passwords using SSH keys, and by name. To do this, you'll need to configure `/etc/hosts`, generate SSH keys using `ssh-keygen`, and write the content of the public key to each box to the file `/root/.ssh/authorized_keys` (`ssh-copy-id` helps with key distribution; if you need assistance with these parts of the process, consult earlier homework assignments).
+Configure spark1 such that it can SSH to spark1, spark2, and spark3 without passwords using SSH keys, and by name. To do this, you'll need to configure /etc/hosts, generate SSH keys using ssh-keygen, and write the content of the public key to each box to the file /root/.ssh/authorized_keys (ssh-copy-id helps with key distribution; if you need assistance with these parts of the process, consult earlier homework assignments).
 
 ## Install Java, SBT, and Spark on all nodes
 
 Install packages:
 
-    curl https://bintray.com/sbt/rpm/rpm | sudo tee /etc/yum.repos.d/bintray-sbt-rpm.repo
-    yum install -y java-1.8.0-openjdk-headless sbt
+```
+curl https://bintray.com/sbt/rpm/rpm | sudo tee /etc/yum.repos.d/bintray-sbt-rpm.repo
+yum install -y java-1.8.0-openjdk-devel sbt git
+```
+Set the proper location of JAVA_HOME and test it:
 
-Set the proper location of `JAVA_HOME` and test it:
-
-    echo export JAVA_HOME=\"$(readlink -f $(which java) | grep -oP '.*(?=/bin)')\" >> /root/.bash_profile
-    source /root/.bash_profile
-    $JAVA_HOME/bin/java -version
-
+```
+echo export JAVA_HOME=\"$(readlink -f $(which java) | grep -oP '.*(?=/bin)')\" >> /root/.bash_profile
+source /root/.bash_profile
+$JAVA_HOME/bin/java -version
+```
 Download and extract a recent, prebuilt version of Spark (link obtained from ):
 
-    curl http://www.gtlib.gatech.edu/pub/apache/spark/spark-1.6.3/spark-1.6.3-bin-hadoop2.6.tgz | tar -zx -C /usr/local --show-transformed --transform='s,/*[^/]*,spark,'
+```
+curl https://d3kbcqa49mib13.cloudfront.net/spark-2.1.1-bin-hadoop2.7.tgz | tar -zx -C /usr/local --show-transformed --transform='s,/*[^/]*,spark,'
+```
+For convenience, set $SPARK_HOME:
 
-For convenience, set `$SPARK_HOME`:
+```
+echo export SPARK_HOME=\"/usr/local/spark\" >> /root/.bash_profile
+source /root/.bash_profile
+```
 
-    echo export SPARK_HOME=\"/usr/local/spark\" >> /root/.bash_profile
-    source /root/.bash_profile
 
 ## Configure Spark
 
@@ -44,55 +50,65 @@ From here on out, all commands you execute should be done on __spark1__ only. Yo
 
 ## Start Spark from master
 
-Once you’ve set up the `conf/slaves` file, you can launch or stop your cluster with the following shell scripts, based on Hadoop’s deploy scripts, and available in `$SPARK_HOME/`:
+Configure Spark
 
-- `sbin/start-master.sh` - Starts a master instance on the machine the script is executed on
-- `sbin/start-slaves.sh` - Starts a slave instance on each machine specified in the conf/slaves file
-- `sbin/start-all.sh` - Starts both a master and a number of slaves as described above
-- `sbin/stop-master.sh` - Stops the master that was started via the bin/start-master.sh script
-- `sbin/stop-slaves.sh` - Stops all slave instances on the machines specified in the conf/slaves file
-- `sbin/stop-all.sh` - Stops both the master and the slaves as described above
+On spark1, create the new file $SPARK_HOME/conf/slaves and content:
 
-Start the master first, then open browser and see `http://<master_ip>:8080/`:
+```
+spark1
+spark2
+spark3
+```
+From here on out, all commands you execute should be done on spark1 only. You may log in to the other boxes to investigate job failures, but you can control the entire cluster from the master. If you plan to use the Spark UI, it's convenient to modify your workstation's hosts file so that Spark-generated URLs for investigating nodes resolve properly.
 
-    $SPARK_HOME/sbin/start-master.sh
+## Copy files to master
 
-    starting org.apache.spark.deploy.master.Master, logging to /root/spark/sbin/../logs/spark-root-org.apache.spark.deploy.master.Master-1-spark1.out
+From spark1, clone the homework repo into /root.  Locate and note the directory containing the file moby10b.txt and the directory src; they should be in the directory /root/coursework/week6/hw/apache_spark_introduction.
 
-Then, run the `start-slaves` script, refresh the window and see the new workers (note that you can execute this from the master).
 
-    $SPARK_HOME/sbin/start-slaves.sh
+## Start Spark from master
 
-    spark1: starting org.apache.spark.deploy.worker.Worker, logging to /usr/local/spark/sbin/../logs/spark-root-org.apache.spark.deploy.worker.Worker-1-spark1.out
-    spark3: starting org.apache.spark.deploy.worker.Worker, logging to /usr/local/spark/sbin/../logs/spark-root-org.apache.spark.deploy.worker.Worker-1-spark3.out
-    spark2: starting org.apache.spark.deploy.worker.Worker, logging to /usr/local/spark/sbin/../logs/spark-root-org.apache.spark.deploy.worker.Worker-1-spark2.out
+Once you’ve set up the conf/slaves file, you can launch or stop your cluster with the following shell scripts, based on Hadoop’s deploy scripts, and available in $SPARK_HOME/:
 
-## Example 1: Calculating Pi
+```
+sbin/start-master.sh - Starts a master instance on the machine the script is executed on
+sbin/start-slaves.sh - Starts a slave instance on each machine specified in the conf/slaves file
+sbin/start-all.sh - Starts both a master and a number of slaves as described above
+sbin/stop-master.sh - Stops the master that was started via the bin/start-master.sh script
+sbin/stop-slaves.sh - Stops all slave instances on the machines specified in the conf/slaves file
+sbin/stop-all.sh - Stops both the master and the slaves as described above
+```
+Start the master first, then open browser and see http://<master_ip>:8080/:
 
-Begin by executing a Scala example on __spark1__. Note that this operation will not execute on the cluster, only on __spark1__.
+```
+$SPARK_HOME/sbin/start-master.sh
 
-    $SPARK_HOME/bin/run-example SparkPi
+starting org.apache.spark.deploy.master.Master, logging to /root/spark/sbin/../logs/spark-root-org.apache.spark.deploy.master.Master-1-spark1.out
+```
+Then, run the start-slaves script, refresh the window and see the new workers (note that you can execute this from the master).
+```
+$SPARK_HOME/sbin/start-slaves.sh
 
-Look for task output like this:
+spark1: starting org.apache.spark.deploy.worker.Worker, logging to /usr/local/spark/sbin/../logs/spark-root-org.apache.spark.deploy.worker.Worker-1-spark1.out
+spark3: starting org.apache.spark.deploy.worker.Worker, logging to /usr/local/spark/sbin/../logs/spark-root-org.apache.spark.deploy.worker.Worker-1-spark3.out
+spark2: starting org.apache.spark.deploy.worker.Worker, logging to /usr/local/spark/sbin/../logs/spark-root-org.apache.spark.deploy.worker.Worker-1-spark2.out
+```
 
-    15/06/10 16:36:23 INFO TaskSchedulerImpl: Removed TaskSet 0.0, whose tasks have all completed, from pool
-    15/06/10 16:36:23 INFO DAGScheduler: Stage 0 (reduce at SparkPi.scala:35) finished in 0.706 s
-    15/06/10 16:36:23 INFO DAGScheduler: Job 0 finished: reduce at SparkPi.scala:35, took 0.954864 s
-    Pi is roughly 3.1436
+## Assignment
+### Calculating Pi
 
-Try a Python example (note that Python code executed in Spark is executed in the Jython interpreter, not CPython, the Python runtime with which you are likely most familiar):
+Run the command: $SPARK_HOME/bin/run-example SparkPi
 
-    $SPARK_HOME/bin/spark-submit $SPARK_HOME/examples/src/main/python/pi.py
+*Question 1:* What value of PI to you get?  Why is the value not "exact"? For a hint, see $SPARK_HOME/examples/src/main/python/pi.py 
 
-## Example 2: Use the Spark shell
-
-Start the spark shell from $SPARK_HOME (otherwise you won't be able to find the README.md file as below)
+### Use the Spark shell
+Start the spark-shell
 
     $SPARK_HOME/bin/spark-shell
 
 At the shell prompt, `scala>`, execute:
 
-    val textFile = sc.textFile("README.md")
+    val textFile = sc.textFile("/usr/local/spark/README.md")
 
 This reads the local text file "README.md" into a Resilient Distributed Dataset or RDD (cf. https://spark.apache.org/docs/latest/quick-start.html) and sets the immutable reference "textFile". You should see output like this:
 
@@ -113,60 +129,80 @@ Finally, execute a Scala collection transformation method on the RDD and then in
 
 Exit the Spark shell with `CTRL-D`.
 
-## Example 3: Submitting a Scala program to Spark
+Using the spark-shell, read the local text file moby10b.txt (should be /root/coursework/week6/hw/apache_spark_introduction/moby10b.txt) into a Resilient Distributed Dataset
 
-You can process data in an RDD by providing a function to execute on it. Spark will schedule execution of that function, collect results and process them as instructed. This is a common use case for Spark and often it is accomplished by submitting Scala programs to a Spark cluster. You'll write a small Scala program and submit it to the master. Note that we're going to package the simple program using Scala Build Tool(SBT), http://www.scala-sbt.org/0.13/tutorial/index.html. Note that the version of Spark we're using expects applications written for Scala 2.10 and is incompatible with Scala 2.11.
+*Question 2:* How many lines does the file have?
 
-### Install SBT
+*Question 3:* What is the first line?
 
-You installed SBT in a previous step. Upon first execution, SBT will download a number of dependent packages. Execute `sbt` to start this process. If the program gives you shell prompt (`>`), you're all set. Type `CTRL-D` to exit the shell and continue creating a program to run in Spark.
+*Question 4:* How many lines contain the text "whale"?
 
-Write the following content into `SimpleApp.scala`:
+### Run SparkJava8Example
 
-    /* SimpleApp.scala */
-    import org.apache.spark.SparkContext
-    import org.apache.spark.SparkContext._
-    import org.apache.spark.SparkConf
+In this section, you will create a program and run it on spark1 in standalone mode.
 
-    object SimpleApp {
-      def main(args: Array[String]) {
-        val file = "file:///usr/local/spark/README.md" // Should be some file on your system
-          val conf = new SparkConf().setAppName("Simple Application")
-          val sc = new SparkContext(conf)
-          val data = sc.textFile(file, 2).cache()
-          val numAs = data.filter(line => line.contains("a")).count()
-          val numBs = data.filter(line => line.contains("b")).count()
+Note, you'll need to delete or change your output directory after each run.
 
-          println("+++++++++++ Lines with a: %s, Lines with b: %s ++++++++++".format(numAs, numBs))
-      }
-    }
+Locate the file src/spark/SparkJava8Example.java and open it in your favorite editor.
 
-Create a simple SBT build file in the same directory as the source file you created earlier. Write the following content to `build.sbt` (note the version of the `spark-core` dependency: this should match the Spark version from your cluster):
+This file demonstrates a number of features of spark, including map, flatmap, filter, reduce, and dataframes.  Spend some time looking over this file before moving on.
 
-    name := "Simple Project"
-    version := "1.0"
-    scalaVersion := "2.10.4"
-    libraryDependencies += "org.apache.spark" %% "spark-core" % "1.6.1"
-    resolvers += "Akka Repository" at "http://repo.akka.io/releases/"
+From within the source directory, complile SparkJava8Example
+```
+    javac -cp .:$SPARK_HOME/jars/* spark/SparkJava8Example.java 
+```
 
-Package your program into a jar file (a standard Java archive) for submission to the Spark cluster:
+Now run the file using moby10b.txt as the input and an output directory of your choice.
+```
+    java -cp .:$SPARK_HOME/jars/* spark.SparkJava8Example /root/coursework/week6/hw/apache_spark_introduction/moby10b.txt /<yourOutputDirectory>
+```
+*Question 5:* How many output files (ignore _SUCCESS file) does Spark write when the file RDD 
+(file.saveAsTextFile( outputDirectory)) is written to the output directory?
 
-    sbt package
+*Question 5b:*  Change the line:
+                              JavaRDD<String> file = sc.textFile(inputFile);
+              to:
+                              JavaRDD<String> file = sc.textFile(inputFile,1);
+              and rerun the sample.  How many outfiles are created when the RDD is saved?  
+              Explain the difference.
+              
+### Programing example
 
-This step should have produced a jar file in a subdir of the `target` directory. Execute the following command to locate it:
+Assumptions: job is run against the cluster
 
-    find target -iname "*.jar"
+In this part, you will submit a spark job to your cluster.  In addition, you will need a HDFS cluster to act as a shared file system.  You may install HDFS on one or more nodes or resuse your HDFS cluster from the previous homework.  You will need to copy moby10b.txt into HDFS.
 
-Once you've located the archive, submit the program to the Spark cluster for execution:
+If you run into any issues with file permissions in HDFS, one solution is to update the hdfs-site.xml config file on each of your HDFS nodes to include the following:
+```
+<property>
+  <name>dfs.permissions</name>
+  <value>false</value>
+</property>
+```
 
-    $SPARK_HOME/bin/spark-submit --class "SimpleApp" \
-    --master spark://spark1:7077 \
-    $(find target -iname "*.jar")
+To run a job against the cluster, you'll need to package your job as a jar file.  Using SparkJava8Example as an example, you may create a jar using the following:
+```
+   jar cvf job.jar spark/*.class
+```
 
-You might check the web UI (http://{spark1_ip}:8080/) to see that the application execution completed.
+To submit a job to a spark cluster, you will need to use the $SPARK_HOME/bin/spark-submit command.  See https://spark.apache.org/docs/latest/submitting-applications.html for details.  For your SparkJava8Example example, now using HDFS, the command would be:
 
-(If you have trouble executing this program in your cluster, you might try debugging with the switch `--master local[4]` instead).
+```
+$SPARK_HOME/bin/spark-submit --master spark://spark1:7077 --class spark.SparkJava8Example job.jar hdfs://<yourNameNodeIP>:9000/home/data/moby10b.txt hdfs://<yourNameNodeIP>:9000/home/data/output
+```
+You will need to adjust your paths and IPs as needed.
+
+For the following problems, you may create a single job or a series of jobs
+
+*Question 6:* The text file moby10b.txt is the The Project Gutenberg Etext of Moby Dick.  This file contains a Gutenberg    preamble. Write a job that removes or filters out all the lines until the text "MOBY DICK; OR THE WHALE" and write this new RDD to disk.  How many lines does our filtered file have?
+
+*Question 7:* Using your filtered RDD, count the number of words.  Non-letter characters (only a-z should be included) should be removed.
+
+*Question 8:* Find the number of times each letter is used.  The results should be sorted alphabetically, from a to z. 
+
+*Question 9:* Find the number of times each letter is used.  The results should be sorted from most frequent to least frequent.
+
+*Question 10:* Rewrite the filtered file such that each line is mirrored or reversed. What are the first 20 lines of the mirrored RDD?
 
 ## Submission
-
-Please submit a document that contains both the logs and command line output from execution of the commands you submitted to Spark.
+Submit a document with your answers to the problems, the access information to your spark cluster, and the steps to run your job(s) for questions 6 - 10.
