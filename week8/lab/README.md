@@ -9,7 +9,7 @@
 
 ## How to install Docker
 
-We will be using Docker to run this lab. You will need a VM. Any VM will do, this will not affect your homeworks, but you can provision a fresh VM (2 cpu, 4GB ram, 100GB disk) if you wish. The steps below will install Docker CE on your VM.
+We will be using Docker to run this lab. You will need a VM. Any Ubuntu 16 VM will do, this will not affect your homeworks, but you can provision a fresh VM (2 cpu, 4GB ram, 100GB disk, Ubuntu 16) if you wish. The steps below will install Docker CE on your VM.
 
 ```
 sudo apt install -y python
