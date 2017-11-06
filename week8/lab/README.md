@@ -1,131 +1,152 @@
-##Preparation
-* Make sure that you have signed up for a free Cloudant account and able to log into it. 
-* Make sure that you have a JSON plugin added to your browser so that you can see JSON documents, pretty printed.  For instance, if you are using Chrome, you can install JSONView
-* Make sure that you have a shell -- either locally on your laptop or via a VM in the Cloud that has curl working on it.
-* Ensure that you can use this command line curl to connect to your cloundant account, e.g.
+# darknet dockerfile
+[darknet](http://pjreddie.com/darknet/) is an open source neural network framework written in C and CUDA. This docker image (created by [loretoparisi](https://github.com/loretoparisi/docker/tree/master/darknet)) contains all the models you need to run darknet with the following neural networks and models
 
-`curl -X GET -H 'Content-Type: application/json' https://userid:pass@userid.cloudant.com`
+- [yolo](http://pjreddie.com/darknet/yolo/) real time object detection
+- [imagenet](http://pjreddie.com/darknet/imagenet/) classification
+- [nightmare](http://pjreddie.com/darknet/nightmare/) cnn inception
+- [rnn](http://pjreddie.com/darknet/rnns-in-darknet/) Recurrent neural networks model for text prediction
+- [darkgo](http://pjreddie.com/darknet/darkgo-go-in-darknet/) Go game play
 
+## How to install Docker
 
-##Basic lab
-We'll follow the cloudant session below using our browser.  The sections below contain interactive elements.  They could be followed directly by clicking interactive "Show me!" buttons.  however, please paste the URLs into your browser to ensure that they work.  Also, use your command line curl to execute them.  Note that before these examples start to work, you'll need to replicate the sample databases into your environment.  This is part of the instructions.  Make sure you don't miss those!
+We will be using Docker to run this lab. You will need a VM. Any VM will do, this will not affect your homeworks, but you can provision a fresh VM (2 cpu, 4GB ram, 100GB disk) if you wish. The steps below will install Docker CE on your VM.
 
-[Main Lab Page] (https://cloudant.com/for-developers/)
+```
+sudo apt install -y python
+sudo apt-get remove -y docker docker-engine docker.io
+sudo apt-get -f install
+sudo apt-get update
+sudo apt-get install -y apt-transport-https     ca-certificates     curl     software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository    "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt-get update
+sudo apt-get install -y docker-ce
+sudo docker run hello-world
+```
 
-Part 1: [Reading and writing] (https://cloudant.com/for-developers/crud/)
+## How to build the Docker container
+You can build build the docker image from the Dockerfile folder or from Docker repositories hub.
 
-Part 2: [Primary Index] (https://cloudant.com/for-developers/all_docs/)
+To pull the [darknet image](https://store.docker.com/community/images/loretoparisi/darknet) from the repo
 
-Part 3: [Secondary Indexes] (https://cloudant.com/for-developers/views/)
+```
+docker pull loretoparisi/darknet
+```
 
-Part 4: [Search Indexing and Query] (https://cloudant.com/for-developers/search/)
+This will build all layers, cache each of them with a opportunist caching of git repositories for hunspell and dictionaries stable branches.
 
-##Advanced lab (see the optional part of the homework)
-* [Download the Yelp dataset] (http://www.yelp.com/dataset_challenge)
-* Uncompress it.  
-* Create a new database in Cloudant, bulk upload a subset of the data (e.g. 50,000 lines) to that database.
-* Make sure that you can see the uploaded documents both in the web GUI and via curl.  
-* Create an index / view allowing you to query for businesses by name and by longitude / latitude
-* Create a secondary index allowing you to list all users who reviewed a particular business.
+## INFORMATIONAL: How to build your own darknet container
+If you want to play with darknet further, you can modify and build the container using the `Dockerfile` contained in the `cpu/` folder. Run:
 
-To create a database "yelp" in Cloudant, you'd do something like:
+```
+git clone https://github.com/loretoparisi/docker.git
+cd docker/darknet/cpu/
+./build.sh
+```
 
-`curl -v -i -X PUT -H 'Content-Type: application/json' https://userid:passwrd@user.cloudant.com/yelp`
+You can then run and enter the container by running
+`./run.sh` in the same directory.
 
-To cut out 50000 lines from an input file, you do:  
-`head -50000 yelp_academic_dataset_business.json > business.json`
+## How to test the docker image
 
-This file is not yet in the json format that the bulk upload can accept -- we need to add in the beginning:
+Then to run the container in interactive mode (bash) do
 
-`{"docs": [`
+```
+docker run --rm -it --name darknet darknet bash
+```
 
-and in the end:
+then you can perform some darknet tasks like
 
-`]}`
+Run [yolo](http://pjreddie.com/darknet/yolo/)
 
-Or you can use the attached [converter.py] (converter.py) script.
+```
+cd darknet
+./darknet detector test cfg/coco.data cfg/yolo.cfg /root/yolo.weights data/dog.jpg
+layer     filters    size              input                output
+    0 conv     32  3 x 3 / 1   416 x 416 x   3   ->   416 x 416 x  32
+    1 max          2 x 2 / 2   416 x 416 x  32   ->   208 x 208 x  32
+    2 conv     64  3 x 3 / 1   208 x 208 x  32   ->   208 x 208 x  64
+    3 max          2 x 2 / 2   208 x 208 x  64   ->   104 x 104 x  64
+    4 conv    128  3 x 3 / 1   104 x 104 x  64   ->   104 x 104 x 128
+    5 conv     64  1 x 1 / 1   104 x 104 x 128   ->   104 x 104 x  64
+    6 conv    128  3 x 3 / 1   104 x 104 x  64   ->   104 x 104 x 128
+    7 max          2 x 2 / 2   104 x 104 x 128   ->    52 x  52 x 128
+    8 conv    256  3 x 3 / 1    52 x  52 x 128   ->    52 x  52 x 256
+    9 conv    128  1 x 1 / 1    52 x  52 x 256   ->    52 x  52 x 128
+   10 conv    256  3 x 3 / 1    52 x  52 x 128   ->    52 x  52 x 256
+   11 max          2 x 2 / 2    52 x  52 x 256   ->    26 x  26 x 256
+   12 conv    512  3 x 3 / 1    26 x  26 x 256   ->    26 x  26 x 512
+   13 conv    256  1 x 1 / 1    26 x  26 x 512   ->    26 x  26 x 256
+   14 conv    512  3 x 3 / 1    26 x  26 x 256   ->    26 x  26 x 512
+   15 conv    256  1 x 1 / 1    26 x  26 x 512   ->    26 x  26 x 256
+   16 conv    512  3 x 3 / 1    26 x  26 x 256   ->    26 x  26 x 512
+   17 max          2 x 2 / 2    26 x  26 x 512   ->    13 x  13 x 512
+   18 conv   1024  3 x 3 / 1    13 x  13 x 512   ->    13 x  13 x1024
+   19 conv    512  1 x 1 / 1    13 x  13 x1024   ->    13 x  13 x 512
+   20 conv   1024  3 x 3 / 1    13 x  13 x 512   ->    13 x  13 x1024
+   21 conv    512  1 x 1 / 1    13 x  13 x1024   ->    13 x  13 x 512
+   22 conv   1024  3 x 3 / 1    13 x  13 x 512   ->    13 x  13 x1024
+   23 conv   1024  3 x 3 / 1    13 x  13 x1024   ->    13 x  13 x1024
+   24 conv   1024  3 x 3 / 1    13 x  13 x1024   ->    13 x  13 x1024
+   25 route  16
+   26 reorg              / 2    26 x  26 x 512   ->    13 x  13 x2048
+   27 route  26 24
+   28 conv   1024  3 x 3 / 1    13 x  13 x3072   ->    13 x  13 x1024
+   29 conv    425  1 x 1 / 1    13 x  13 x1024   ->    13 x  13 x 425
+   30 detection
+Loading weights from /root/yolo.weights...Done!
+data/dog.jpg: Predicted in 8.208007 seconds.
+car: 54%
+bicycle: 51%
+dog: 56%
+Not compiled with OpenCV, saving to predictions.png instead
+```
+You just analyzed an image (data/dog.jpg) and found a car, a bicyle, and a dog.
 
+The pre-defined (and pre-trained) categories can be viewed in [the darknet github repo](https://github.com/pjreddie/darknet/blob/master/examples/yolo.c).
 
-`cat business.json | ./converter.py > business.json`
+Run the [rnn](http://pjreddie.com/darknet/rnns-in-darknet/)
 
-To bulk upload the properly formed business.json file, we do something like:
+```
+cd ./darknet/
+./darknet rnn generate cfg/rnn.cfg /root/shakespeare.weights -srand 0 -seed CLEOPATRA -len 200 
+rnn
+layer     filters    size              input                output
+    0 RNN Layer: 256 inputs, 1024 outputs
+		connected                             256  ->  1024
+		connected                            1024  ->  1024
+		connected                            1024  ->  1024
+    1 RNN Layer: 1024 inputs, 1024 outputs
+		connected                            1024  ->  1024
+		connected                            1024  ->  1024
+		connected                            1024  ->  1024
+    2 RNN Layer: 1024 inputs, 1024 outputs
+		connected                            1024  ->  1024
+		connected                            1024  ->  1024
+		connected                            1024  ->  1024
+    3 connected                            1024  ->   256
+    4 softmax                                         256
+    5 cost                                            256
+Loading weights from /root/shakespeare.weights...Done!
+CLEOPATRA. O, the Senate House?
+    These haste doth bear the studiest dangerous weeds,
+    Which never had more profitable mind,
+    And yet most woeful note to you,
+    That hang them in these worthiest serv
+```
 
-`curl -v -i -X POST -H 'Content-Type: application/json' -d @business.json https://userid:passwrd@userid.cloudant.com/databasename/_bulk_docs`
+If you want to run darknet against your own images, you can put them into a directory on your VM and mount it into your container with:
 
-Now check that your documents made it over:
+```
+docker run -v /directory/of/images:/pictures --rm -it --name darknet darknet bash
+```
 
-`curl -v -i -X GET -H 'Content-Type: application/json' https://userid:passwrd@userid.cloudant.com/yelp`
+*(make sure to update the `directory/of/images` to point to a directory on your VM that actually contains images)*
 
-Here's the design doc that we'd need to create in order to be able to retrieve businesses by business id along with their reviews. This should be done via the GUI.
+Then you can re-run darknet:
 
-Under indices:
-
-    function(doc) {  
-	    var key= null;  
-	    var value = null;  
-	    if (doc.type==="business") {  
-	    	key = [doc.business_id];  
-	    	value = null;  
-	    	emit(key, value);  
-	    } else if (doc.type==="review") { 
-	    	key = [doc.business_id,doc.review_id ];  
-	    	value = {"_id":doc._id};  
-		emit(key, value); 
-	    }  
-    }  
-
-
-Under views:
-
-    function(doc){
-     if(doc.type==="business") {
-    	index("default", doc._id);
-    	if(doc.name){
-    		index("name", doc.name, {"store": "yes"});
-    	}
-    	if(doc.business_id){
-    		index("business_id", doc.business_id, {"store": "yes"});
-    	}					
-    	if (doc.latitude){
-    		index("lat", doc.latitude, {"store": "yes"});
-    	}
-	    if (doc.longitude){
-	    	index("lon", doc.longitude, {"store": "yes"});
-	    }
-     }
-    }
-
-And:
-
-    function(doc){
-    	if(doc.type==="review") {
-    		index("default", doc._id);
-    		if(doc.review_id){
-    			index("review_id", doc.review_id, {"store": "yes"});
-    		}
-    		if(doc.business_id){
-		    	index("business_id", doc.business_id, {"store": "yes"});
-    	    }					
-	    	if (doc.text){
-	    		index("text", doc.text, {"store": "yes"});
-	    	}
-	    }
-    }
-
-
-
-Now you should be able to query the businesses, e.g.
-
-
-`curl -v -i -X GET -H 'Content-Type: application/json' https://username:pass@username.cloudant.com/yelp/_design/thursday/_search/businesses?q=name:Eric`
-
-
-Get one of the keys ... this is the business id -- e.g. fgjPheORTQCwwPOWiUE2SQ
-
-To retrieve all of its reviews, you would do:
-
-`curl -X GET "https://username:pass@username.cloudant.com/yelp/_design/thursday/_view/reviews?include_docs=true&limit=10&startkey=\[\"fgjPheORTQCwwPOWiUE2SQ\"\]&endkey=\[\"fgjPheORTQCwwPOWiUE2SQ\",\{\}\]&inclusiveend=true"`
-
-
-
-
+```
+cd darknet
+./darknet detector test cfg/coco.data cfg/yolo.cfg /root/yolo.weights /pictures/your_picture.jpg
+```
+where you replace `your_picture.jpg` with your image name.
