@@ -176,6 +176,17 @@ There are a few noteworthy elements in this line. First, since we're not going t
 
 Repackage your application and execute it again in Spark. You should notice that the tweet output from the first execution is missing and that log statements in the output report writes to the Cassandra instance.  Note, we have already included the Cassandra packages in both our build.sbt and in our job submission.
 
+If you get an error similar to 
+
+```
+ Core connections for LOCAL hosts must be less than max (2 > 1)
+```
+you will need to update your `SparkConf` object with the following property, replacing 2 by the max you need:
+
+
+    .set("spark.cassandra.connection.connections_per_executor_max","2")
+
+
 ### Browse the Data in Cassandra
 
 After you've executed the application in Spark, you can browse stored tweet data. Enter the `cqlsh` shell and execute this query:
