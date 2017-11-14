@@ -8,7 +8,7 @@ In this assignment, we will go to the next step and focus on DetectNet, a networ
 #### General
 This lab follows DIGITS's [Object Detection Example] (https://github.com/NVIDIA/DIGITS/tree/master/examples/object-detection) 
 
-http://169.50.131.114:5001/  is the URL to access our server running a docker container with DIGITS 5 inside.
+http://169.44.201.108:5000/  is the URL to access our server running a docker container with DIGITS 5 inside.
 
 The instructors have done some work for you already: the `./prepare_kitti_data.py` script has already been run; you need to pick up 
 from the LOADING DATA INTO DIGITS section.
