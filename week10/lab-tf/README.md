@@ -174,7 +174,7 @@ See https://codelabs.developers.google.com/codelabs/tensorflow-for-poets/#4 for 
 
 ### Using the Retrained Model
 
-he retraining script will write out a version of the Inception v3 network with a final layer retrained to your categories to tf_files/retrained_graph.pb and a text file containing the labels to tf_files/retrained_labels.txt.
+The retraining script will write out a version of the Inception v3 network with a final layer retrained to your categories to tf_files/retrained_graph.pb and a text file containing the labels to tf_files/retrained_labels.txt.
 
 These files are both in a format that the C++ and Python image classification examples can use, so you can start using your new model immediately.
 
