@@ -1,8 +1,8 @@
-### Digits 5 and Image Classification with Transfer Learning
+### Digits and Image Classification with Transfer Learning
 
 Intro
 
-Digits is currently one of the leading tools to easily train and run neural nets. It supports Caffe and Torch and is in furious development. Note that the production branch is 4 while the dev branch with a lot more features is 5.
+Digits is currently one of the leading tools to easily train and run neural nets. It supports Caffe and Torch and is in furious development. At the moment, the latest version is Digits 6
 
 #### The training set
 
