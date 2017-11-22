@@ -2,7 +2,7 @@
 
 #### Intro
 [Digits](https://github.com/NVIDIA/nvidia-docker/wiki/DIGITS) is the leading tool for rapid training of image related networks.
-It supports Caffe and Torch and now is on version 5.  In the previous lab, we used it to train a simple image classification network. 
+It supports Caffe and Torch and now is on version 6.  In the previous lab, we used it to train a simple image classification network. 
 In this assignment, we will go to the next step and focus on DetectNet, a network for object localization.
 
 #### General
