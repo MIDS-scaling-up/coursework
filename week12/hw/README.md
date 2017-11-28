@@ -125,4 +125,4 @@ If you're having trouble selecting a dataset, consider these:
 Want to get fancy? Deploy a graphical frontend for easier interaction with your instance: https://github.com/jettro/elasticsearch-gui.
 
 ## To Turn In
-Submit the URLs for **five** interesting queries we can execute on your Elasticsearch instance.
+Submit the URLs for **five** interesting queries we can execute on your Elasticsearch instance. NOTE that you should create the URLs using your public IP address. URLs with `http://localhost` cannot be accessed by the instructors.
