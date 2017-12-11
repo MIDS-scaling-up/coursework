@@ -2,14 +2,15 @@
 
 1.  Create or reuse an existing Spark cluster.  Just ensure that you have 3-4 nodes with 4 CPUs, 16 G RAM (32G is even better!) and 100G of disk each. The OS could be the latest 64-bit Ubuntu or CentOS, does not really matter.  If you recall, we installed Spark before, and you could follow these general instructions here: https://github.com/MIDS-scaling-up/coursework/tree/master/week6/hw/apache_spark_introduction
 2.  Install hadoop in the same cluster as well.  Follow the set up instructions here: https://github.com/MIDS-scaling-up/coursework/tree/master/week13/lab Once you are finished, you should have both Spark and Hadoop installed, HDFS running, and Spark configured to use Yarn as the scheduler.  Key to this application is that Yarn has enough memory allocated to it, so make sure that yarn-site.xml  has yarn.scheduler.maximum-allocation-mb set to a high value (if you have 32G of RAM, set it to 20000 ) and do the same for yarn.nodemanager.resource.memory-mb.
-3.  Now you can proceed with the installation of Spark BWA. You will need to make sure you have make, gcc, git, libz-devel installed (e.g. apt-get -y install gcc make git libz-devel if you are using Ubuntu).  Follow the instructions here:  https://github.com/citiususc/SparkBWA  Note that this software is a bit unbaked, unfortunately, especially when it comes to error handling.  You may need to get used to reading output logs...
+3.  Now you can proceed with the installation of Spark BWA. You will need to make sure you have make, gcc, git, libz-devel installed (e.g. apt-get -y install gcc make git libz-devel if you are using Ubuntu or yum -y install gcc make git libz-devel ).  Follow the instructions here:  https://github.com/citiususc/SparkBWA  Note that this software is a bit unbaked, unfortunately, especially when it comes to error handling.  You may need to get used to reading output logs...
 4. SparkBWA requires that the reference genome for your workload be installed on each node of your cluster. We will need to download the GATK resource bundle as described here: https://software.broadinstitute.org/gatk/download/bundle  I pulled down all the files under hg38, e.g.
 ```
 # on the master node of your cluster
-mkdir -m 777 /Data/HumanBase
+mkdir -pm 777 /Data/HumanBase
 cd /Data/HumanBase
 ftp ftp.broadinstitute.org
 user: gsapubftp-anonymous
+# enter these commands below to ensure non-interactive and binary modes
 prompt
 binary
 cd bundle
@@ -19,8 +20,13 @@ mget *
 ```
 5.  We need to index the human genome. Note that the command below will take 1-2 hours. 
 ```
+# if on ubuntu
 apt-get install -y bwa
-bwa index Homo_sapiens_assembly38.fasta
+# if on centos
+yum -y install epel-release
+yum -y install bwa
+# now the indexing.. 
+bwa index Homo_sapiens_assembly38.fasta.gz
 ```
 Once this completes, we will need to propagate this directory to all other nodes, e.g.
 ```
