@@ -96,14 +96,16 @@ bwa index Homo_sapiens_assembly38.fasta.gz
 ```
 Once this completes, we will need to propagate this directory to all other nodes, e.g.
 ```
-scp -r /Data/HumanBase spark2:/
-scp -r /Data/HumanBase spark3:/
+ssh spark2 mkdir -m 777 /Data
+ssh spark3 mkdir -m 777 /Data
+rsync -av /Data/HumanBase spark2:/Data/
+rsync -av /Data/HumanBase spark3:/Data/
 # ...
 ```
 
 ## Validation [Running alignment]
 Make sure that BWA Spark is correctly installed and that the command below runs to the end.  If you are successful, you will see a file called FullOutput.sam (4.67 GB) created in the /user/hadoop/OUTPUT_DIR directory of your HDFS.  Set the num-executors to the number of nodes in your cluster.  Set executor-cores to the number of cores in each VM in your cluster -- and if you see out of memory errors, go down.  The --index parameter should contain the base name of your reference genome files. Make sure the path to the SparkBWA jar file is correct in the line below. 
 ```
-$SPARK_HOME/spark-submit --class com.github.sparkbwa.SparkBWA --master yarn --driver-memory 1500m --executor-memory 15g --executor-cores 2 --verbose --num-executors 4 /root/SparkBWA/target/SparkBWA-0.2.jar -m -r -p --index /Data/HumanBase/Homo_sapiens_assembly38.fasta -n 32  -w "-R @RG\tID:foo\tLB:bar\tPL:illumina\tPU:illumina\tSM:ERR000589" /ERR000589_1.filt.fastq /ERR000589_2.filt.fastq OUTPUT_DIR
+$SPARK_HOME/spark-submit --class com.github.sparkbwa.SparkBWA --master yarn --driver-memory 1500m --executor-memory 15g --executor-cores 2 --verbose --num-executors 4 /root/SparkBWA/target/SparkBWA-0.2.jar -m -r -p --index /Data/HumanBase/Homo_sapiens_assembly38.fasta.gz -n 32  -w "-R @RG\tID:foo\tLB:bar\tPL:illumina\tPU:illumina\tSM:ERR000589" /ERR000589_1.filt.fastq /ERR000589_2.filt.fastq OUTPUT_DIR
 ```
 To submit this homework, send the output from the above command or a link to your FullOutput.sam file in HDFS
