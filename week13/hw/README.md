@@ -1,7 +1,7 @@
 ## Genomic Assembly using BWA Spark
 
 1.  Create or reuse an existing Spark cluster.  Just ensure that you have 3-4 nodes with 4 CPUs, 32G RAM and 100G of disk each. The OS could be the latest 64-bit Ubuntu or CentOS, does not really matter.  If you recall, we installed Spark before, and you could follow these general instructions here: https://github.com/MIDS-scaling-up/coursework/tree/master/week6/hw/apache_spark_introduction
-2.  Install Hadoop with Yarn in the same cluster as well.  You don't need to create the hadoop userid, otherwise the instructions are here: https://github.com/MIDS-scaling-up/coursework/tree/master/week13/lab  
+2.  Install Hadoop with Yarn in the same cluster as well.  You don't need to create the hadoop userid or use multiple disks -- just one 100G disk is ok.  General instructions are here: https://github.com/MIDS-scaling-up/coursework/tree/master/week13/lab  
 Do this on each node:
 ```
 # download hadoop
@@ -19,20 +19,120 @@ EOF
 
 source ~/.bash_profile
 $JAVA_HOME/bin/java -version
+
+# Create the data directory
+# we don't have a separate disk to hold the data, so just use /root:
+mkdir -m 777 /data
 ```
-Edit the hadoop config files as we did in week 5: https://github.com/MIDS-scaling-up/coursework/tree/master/week5/hw/hadoop_yarn_sort
+Edit the hadoop config files as we did in week 5:
+```
+cd $HADOOP_HOME/etc/hadoop
+echo "export JAVA_HOME=\"$JAVA_HOME\"" > ./hadoop-env.sh
+# core-site.xml:
+# ensure that the name of your master node is correct below
+<?xml version="1.0"?>
+<configuration>
+    <property>
+      <name>fs.defaultFS</name>
+      <value>hdfs://spark1/</value>
+    </property>
+</configuration>
+# yarn-site.xml:
+# ensure that the name of your master node is correct below
+# If you are NOT using a 2 CPU/4G node configuration, you will need to add the corresponding properties as well.
+# Key to this application is that Yarn has enough memory allocated to it, so make sure that yarn.scheduler.maximum-allocation-mb set to a high value (e.g. 20000 ) and same for yarn.nodemanager.resource.memory-mb
+<?xml version="1.0"?>
+<configuration>
+    <property>
+      <name>yarn.resourcemanager.hostname</name>
+      <value>master</value>
+    </property>
+    <property>
+      <name>yarn.nodemanager.aux-services</name>
+      <value>mapreduce_shuffle</value>
+    </property>
+    <property>
+       <name>yarn.resourcemanager.bind-host</name>
+       <value>0.0.0.0</value>
+     </property>
+     <property>
+        <name>yarn.nodemanager.resource.cpu-vcores</name>
+        <value>2</value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.resource.memory-mb</name>
+        <value>4096</value>
+    </property>
+    <property>
+      <name>yarn.scheduler.maximum-allocation-mb</name>
+      <value>20000</value>
+    </property>
+    <property>
+      <name>yarn.nodemanager.resource.memory-mb</name>
+      <value>20000</value>
+    </property>    
+</configuration>
+
+# mapred-site.xml
+<?xml version="1.0"?>
+  <configuration>
+    <property>
+      <name>mapreduce.framework.name</name>
+      <value>yarn</value>
+    </property>
+  </configuration>
+  
+# hdfs-site.xml
+<?xml version="1.0"?>
+<configuration>
+    <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>file:///data/datanode</value>
+    </property>
+
+    <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>file:///data/namenode</value>
+    </property>
+
+    <property>
+        <name>dfs.namenode.checkpoint.dir</name>
+        <value>file:///data/namesecondary</value>
+    </property>
+</configuration>
+```
 Now let's distribute the config files to the nodes:
 ```
 rsync -a /usr/local/hadoop/etc/hadoop/* spark2:/usr/local/hadoop/etc/hadoop/
 rsync -a /usr/local/hadoop/etc/hadoop/* spark3:/usr/local/hadoop/etc/hadoop/
 ```
+Write the following content to the file slaves (note that you want to remove the values that are already there):
+```
+spark1
+spark2
+spark3
+```
+On the master node, format your namenode before the first time you set up your cluster. If you format a running Hadoop filesystem, you will lose all the data stored in HDFS.
+```
+hdfs namenode -format
+```
+On master node only, execute these startup scripts:
+```
+start-dfs.sh
+start-yarn.sh
+# check status
+hdfs dfsadmin -report
+yarn node -list
+```
 Once you are finished, you should have both Spark and Hadoop installed, HDFS running, and Spark configured to use Yarn as the scheduler.
 
+http://master-ip:50070/dfshealth.html
+http://master-ip:8088/cluster
+http://master-ip:19888/jobhistory (for Job History Server)
 
-Key to this application is that Yarn has enough memory allocated to it, so make sure that yarn-site.xml  has yarn.scheduler.maximum-allocation-mb set to a high value (set it to 20000 ) and do the same for yarn.nodemanager.resource.memory-mb.  Restart yarn after you have done this: 
-```
-$HADOOP_HOME/sbin/stop-yarn.sh && $HADOOP_HOME/sbin/start-yarn.sh
-```
+As a reminder, the original instructions that we followed in week 5 are here: https://github.com/MIDS-scaling-up/coursework/tree/master/week5/hw/hadoop_yarn_sort
+ 
+
 3.  Now you can proceed with the installation of Spark BWA. You will need to make sure you have all the pre-requisites installed:
 ```
 # if on Ubuntu:
@@ -52,7 +152,7 @@ mvn package
 ```
 Note that this software is a bit unbaked, unfortunately, especially when it comes to error handling.  You may need to get used to reading output logs :(
 
-Now, let us distribute our build to other nodes:
+Now, let us distribute our build to other nodes - not strictly required, but why not:
 ```
 scp -r SparkBWA spark2:root/
 scp -r SparkBWA spark3:root/
