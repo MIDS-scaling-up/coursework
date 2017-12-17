@@ -124,11 +124,11 @@ start-yarn.sh
 hdfs dfsadmin -report
 yarn node -list
 ```
-Once you are finished, you should have both Spark and Hadoop installed, HDFS running, and Spark configured to use Yarn as the scheduler.
+Once you are finished, you should have both Spark and Hadoop installed, HDFS running, and Spark configured to use Yarn as the scheduler. These are the web front-ends for monitoring:
 
-http://master-ip:50070/dfshealth.html
-http://master-ip:8088/cluster
-http://master-ip:19888/jobhistory (for Job History Server)
+* http://master-ip:50070/dfshealth.html
+* http://master-ip:8088/cluster
+* http://master-ip:19888/jobhistory (for Job History Server)
 
 As a reminder, the original instructions that we followed in week 5 are here: https://github.com/MIDS-scaling-up/coursework/tree/master/week5/hw/hadoop_yarn_sort
  
