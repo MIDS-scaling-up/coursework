@@ -40,7 +40,15 @@ echo "export JAVA_HOME=\"$JAVA_HOME\"" > ./hadoop-env.sh
 # yarn-site.xml:
 # ensure that the name of your master node is correct below
 # If you are NOT using a 2 CPU/4G node configuration, you will need to add the corresponding properties as well.
-# Key to this application is that Yarn has enough memory allocated to it, so make sure that yarn.scheduler.maximum-allocation-mb set to a high value (e.g. 20000 ) and same for yarn.nodemanager.resource.memory-mb
+# Key to this application is that Yarn has enough memory allocated to it, so make sure that yarn.scheduler.maximum-allocation-mb set to a high value (e.g. 20000 ) and same for yarn.nodemanager.resource.memory-mb (e.g. 32768)
+# also, setting yarn.scheduler.minimum-allocation-mb to something above the default value (below to 3000 vs 2048 default) 
+# helped in December 2017 because spark BWA became a little more memory hungry and the containers were killed quietly.
+# if you are getting strange silent app container failures, 
+# Look for the similar error message in the $HADOOP_HOME/logs/yarn-root-nodemanager-yourhostname.log:
+# 2017-12-18 16:07:01,700 WARN org.apache.hadoop.yarn.server.nodemanager.containermanager.monitor.ContainersMonitorImpl: 
+# Container [pid=1766,containerID=container_1513485541361_0008_02_000001] is running beyond virtual memory limits.
+# Current usage: 331.0 MB of 1 GB physical memory used; 2.4 GB of 2.1 GB virtual memory used. Killing container.
+
 <?xml version="1.0"?>
 <configuration>
     <property>
@@ -69,8 +77,12 @@ echo "export JAVA_HOME=\"$JAVA_HOME\"" > ./hadoop-env.sh
     </property>
     <property>
       <name>yarn.nodemanager.resource.memory-mb</name>
-      <value>20000</value>
-    </property>    
+      <value>32768</value>
+    </property>
+    <property> 
+      <name>yarn.scheduler.minimum-allocation-mb</name> 
+      <value>3000</value> 
+    </property>
 </configuration>
 
 # mapred-site.xml
