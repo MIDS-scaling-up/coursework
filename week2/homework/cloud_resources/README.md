@@ -132,6 +132,7 @@ Follow these instructions to install Salt Stack:  https://repo.saltstack.com/#ub
 2. Save the following file to /etc/apt/sources.list.d/saltstack.list:
 
     `cat > /etc/apt/sources.list.d/saltstack.list`
+    
     `deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest xenial main`
 
 3. Run `sudo apt-get update`
@@ -139,10 +140,15 @@ Follow these instructions to install Salt Stack:  https://repo.saltstack.com/#ub
 4. Install the salt-minion, salt-master, or other Salt components:
 
     `sudo apt-get install salt-master`
+
     `sudo apt-get install salt-minion`
+
     `sudo apt-get install salt-ssh`
+
     `sudo apt-get install salt-syndic`
+
     `sudo apt-get install salt-cloud`
+
     `sudo apt-get install salt-api`
 
 5. (Upgrade only) Restart all upgraded services, for example:
