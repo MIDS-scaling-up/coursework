@@ -89,7 +89,7 @@ Use `slcli vs list` and `slcli vs credentials <id>` or the SoftLayer management 
 
 While logged into the VS:
 
-*Install [pip on ubuntu](https://www.rosehosting.com/blog/how-to-install-pip-on-ubuntu-16-04/)*:
+**Install [pip on ubuntu](https://www.rosehosting.com/blog/how-to-install-pip-on-ubuntu-16-04/)**:
 
     $ sudo apt-get update && sudo apt-get -y upgrade
 
@@ -101,7 +101,7 @@ For Python2:
 
     $ sudo apt-get install python-pip
 
-*Install SoftLayer*:
+**Install SoftLayer**:
 
     $ pip install softlayer
 
@@ -121,7 +121,7 @@ Check that `slcli` works before you proceed to install salt. Try getting a list 
     $ slcli virtual list
 
 
-*Install Salt Stack*
+**Install Salt Stack**
 
 Follow these instructions to install Salt Stack:  https://repo.saltstack.com/#ubuntu.  Don’t bother with the post-install config because the defaults are fine.
 
