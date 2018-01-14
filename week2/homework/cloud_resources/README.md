@@ -75,7 +75,7 @@ Salt Cloud is a cloud provisioning program that we’ll use to automate provisio
 
 Provision a new VS (you can choose your own datacenter and domain name if you wish; we recommend using a hostname with the ‘saltmaster’ prefix for Salt configuration management convenience). Note that you’re making use of the SSH key you generated earlier:
 
-    slcli vs create -d hou02 --os CENTOS_LATEST --cpu 1 --memory 1024 --hostname saltmaster --domain someplace.net --key identifier
+    slcli virtual create -d hou02 --os UBUNTU_LATEST_64 --cpu 1 --memory 1024 --hostname saltmaster --domain someplace.net --key identifier
 
 Use `slcli vs list` to check up on the provisioning VS. Provisioning is finished when you the ‘action’ field in the output has the value ‘-’.
 
@@ -87,15 +87,68 @@ Use `slcli vs list` and `slcli vs credentials <id>` or the SoftLayer management 
 
 #### Install Salt programs
 
-While logged into the VS, execute:
+While logged into the VS:
 
-    pip install --upgrade pip
-    pip uninstall -y urllib3
-    yum install -y gcc python-devel openssl-devel 
-    pip install m2crypto
-    curl -o /tmp/install_salt.sh -L https://bootstrap.saltstack.com && sh /tmp/install_salt.sh -Z -M git 2015.5
+*Install [pip on ubuntu](https://www.rosehosting.com/blog/how-to-install-pip-on-ubuntu-16-04/)*:
 
-    yum install -y python-pip && pip install SoftLayer apache-libcloud
+    $ sudo apt-get update && sudo apt-get -y upgrade
+
+For Python3:
+
+    $ sudo apt-get install python3-pip
+
+For Python3:
+
+    $ sudo apt-get install python3-pip
+
+*Install SoftLayer*:
+
+    $ pip install softlayer
+
+
+Copy the `~/.softlayer` file from your local machine to your ubuntu server (or use `slcli config setup` as in Week 1):
+
+    $ vi ~/.softlayer
+
+    [softlayer]
+    username = <username>
+    api_key = <api_key>
+    endpoint_url = https://api.softlayer.com/xmlrpc/v3.1/
+    timeout = 0
+
+Check that `slcli` works before you proceed to install salt. Try getting a list of your servers:
+
+    $ slcli virtual list
+
+
+*Install Salt Stack*
+
+Follow these instructions to install Salt Stack:  https://repo.saltstack.com/#ubuntu.  Don’t bother with the post-install config because the defaults are fine.
+
+1. Run the following command to import the SaltStack repository key:
+
+    wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest/SALTSTACK-GPG-KEY.pub | sudo apt-key add -
+
+2. Save the following file to /etc/apt/sources.list.d/saltstack.list:
+
+    cat > /etc/apt/sources.list.d/saltstack.list
+    deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest xenial main
+
+3. Run sudo apt-get update
+
+4. Install the salt-minion, salt-master, or other Salt components:
+
+    sudo apt-get install salt-master
+    sudo apt-get install salt-minion
+    sudo apt-get install salt-ssh
+    sudo apt-get install salt-syndic
+    sudo apt-get install salt-cloud
+    sudo apt-get install salt-api
+
+5. (Upgrade only) Restart all upgraded services, for example:
+
+    sudo systemctl restart salt-minion
+
 
 #### Configure Salt Cloud
 
@@ -107,24 +160,19 @@ Alternately you can use an editor of your choice (vim, emacs, nano).
 
 Write a cloud provider configuration file. Note that you must replace the values in `<>`'s. The value on the `master: …` line should be the public IP address of your VS.
 
-    cat > /etc/salt/cloud.providers.d/softlayer.conf
+    $ vi /etc/salt/cloud.providers.d/softlayer.conf
+
     sl:
       minion:
         master: <6.2.6.1>
       user: <beyonce>
       apikey: <ZZZZZZZZZZZZZZZZZZZZZ>
-      provider: softlayer
-      script: bootstrap-salt
-      script_args: -Z git 2015.5
-      delete_sshkeys: True
-      display_ssh_output: False
-      wait_for_ip_timeout: 1800
-      ssh_connect_timeout: 1200
-      wait_for_fun_timeout: 1200
+      driver: softlayer
+
 
 Verify that you’ve properly written the file to disk:
 
-    cat /etc/salt/cloud.providers.d/softlayer.conf
+    $ cat /etc/salt/cloud.providers.d/softlayer.conf
 
     sl:
       minion:
@@ -132,10 +180,10 @@ Verify that you’ve properly written the file to disk:
 
 Write a cloud profiles configuration file:
 
-    cat > /etc/salt/cloud.profiles.d/softlayer.conf
-    sl_centos7_small:
+    $ vi /etc/salt/cloud.profiles.d/softlayer.conf
+    sl_ubuntu_small:
       provider: sl
-      image: CENTOS_7_64
+      image: UBUNTU_LATEST_64
       cpu_number: 1
       ram: 1024
       disk_size: 25
@@ -148,7 +196,7 @@ Write a cloud profiles configuration file:
 
 Execute:
 
-    salt-cloud -p sl_centos7_small <mytestvs>
+    salt-cloud -p sl_ubuntu_small <mytestvs>
 
 You should observe output like this:
 
