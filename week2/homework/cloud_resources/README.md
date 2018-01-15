@@ -93,6 +93,8 @@ While logged into the VS:
 
     $ sudo apt-get update && sudo apt-get -y upgrade
 
+**Install** either Python2 or Python3:
+
 For Python3:
 
     $ sudo apt-get install python3-pip
@@ -101,6 +103,10 @@ For Python2:
 
     $ sudo apt-get install python-pip
 
+You may need to upgrade pip:
+
+    $ pip install --upgrade pip
+
 **Install SoftLayer**:
 
     $ pip install softlayer
@@ -108,13 +114,15 @@ For Python2:
 
 Copy the `~/.softlayer` file from your local machine to your ubuntu server (or use `slcli config setup` as in Week 1):
 
-    $ vi ~/.softlayer
+    $ cat > ~/.softlayer
 
     [softlayer]
     username = <username>
     api_key = <api_key>
     endpoint_url = https://api.softlayer.com/xmlrpc/v3.1/
     timeout = 0
+
+If copying the file (as above using cat), use **CTRL-D** to complete changes to the file and return to the $ prompt.
 
 Check that `slcli` works before you proceed to install salt. Try getting a list of your servers:
 
@@ -132,8 +140,10 @@ Follow these instructions to install Salt Stack:  https://repo.saltstack.com/#ub
 2. Save the following file to /etc/apt/sources.list.d/saltstack.list:
 
     `cat > /etc/apt/sources.list.d/saltstack.list`
-    
+
     `deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest xenial main`
+
+  Use **CTRL-D** to complete changes to the file and return to the $ prompt.
 
 3. Run `sudo apt-get update`
 
@@ -166,7 +176,7 @@ Alternately you can use an editor of your choice (vim, emacs, nano).
 
 Write a cloud provider configuration file. Note that you must replace the values in `<>`'s. The value on the `master: …` line should be the public IP address of your VS.
 
-    $ vi /etc/salt/cloud.providers.d/softlayer.conf
+    $ cat > /etc/salt/cloud.providers.d/softlayer.conf
 
     sl:
       minion:
@@ -186,7 +196,7 @@ Verify that you’ve properly written the file to disk:
 
 Write a cloud profiles configuration file:
 
-    $ vi /etc/salt/cloud.profiles.d/softlayer.conf
+    $ cat > /etc/salt/cloud.profiles.d/softlayer.conf
     sl_ubuntu_small:
       provider: sl
       image: UBUNTU_LATEST_64
