@@ -35,9 +35,42 @@ Python version 2.7 or newer and a complementing pip program are required for thi
     pip --version
     pip 6.1.1 from /usr/lib/python3.4/site-packages (python 3.4)
 
-#### Windows 10 Pro / Mac OS X Installation Steps
+#### Install slcli in Docker (Windows, Mac, or Linux)
 * Install docker from http://docker.io
-* Open up powershell (Windows) or terminal (Mac) and spin up a docker container with Ubuntu in it, e.g. docker run --name slcli -ti ubuntu bash
+* Save the contents of the snippet below to a file called "Dockerfile"
+
+```
+FROM ubuntu
+
+RUN apt-get update 
+
+RUN apt-get install -y \
+    python \
+    python-pip \
+    python-setuptools \
+    python-dev 
+
+RUN pip install SoftLayer
+
+RUN echo '[softlayer]' > ~/.softlayer
+
+RUN echo 'username = SL1335675' >> ~/.softlayer
+
+RUN echo 'api_key = eb1a8148c3ca8c82fed1fbac7e1b8aef47d8bd1c37b29b3e44b3932134c9155f' >> ~/.softlayer
+
+RUN echo 'endpoint_url = https://api.softlayer.com/xmlrpc/v3.1/' >> ~/.softlayer
+
+ENTRYPOINT ["/bin/bash"]
+```
+
+* Build a Docker image with the command: 
+
+`docker build --tag slcli --file Dockerfile .`
+
+* Open up powershell (Windows) or terminal (Mac) and spin up a docker container with the command:
+
+`docker run -it slcli`
+
 * Work inside this container -- e.g. follow the ubuntu Linux steps below
 
 #### Mac OS X Installation Steps (without docker)
