@@ -37,7 +37,7 @@ Python version 2.7 or newer and a complementing pip program are required for thi
 
 #### Install slcli in Docker (Windows, Mac, or Linux)
 * Install docker from http://docker.io
-* Save the contents of the snippet below to a file called "Dockerfile"
+* Save the contents of the snippet below to a file called "Dockerfile" ***(make sure to change YOUR_SL_API_ID and YOUR_SL_API_KEY to your values)***
 
 ```
 FROM ubuntu
