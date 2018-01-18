@@ -54,9 +54,9 @@ RUN pip install SoftLayer
 
 RUN echo '[softlayer]' > ~/.softlayer
 
-RUN echo 'username = SL1335675' >> ~/.softlayer
+RUN echo 'username = YOUR_SL_API_ID' >> ~/.softlayer
 
-RUN echo 'api_key = eb1a8148c3ca8c82fed1fbac7e1b8aef47d8bd1c37b29b3e44b3932134c9155f' >> ~/.softlayer
+RUN echo 'api_key = YOUR_SL_API_KEY' >> ~/.softlayer
 
 RUN echo 'endpoint_url = https://api.softlayer.com/xmlrpc/v3.1/' >> ~/.softlayer
 
