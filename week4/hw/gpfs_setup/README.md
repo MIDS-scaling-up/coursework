@@ -1,7 +1,7 @@
 # Homework: Part 1 - Installing GPFS FPO
 
 ### Update Jan 24, 2018
-Some students are reporting that after appling the latest kernl, their VMs do not reboot.  At this time, we recommend not updating the kernel, so not not run ''' yum install -y kernel'''.  To install the correct version of the kernel headers run:
+Some students are reporting that after appling the latest kernl, their VMs do not reboot.  At this time, we recommend not updating the kernel, so not not run ```yum install -y kernel```.  To install the correct version of the kernel headers run:
 ```
 yum install "kernel-devel-uname-r == $(uname -r)"
 ```
