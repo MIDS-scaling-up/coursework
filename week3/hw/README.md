@@ -28,7 +28,7 @@ Please review the Ethereum white paper located at https://github.com/ethereum/wi
 ### Subscribing to messages on the development  Blue Horizon MQTT Cloud Broker
 At this point, we will use our new VM to subscribe to the public topic tree on the development MQTT bus of Blue Horizon:
 ```
-mosquitto_sub -t /applications/in/+/public/# -h 198.23.89.34
+mosquitto_sub -t /applications/in/+/public/# -h 169.44.201.108
 ```
 In your homework submission, please explain what the + and # in the line above stand for, as well as provide a few lines of output that you see on screen.  Can you recognize some of the messages?  What is their meaning?
 
