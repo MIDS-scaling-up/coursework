@@ -12,7 +12,7 @@ Download and install BigDL on the master node
 cd /usr/local
 mkdir -m 777 bigdl
 cd bigdl
-wget https://oss.sonatype.org/content/groups/public/com/intel/analytics/bigdl/dist-spark-1.6.2-scala-2.10.5-linux64/0.3.0-SNAPSHOT/dist-spark-1.6.2-scala-2.10.5-linux64-0.3.0-20171016.200700-73-dist.zip
+wget https://oss.sonatype.org/content/groups/public/com/intel/analytics/bigdl/dist-spark-1.6.2-scala-2.10.5-linux64/0.3.0/dist-spark-1.6.2-scala-2.10.5-linux64-0.3.0-dist.zip
 unzip *.zip
 rm *.zip
 ```
