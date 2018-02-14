@@ -59,6 +59,7 @@ Let us pick a directory and clone Intel's BigDL examples directory
 ```
 cd /root
 git clone https://github.com/intel-analytics/BigDL
+git checkout branch-0.3
 ```
 
 We will need to install a package called six:
