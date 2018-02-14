@@ -34,9 +34,9 @@ To get a python shell with BigDL you do this:
 ```
 export BIGDL_HOME=/usr/local/bigdl
 cd $BIGDL_HOME/lib
-BIGDL_VERSION=0.3.0-SNAPSHOT
+BIGDL_VERSION=0.3.0
 ${SPARK_HOME}/bin/pyspark --master local[2] \
---conf spark.driver.extraClassPath=bigdl-SPARK_1.6-${BIGDL_VERSION}-jar-with-dependencies.jar \
+--conf spark.driver.extraClassPath=bigdl-SPARK_2.1-${BIGDL_VERSION}-jar-with-dependencies.jar \
 --py-files bigdl-${BIGDL_VERSION}-python-api.zip \
 --properties-file ../conf/spark-bigdl.conf
 ```
@@ -73,14 +73,14 @@ Now, create a script file called lenet.sh and write the following into it:
 #!/bin/sh
 
 PYTHONHASHSEED=0
-BIGDL_VERSION=0.3.0-SNAPSHOT
+BIGDL_VERSION=0.3.0
 BigDL_HOME=/usr/local/bigdl
 GITHUB_BIGDL_HOME=/root/BigDL
 SPARK_HOME=/usr/local/spark
 MASTER=local[2]
 
-PYTHON_API_ZIP_PATH=${BigDL_HOME}/lib/bigdl-0.3.0-SNAPSHOT-python-api.zip
-BigDL_JAR_PATH=${BigDL_HOME}/lib/bigdl-SPARK_1.6-0.3.0-SNAPSHOT-jar-with-dependencies.jar
+PYTHON_API_ZIP_PATH=${BigDL_HOME}/lib/bigdl-0.3.0-python-api.zip
+BigDL_JAR_PATH=${BigDL_HOME}/lib/bigdl-SPARK_2.1-0.3.0-jar-with-dependencies.jar
 
 # BigDL_JAR_PATH=${BigDL_HOME}/dist/lib/bigdl-VERSION-jar-with-dependencies.jar
 PYTHONPATH=${PYTHON_API_ZIP_PATH}:$PYTHONPATH
