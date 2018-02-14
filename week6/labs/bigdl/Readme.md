@@ -64,7 +64,7 @@ git clone https://github.com/intel-analytics/BigDL
 We will need to install a package called six:
 ```
 pip install six
-ssh spark2 pip install siz
+ssh spark2 pip install six
 ssh spark3 pip install six
 ```
 
