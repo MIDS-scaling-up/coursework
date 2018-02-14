@@ -59,6 +59,7 @@ Let us pick a directory and clone Intel's BigDL examples directory
 ```
 cd /root
 git clone https://github.com/intel-analytics/BigDL
+cd BigDL
 git checkout branch-0.3
 ```
 
