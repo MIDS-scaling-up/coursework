@@ -91,7 +91,7 @@ The rest of the article (http://sldn.softlayer.com/blog/waelriac/Managing-SoftLa
 You do not need to use the SLAPI to manage object storage accounts, You could use a generic swift client instead, e.g., to list containers in the account in the particular datacenter using the openstack swift utility:
 
 	pip install python-swiftclient  
-	swift -A https://SL_DATA_CENTER_ID.objectstorage.softlayer.net/auth/v1.0/ -U ACCOUNT-ID:USERID -K API_KEY list  
+	swift -A https://SL_DATA_CENTER_ID.objectstorage.softlayer.net/auth/v1.0/ -U USERNAME:ACCOUNT-ID -K API_KEY list  
 
 Where the SL_DATA_CENTER_ID is something like dal05 or sjc01, as returned in the call to getHubNetworkStorage, ACCOUNT-ID is the storage account you retrieved above and USERID is your portal username.  For example if the datacenter is sjc01, your storage username is SL000000-1 and you log into the portal with just SL000000 your command line would look similar to the following:
 
