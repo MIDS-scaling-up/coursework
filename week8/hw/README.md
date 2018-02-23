@@ -29,7 +29,7 @@ integer?
 1. What condition relating ‘W’, ‘R’, and ‘N’ must be satisfied to "yield a quorum like system"? 
 1. In the paper "Probabilistically Bounded Staleness,"
 Berkeley researchers derive an analytic framework for the probability of reading a "stale" version of an object in a Dynamo-like system that implements quorum.
-Using [this tool] (http://pbs.cs.berkeley.edu/\#demo) (lambda=0.1 for all latencies, tolerable staleness=1 version, 15,000 iterations/point), answer the following questions: 
+Using [this tool] (http://pbs.cs.berkeley.edu/#demo) (lambda=0.1 for all latencies, tolerable staleness=1 version, 15,000 iterations/point), answer the following questions: 
 
   1. With what probability are you reading "fresh" data for n=3, w=2, r=2? 
   1. Does it depend on time? If so, why? If so, why not? 
