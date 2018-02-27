@@ -29,9 +29,15 @@ cd /usr/local
 rsync -avz bigdl spark2:/usr/local
 rsync -avz bigdl spark3:/usr/local
 ```
+Make sure you have numpy installed:
+```
+yum install -y numpy
+```
+
 ### Validating the install
 To get a python shell with BigDL you do this:
 ```
+cd /usr/local/bigdl/lib
 export BIGDL_HOME=/usr/local/bigdl
 cd $BIGDL_HOME/lib
 BIGDL_VERSION=0.3.0
