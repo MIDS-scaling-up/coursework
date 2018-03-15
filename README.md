@@ -101,7 +101,7 @@ _There will be no in-class lab for this assignment_
 
 ## Week 11: Spark ML Round 2
 
-[DIGITS Object Detection](week11/hw-nn)
+0. [DIGITS Object Detection](week11/hw-nn)
 
 ### Labs
 
