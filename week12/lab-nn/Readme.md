@@ -38,7 +38,7 @@ overfitting
 * number of epochs (full passes over the data set) -- when do you stop?
 
 #### Auto-stopping
-In cell 12, you should see a number of commented out lines related to callbacks, patience, and early stopping.  The idea here is to 
+In cell 11, you should see a number of commented out lines related to callbacks, patience, and early stopping.  The idea here is to 
 calculate validation loss at the end of each epoch pass and to stop if it no longer goes down.  Note that we are not training on the 
 validation data, we are only using it to see whether the model is improving (and is generalizable)
 
