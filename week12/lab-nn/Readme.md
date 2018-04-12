@@ -34,7 +34,7 @@ if your starting point is near a local minimum
 overfitting
 * activations.  relu is generally faster, but might cause an LSTM to have its gradients explode. tanh or sigmoid would be safer
 * Type of RNN - try GAN vs LSTM
-* batch size (cell 12) -  a larger number can reduce the training time but is also somewhat less accurate
+* batch size (cell 11) -  a larger number can reduce the training time but is also somewhat less accurate
 * number of epochs (full passes over the data set) -- when do you stop?
 
 #### Auto-stopping
