@@ -21,7 +21,7 @@ The MNIST data set consists of 28x28 black and white images of hand written digi
 * Add one more conv layer.  Does it help with accuracy?
 * Increase the batch size.  What impact does it have?
 
-#### 2. Keras / Theano MNIST demo (10 min in teams)
+#### 3. Keras / Theano MNIST demo (10 min in teams)
 In this lab, we take the same concept to the familiar world of Jupyter and Keras.  This lab, as the previous ones, should be done 
 in groups.  Note the number of your group, and open up the corresponding url; e.g. if your group number is 4, then go to http://169.44.201.108:8888/notebooks/cnn4.ipynb   The instructors will provide you with the Jupyter token.
 Familiarize yourself with the code.  Make sure you understand the meaning of the layers in the model definition.  Run the model to completion, then try the following:

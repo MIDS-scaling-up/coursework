@@ -1,5 +1,15 @@
 # Homework: Part 1 - Installing GPFS FPO
 
+### Update Jan 24, 2018
+Some students are reporting that after appling the latest kernl, their VMs do not reboot.  At this time, we recommend not updating the kernel, so not not run ```yum install -y kernel```.  To install the correct version of the kernel headers run:
+```
+yum install "kernel-devel-uname-r == $(uname -r)"
+```
+You may then install the remaining dependences with the following command: 
+```
+yum -y install ksh gcc-c++ compat-libstdc++-33 redhat-lsb net-tools libaio
+```
+
 ## Overview
 
 These instructions are a subset of the official instructions linked to from here: [IBM Spectrum Scale Resources - GPFS](http://www-03.ibm.com/systems/storage/spectrum/scale/resources.html).
