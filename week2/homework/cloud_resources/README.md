@@ -75,28 +75,132 @@ Salt Cloud is a cloud provisioning program that we’ll use to automate provisio
 
 Provision a new VS (you can choose your own datacenter and domain name if you wish; we recommend using a hostname with the ‘saltmaster’ prefix for Salt configuration management convenience). Note that you’re making use of the SSH key you generated earlier:
 
-    slcli vs create -d hou02 --os CENTOS_LATEST --cpu 1 --memory 1024 --hostname saltmaster --domain someplace.net --key identifier
+    slcli vs create -d hou02 --os UBUNTU_LATEST_64 --cpu 1 --memory 1024 --hostname saltmaster --domain someplace.net --key identifier
 
 Use `slcli vs list` to check up on the provisioning VS. Provisioning is finished when you the ‘action’ field in the output has the value ‘-’.
 
 #### SSH to the VS
 
-Use `slcli vs list` and `slcli vs credentials <id>` or the SoftLayer management web UI (https://control.softlayer.com/) to discover both the public IP address and the root password of your VS. Login to the VS using SSH (note that you must replace the pink field with the IP you’ve discovered):
+Use `slcli vs list` and `slcli vs credentials <id>` or the SoftLayer management web UI (https://control.softlayer.com/) to discover both the public IP address and the root password of your VS. Login to the VS using SSH (note that you must replace the IP_ADDRESS with the IP you’ve discovered):
 
-    ssh root@5.1.56.1
+    ssh root@IP_ADDRESS
 
-#### Install Salt programs
+## Option 1: Use Docker
 
-While logged into the VS, execute:
+Install Docker per the instructions in [lab 2] (https://github.com/MIDS-scaling-up/coursework/tree/master/week2/labs/docker)
 
-    pip install --upgrade pip
-    pip uninstall -y urllib3
-    yum install -y gcc python-devel openssl-devel 
-    pip install m2crypto
-    curl -o /tmp/install_salt.sh -L https://bootstrap.saltstack.com && sh /tmp/install_salt.sh -Z -M git 2015.5
+Create a file named 'Dockerfile' with the contents from the snippet below ***(Make sure you replace the SL_API ID & KEY with your own)***:
 
-    yum install -y python-pip && pip install SoftLayer apache-libcloud
+```
+FROM ubuntu
 
+RUN wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest/SALTSTACK-GPG-KEY.pub | sudo apt-key add -
+
+RUN echo 'deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest xenial main' > /etc/apt/sources.list.d/saltstack.list
+
+RUN apt-get update 
+
+RUN apt-get install -y salt-master salt-minion salt-ssh salt-syndic salt-cloud salt-api
+
+RUN mkdir -p /etc/salt/{cloud.providers.d,cloud.profiles.d}
+
+RUN pip install SoftLayer
+
+RUN echo '[softlayer]' > ~/.softlayer
+
+RUN echo 'username = YOUR_SL_API_ID' >> ~/.softlayer
+
+RUN echo 'api_key = YOUR_SL_API_KEY' >> ~/.softlayer
+
+RUN echo 'endpoint_url = https://api.softlayer.com/xmlrpc/v3.1/' >> ~/.softlayer
+
+RUN service salt-master start
+
+RUN service salt-syndic start
+
+RUN service salt-api start
+
+ENTRYPOINT ["/bin/bash"]
+
+```
+
+Then build the image:
+
+`docker build --tag salt --file Dockerfile .`
+
+Skip to the `Configure Salt Cloud` section below to run your container.
+
+## OPTION 2: Install Salt programs on the VM
+
+While logged into the VS:
+
+```
+$ sudo apt-get update && sudo apt-get -y upgrade
+
+$ sudo apt-get install python-pip
+```
+
+ You may need to upgrade pip:
+ 
+ `$ pip install --upgrade pip`
+ 
+ **Install SoftLayer**:
+ 
+`$ pip install softlayer`
+ 
+ 
+ Copy the `~/.softlayer` file from your local machine to your ubuntu server (or use `slcli config setup` as in Week 1 with your own API ID and KEY):
+ 
+```
+$ cat > ~/.softlayer
+
+[softlayer]
+username = YOUR_SL_API_ID
+api_key = YOUR_SL_API_KEY
+endpoint_url = https://api.softlayer.com/xmlrpc/v3.1/
+timeout = 0
+```
+ 
+If copying the file (as above using cat), use **CTRL-D** to complete changes to the file and return to the $ prompt.
+
+Check that `slcli` works before you proceed to install salt. Try getting a list of your servers:
+
+`$ slcli virtual list`
+
+
+**Install Salt Stack**
+
+Follow these instructions to install Salt Stack:  https://repo.saltstack.com/#ubuntu.  Don’t bother with the post-install config because the defaults are fine.
+
+1. Run the following command to import the SaltStack repository key:
+
+`wget -O - https://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest/SALTSTACK-GPG-KEY.pub | sudo apt-key add -`
+
+2. Save the following file to /etc/apt/sources.list.d/saltstack.list:
+
+`cat > /etc/apt/sources.list.d/saltstack.list`
+
+`deb http://repo.saltstack.com/apt/ubuntu/16.04/amd64/latest xenial main`
+
+Use **CTRL-D** to complete changes to the file and return to the $ prompt.
+
+3. Run `sudo apt-get update`
+
+4. Install the salt-minion, salt-master, or other Salt components:
+
+```
+sudo apt-get install -y salt-master salt-minion salt-ssh salt-syndic salt-cloud salt-api
+```
+5. Start all services:
+
+```
+service salt-master start
+
+service salt-syndic start
+
+service salt-api start
+
+```    
 #### Configure Salt Cloud
 
     mkdir -p /etc/salt/{cloud.providers.d,cloud.profiles.d}
@@ -105,23 +209,16 @@ You next must populate some configuration files on the server. For each command 
 
 Alternately you can use an editor of your choice (vim, emacs, nano).
 
-Write a cloud provider configuration file. Note that you must replace the values in `<>`'s. The value on the `master: …` line should be the public IP address of your VS.
+Write a cloud provider configuration file. ***Note that you must use your own SL_API ID and KEY as well as your own VM PUBLIC ID***. 
 
     cat > /etc/salt/cloud.providers.d/softlayer.conf
     sl:
       minion:
-        master: <6.2.6.1>
-      user: <beyonce>
-      apikey: <ZZZZZZZZZZZZZZZZZZZZZ>
-      provider: softlayer
-      script: bootstrap-salt
-      script_args: -Z git 2015.5
-      delete_sshkeys: True
-      display_ssh_output: False
-      wait_for_ip_timeout: 1800
-      ssh_connect_timeout: 1200
-      wait_for_fun_timeout: 1200
-
+        master: YOUR_VM_PUBLIC_IP
+      user: YOUR_SL_API_ID
+      apikey: YOUR_SL_API_KEY
+      driver: softlayer
+      
 Verify that you’ve properly written the file to disk:
 
     cat /etc/salt/cloud.providers.d/softlayer.conf
@@ -132,23 +229,29 @@ Verify that you’ve properly written the file to disk:
 
 Write a cloud profiles configuration file:
 
-    cat > /etc/salt/cloud.profiles.d/softlayer.conf
-    sl_centos7_small:
-      provider: sl
-      image: CENTOS_7_64
-      cpu_number: 1
-      ram: 1024
-      disk_size: 25
-      local_disk: True
-      hourly_billing: True
-      domain: <somewhere.net>
-      location: dal06
+```
+$ cat > /etc/salt/cloud.profiles.d/softlayer.conf
+sl_ubuntu_small:
+  provider: sl
+  image: UBUNTU_LATEST_64
+  cpu_number: 1
+  ram: 1024
+  disk_size: 25
+  local_disk: True
+  hourly_billing: True
+  domain: somewhere.net
+  location: dal06
+ 
+```
 
 ### Provision a new VS with Salt Cloud
 
+***IF you are using Option 1 (Docker), then run this command to start the container:***
+`docker run -it -v /etc/salt/cloud.providers.d:/etc/salt/cloud.providers.d -v /etc/salt/cloud.profiles.d:/etc/salt/cloud.profiles.d salt `
+
 Execute:
 
-    salt-cloud -p sl_centos7_small <mytestvs>
+    salt-cloud -p sl_ubuntu_small mytestvs
 
 You should observe output like this:
 
