@@ -1,7 +1,7 @@
-#THIS HOMEWORK IS OPTIONAL
-#THE hw-nn HOMEWORK IS THE OFFICIAL WEEK 10 HOMEWORK
+# THIS HOMEWORK IS OPTIONAL
+# THE hw-nn HOMEWORK IS THE OFFICIAL WEEK 10 HOMEWORK
 
-#Orchestrate with Brooklyn
+# Orchestrate with Brooklyn
 You'll need a VM with 2 CPUs and 4G of RAM to serve as the brooklyn server, e.g. this is how Dima did it.  Note that the key needs to exist in SoftLayer for this to work (YOUR_KEY in this case)
 
     slcli vs create --datacenter=sjc01 --domain=dima.com  --hostname=brooklyn --os=UBUNTU_LATEST_64 --key=YOUR_KEY --cpu=2 --memory=4096 --billing=hourly --wait=64000
@@ -10,7 +10,7 @@ You'll need a VM with 2 CPUs and 4G of RAM to serve as the brooklyn server, e.g.
 In general, a good starting point for Brooklyn is here:
 https://brooklyn.incubator.apache.org/v/latest/start/blueprints.html
 
-###Connect to your VM and install the latest brooklyn
+### Connect to your VM and install the latest brooklyn
 
 
     # Install Java
@@ -44,13 +44,13 @@ https://brooklyn.incubator.apache.org/v/latest/start/blueprints.html
     cd
 
     #Download the Brooklyn source code tarball
-    wget "http://mirror.cogentco.com/pub/apache/brooklyn/apache-brooklyn-0.11.0/apache-brooklyn-0.11.0-bin.tar.gz"
+    wget "http://mirror.reverse.net/pub/apache/brooklyn/apache-brooklyn-0.12.0/apache-brooklyn-0.12.0-bin.tar.gz"
 
     #unpack the tarball
-    tar zxf apache-brooklyn-0.11.0-bin.tar.gz
+    tar zxf apache-brooklyn-0.12.0-bin.tar.gz
 
     #change working directory to the unpacked code
-    cd  apache-brooklyn-0.11.0-bin
+    cd  apache-brooklyn-0.12.0-bin
 
     
 ### Configure SoftLayer Location
@@ -94,16 +94,16 @@ Change the permissions on the new properties file
     chmod 600 ~/.brooklyn/brooklyn.properties
 
 
-###Start it:
+### Start it:
 
-    cd ~/apache-brooklyn-0.11.0-bin
+    cd ~/apache-brooklyn-0.12.0-bin
     nohup ./bin/brooklyn launch -b <your external ip> &
 
 
-###Now connect to the web console
+### Now connect to the web console
 Point your browser to https://your_vm_ip:8443 and log in with the creds you specififed in the brooklyn.properties file (default is admin/devcl0ud).
 
-###Deploy a sample blueprint.
+### Deploy a sample blueprint.
 The UI will show a deployment window. Click on the YAML Composer button, then paste the following blueprint:
 
     name: My Web Cluster
@@ -129,7 +129,7 @@ The UI will show a deployment window. Click on the YAML Composer button, then pa
 This will take a few minutes to provision.  Once the blueprint is up, you should be able to click on the My Web entity on the left and it'll display URL for the newly provisioned application on the right , e.g.
 http://169.53.137.237:8000/
 
-##To clear out your servers, select the application and click "Stop" on the Effectors tab. This will break down the app and cancel all servers in SoftLayer
+## To clear out your servers, select the application and click "Stop" on the Effectors tab. This will break down the app and cancel all servers in SoftLayer
 
-##This homework is not graded. It is complete/incomplete only.
-###Submit the URL for your brooklyn admin UI as well as the ID and Password to access it.
+## This homework is not graded. It is complete/incomplete only.
+### Submit the URL for your brooklyn admin UI as well as the ID and Password to access it.
