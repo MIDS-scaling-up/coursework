@@ -54,10 +54,9 @@ https://brooklyn.incubator.apache.org/v/latest/start/blueprints.html
 
     
 ### Configure SoftLayer Location
-Brooklyn uses a properties file (~/.brooklyn/brooklyn.properties) to define things like Cloud Endpoints (SoftLayer in our case) and portal security.
+Brooklyn uses a properties file (~/apache-brooklyn-0.12.0-bin/etc/brooklyn.cfg) to define things like Cloud Endpoints (SoftLayer in our case) and portal security.
 
-    mkdir ~/.brooklyn
-edit ~/.brooklyn/brooklyn.properties  and add the following lines (NOTE: make sure to provide your api key/username):
+edit ~/apache-brooklyn-0.12.0-bin/etc/brooklyn.cfg  and add the following lines (NOTE: make sure to provide your api key/username):
 
     brooklyn.location.jclouds.softlayer.identity=YOUR_SOFTLAYER_USERNAME
     brooklyn.location.jclouds.softlayer.credential=YOUR_SOFTLAYER_API_KEY
@@ -97,7 +96,7 @@ Change the permissions on the new properties file
 ### Start it:
 
     cd ~/apache-brooklyn-0.12.0-bin
-    nohup ./bin/brooklyn launch -b <your external ip> &
+    ./bin/start
 
 
 ### Now connect to the web console
