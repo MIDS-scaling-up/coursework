@@ -40,7 +40,7 @@ Python version 2.7 or newer and a complementing pip program are required for thi
 * Save the contents of the snippet below to a file called "Dockerfile" ***(make sure to change YOUR_SL_API_ID and YOUR_SL_API_KEY to your values)***
 
 ```
-FROM ubuntu
+FROM ubuntu:16.04
 
 RUN apt-get update 
 
@@ -48,7 +48,8 @@ RUN apt-get install -y \
     python \
     python-pip \
     python-setuptools \
-    python-dev 
+    python-dev \ 
+    openssh-client
 
 RUN pip install SoftLayer
 
@@ -59,6 +60,8 @@ RUN echo 'username = YOUR_SL_API_ID' >> ~/.softlayer
 RUN echo 'api_key = YOUR_SL_API_KEY' >> ~/.softlayer
 
 RUN echo 'endpoint_url = https://api.softlayer.com/xmlrpc/v3.1/' >> ~/.softlayer
+
+RUN ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N ""
 
 ENTRYPOINT ["/bin/bash"]
 ```
