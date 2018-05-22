@@ -21,7 +21,8 @@ MAINTAINER bmwshop@gmail.com
 # this installs darknet: http://pjreddie.com/darknet/install/
 # and then configures the tiny model for yolo
 
-RUN apt-get update && apt-get install -y git pkg-config wget unzip
+RUN apt-get update && apt-get install -y tzdata
+RUN apt-get install -y git pkg-config wget unzip
 
 RUN apt-get install -y libopencv-dev
 WORKDIR /
@@ -78,7 +79,7 @@ cd /coco
 ./get_coco_dataset.sh
 
 cd /darknet
-./darknet detector demo cfg/coco.data cfg/yolo.cfg yolo.weights
+./darknet detector demo cfg/coco.data cfg/yolov3.cfg yolo.weights
 ```
 What is the framerate printed in the termina window where you started Yolo from?
 
