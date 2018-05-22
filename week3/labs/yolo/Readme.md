@@ -40,7 +40,7 @@ RUN make -j4
 # RUN wget http://pjreddie.com/media/files/tiny-yolo-voc.weights
 # RUN wget http://pjreddie.com/media/files/yolo.weights
 
-RUN wget https://pjreddie.com/media/files/yolo.weights 
+RUN wget https://pjreddie.com/media/files/yolov3.weights 
 ```
 Save your Dockerfile and build the container:
 ```
@@ -60,26 +60,20 @@ docker run --rm -ti darknet bash
 Once inside the container, let's run a few samples:
 ```
 cd /darknet
-./darknet detect cfg/yolo.cfg yolo.weights data/dog.jpg
-./darknet detect cfg/yolo.cfg yolo.weights data/horses.jpg
-./darknet detect cfg/yolo.cfg yolo.weights data/person.jpg
+./darknet detect cfg/yolov3.cfg yolov3.weights data/dog.jpg
+./darknet detect cfg/yolo3.cfg yolo3.weights data/horses.jpg
+./darknet detect cfg/yolo3.cfg yolo3.weights data/person.jpg
 ```
 How long does it take to process one image? 
 
 #### [Optional] Running Yolo on your laptop / desktop
-If your local machine can run Docker, Yolo could be installed on your local machine -- e.g. Macbook -- and will be reasonably fast, especially if you have a GPU.  If you have a webcam attached, then you should be able to run Yolo live.  It will try to open an x window, so ensure that you have your xhost + 
+If your local machine can run Docker, Yolo could be installed on your local machine -- will be reasonably fast, if you have a GPU.  If you have a webcam attached, then you should be able to run Yolo live.  It will try to open an x window, so ensure that you have your xhost + 
 command issued.
 ```
 docker run --name darknet -ti darknet bash
-cd /darknet
-# install the coco data set for optimal awesomeness
-mkdir /coco
-cp /darknet/scripts/get_coco_dataset.sh /coco
-cd /coco
-./get_coco_dataset.sh
 
 cd /darknet
-./darknet detector demo cfg/coco.data cfg/yolov3.cfg yolo.weights
+./darknet detector demo cfg/coco.data cfg/yolov3.cfg yolov3.weights
 ```
 What is the framerate printed in the termina window where you started Yolo from?
 
@@ -91,11 +85,12 @@ Spin up your docker container:
 ```
 docker run --name darknet -ti darknet bash
 cd /darknet
-wget https://pjreddie.com/media/files/tiny-yolo-voc.weights
+wget https://pjreddie.com/media/files/yolov3-tiny.weights
 ```
 This will take a while.  Now run the detector again and observe the difference in performance:
 ```
-./darknet detector test cfg/voc.data cfg/tiny-yolo-voc.cfg tiny-yolo-voc.weights data/dog.jpg
+./darknet detect cfg/yolov3-tiny.cfg yolov3-tiny.weights data/dog.jpg
+./darknet detector demo cfg/coco.data cfg/yolov3-tiny.cfg yolov3-tiny.weights
 ```
 What is the framerate printed in the main terminal window where you started Yolo?
 
