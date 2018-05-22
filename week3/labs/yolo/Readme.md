@@ -61,8 +61,8 @@ Once inside the container, let's run a few samples:
 ```
 cd /darknet
 ./darknet detect cfg/yolov3.cfg yolov3.weights data/dog.jpg
-./darknet detect cfg/yolo3.cfg yolo3.weights data/horses.jpg
-./darknet detect cfg/yolo3.cfg yolo3.weights data/person.jpg
+./darknet detect cfg/yolov3.cfg yolo3.weights data/horses.jpg
+./darknet detect cfg/yolov3.cfg yolo3.weights data/person.jpg
 ```
 How long does it take to process one image? 
 
