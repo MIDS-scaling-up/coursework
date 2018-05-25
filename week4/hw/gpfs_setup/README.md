@@ -3,9 +3,9 @@
 ### Update Jan 24, 2018
 Some students are reporting that after appling the latest kernl, their VMs do not reboot.  At this time, we recommend not updating the kernel, so not not run ```yum install -y kernel```.  To install the correct version of the kernel headers run:
 ```
-yum install "kernel-devel-uname-r == $(uname -r)"
+yum -y install "kernel-devel-uname-r == $(uname -r)"
 ```
-You may then install the remaining dependences with the following command: 
+After rebooting, you may then install the remaining dependences with the following command: 
 ```
 yum -y install ksh gcc-c++ compat-libstdc++-33 redhat-lsb net-tools libaio
 ```
