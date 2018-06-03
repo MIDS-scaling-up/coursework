@@ -72,9 +72,9 @@ Install packages (installing the entire JDK rather than the JRE is necessary to 
 
 ### Hadoop Download
 
-Download hadoop v2 to `/usr/local` and extract it:
+Download hadoop the latest v2.7.x from http://apache.claz.org/hadoop/core to `/usr/local` and extract it.  Assuming 2.7.6 is the latest:
 
-    curl http://apache.claz.org/hadoop/core/hadoop-2.7.4/hadoop-2.7.4.tar.gz | tar -zx -C /usr/local --show-transformed --transform='s,/*[^/]*,hadoop,'
+    curl http://apache.claz.org/hadoop/core/hadoop-2.7.6/hadoop-2.7.6.tar.gz| tar -zx -C /usr/local --show-transformed --transform='s,/*[^/]*,hadoop,'
 
 Make sure your key directories have correct permissions
 
