@@ -1,6 +1,8 @@
 ### Using Spark with Intel BigDL
-In this lab, we are experimenting with [Intel's BigD]
-(https://github.com/intel-analytics/BigDL), a distributed Deep Learning framework developed specifically for Intel hardware
+This lab assumes that you have three CentOS or RedHat servers available (names spark1, spark2, and spark3). We recommend using the VMs from your homework.
+
+
+In this lab, we are experimenting with [Intel's BigDL](https://github.com/intel-analytics/BigDL), a distributed Deep Learning framework developed specifically for Intel hardware
 
 We will use the code from the link below with some minor modification.  Feel free to go over it time permitting:
 https://bigdl-project.github.io/0.2.0/#PythonUserGuide/python-examples/
