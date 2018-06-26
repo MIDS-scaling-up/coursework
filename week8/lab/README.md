@@ -193,7 +193,7 @@ You just analyzed an image (data/dog.jpg) and found a car, a bicyle, and a dog.
 
 Play around with the images in the data directory to check for accuracy.
 
-Here's links to the input & output images:
+Here's links to the data directory input & output images:
 
  * [Input Images](https://github.com/MIDS-scaling-up/coursework/tree/master/week3/labs/yolo/input_images)
  * [Output Images](https://github.com/MIDS-scaling-up/coursework/tree/master/week3/labs/yolo/output_images)
