@@ -37,9 +37,9 @@ rpm -i cuda-repo-rhel7-9.2.88-1.x86_64.rpm
 yum install -y epel-release
 yum clean all
 yum install -y cuda
-yum install -y git
+yum install -y git pciutils
 
-# Reboot to reload libraries
+# Reboot to reload libraries and new kernel
 reboot
 
 # Test CUDA
@@ -48,7 +48,11 @@ nvidia-smi
 # Clone the darknet repo and build with GPU enabled
 git clone https://github.com/pjreddie/darknet
 cd darknet
+
+# Enable GPU in darknet
 sed -i 's/GPU=0/GPU=1/g' Makefile
+
+# Add nvcc to your PATH
 export PATH=/usr/local/cuda-9.2/bin${PATH:+:${PATH}}
 make
 ```
@@ -225,5 +229,7 @@ time ./darknet detect cfg/yolov3.cfg yolov3.weights data/dog.jpg
 Is the program faster with the GPU? If so, how much faster? If not, how much slower?
 
 What are your thoughts on how/why it is faster or slower with the GPU?
+
+Could this be done with nvidia-docker? (google it if you're curious)
 
 # CANCEL YOUR VSI WHEN YOU ARE DONE WITH THIS LAB, DON'T LET IT LINGER. IT'S EXPENSIVE!!!
