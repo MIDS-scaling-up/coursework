@@ -1,4 +1,4 @@
-# darknet dockerfile
+# darknet with a GPU
 [darknet](http://pjreddie.com/darknet/) is an open source neural network framework written in C and CUDA. This docker image (created by [loretoparisi](https://github.com/loretoparisi/docker/tree/master/darknet)) contains all the models you need to run darknet with the following neural networks and models
 
 - [yolo](http://pjreddie.com/darknet/yolo/) real time object detection
@@ -8,6 +8,7 @@
 - [darkgo](http://pjreddie.com/darknet/darkgo-go-in-darknet/) Go game play
 
 ## Order your GPU enabled Virtual Server Instance
+### Do this at the beginning of class!
 
 Since we can't order from the CLI, we'll use the portal:
  * Navigate to https://control.softlayer.com/devices
@@ -20,36 +21,49 @@ Since we can't order from the CLI, we'll use the portal:
  * Select a ssh key and set the host/domain names
  * Accept the licenses (if you agree) and finalize the order
  
-
+## Install and build darknet w/ a GPU
 ```
-yum update
+# Get latest kernel
 yum update -y
+
+# Reboot to enable new kernel
 reboot
+
+# Get & install CUDA rpm
 wget https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-repo-rhel7-9.2.88-1.x86_64.rpm
 rpm -i cuda-repo-rhel7-9.2.88-1.x86_64.rpm
+
+# Install epel, cuda, and git
 yum install -y epel-release
 yum clean all
 yum install -y cuda
 yum install -y git
+
+# Reboot to reload libraries
 reboot
+
+# Test CUDA
 nvidia-smi
+
+# Clone the darknet repo and build with GPU enabled
 git clone https://github.com/pjreddie/darknet
 cd darknet
+sed -i 's/GPU=0/GPU=1/g' Makefile
+export PATH=/usr/local/cuda-9.2/bin${PATH:+:${PATH}}
 make
-wget https://pjreddie.com/media/files/yolov3.weights
-./darknet detect cfg/yolov3.cfg yolov3.weights data/dog.jpg
+```
+
+Download the default weight file.
 
 ```
-Play around with the images in the data directory to check for accuracy.
+# Download the default weight file
+wget https://pjreddie.com/media/files/yolov3.weights
 
-Here's links to the input & output images:
-https://github.com/MIDS-scaling-up/coursework/tree/master/week3/labs/yolo/input_images
-https://github.com/MIDS-scaling-up/coursework/tree/master/week3/labs/yolo/output_images
+```
 
 
-then you can perform some darknet tasks like
 
-Run [yolo](http://pjreddie.com/darknet/yolo/)
+then you can perform some darknet tasks like running [yolo](http://pjreddie.com/darknet/yolo/)
 
 ```
 
@@ -169,6 +183,12 @@ truck: 92%
 bicycle: 99%
 ```
 You just analyzed an image (data/dog.jpg) and found a car, a bicyle, and a dog.
+
+Play around with the images in the data directory to check for accuracy.
+
+Here's links to the input & output images:
+https://github.com/MIDS-scaling-up/coursework/tree/master/week3/labs/yolo/input_images
+https://github.com/MIDS-scaling-up/coursework/tree/master/week3/labs/yolo/output_images
 
 The pre-defined (and pre-trained) categories can be viewed in [the darknet github repo](https://github.com/pjreddie/darknet/blob/master/examples/yolo.c).
 
