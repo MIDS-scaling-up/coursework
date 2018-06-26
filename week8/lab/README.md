@@ -194,8 +194,9 @@ You just analyzed an image (data/dog.jpg) and found a car, a bicyle, and a dog.
 Play around with the images in the data directory to check for accuracy.
 
 Here's links to the input & output images:
-https://github.com/MIDS-scaling-up/coursework/tree/master/week3/labs/yolo/input_images
-https://github.com/MIDS-scaling-up/coursework/tree/master/week3/labs/yolo/output_images
+
+ * [Input Images](https://github.com/MIDS-scaling-up/coursework/tree/master/week3/labs/yolo/input_images)
+ * [Output Images](https://github.com/MIDS-scaling-up/coursework/tree/master/week3/labs/yolo/output_images)
 
 The pre-defined (and pre-trained) categories can be viewed in [the darknet github repo](https://github.com/pjreddie/darknet/blob/master/examples/yolo.c).
 
