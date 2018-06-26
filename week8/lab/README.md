@@ -228,7 +228,7 @@ sed -i 's/GPU=1/GPU=0/g' Makefile
 make
 time ./darknet detect cfg/yolov3.cfg yolov3.weights data/dog.jpg
 ```
-
+Look at the "Predicted in" line of the output (near the end), as well as the timing information from the `time` command.
 
 Is the program faster with the GPU? If so, how much faster? If not, how much slower?
 
