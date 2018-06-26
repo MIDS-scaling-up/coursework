@@ -205,3 +205,23 @@ wget https://pjreddie.com/media/files/shakespeare.weights
 
 ```
 
+## Further challenge
+Time the process to run detection on the dog image.
+
+```
+time ./darknet detect cfg/yolov3.cfg yolov3.weights data/dog.jpg
+```
+Note how long it ran.
+Now update the Makefile to set GPU=0, re-make darknet, and time it again.
+
+```
+cd ~/darknet/
+sed -i 's/GPU=1/GPU=0/g' Makefile
+make
+time ./darknet detect cfg/yolov3.cfg yolov3.weights data/dog.jpg
+```
+
+
+Is the program faster with the GPU? If so, how much faster? If not, how much slower?
+
+What are your thoughts on how/why it is faster or slower with the GPU?
