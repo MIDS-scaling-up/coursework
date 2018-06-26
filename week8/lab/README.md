@@ -70,8 +70,11 @@ wget https://pjreddie.com/media/files/yolov3.weights
 then you can perform some darknet tasks like running [yolo](http://pjreddie.com/darknet/yolo/)
 
 ```
-
 ./darknet detect cfg/yolov3.cfg yolov3.weights data/dog.jpg
+```
+Output:
+
+```
 layer     filters    size              input                output
     0 conv     32  3 x 3 / 1   416 x 416 x   3   ->   416 x 416 x  32  0.299 BFLOPs
     1 conv     64  3 x 3 / 2   416 x 416 x  32   ->   208 x 208 x  64  1.595 BFLOPs
