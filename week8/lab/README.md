@@ -7,153 +7,177 @@
 - [rnn](http://pjreddie.com/darknet/rnns-in-darknet/) Recurrent neural networks model for text prediction
 - [darkgo](http://pjreddie.com/darknet/darkgo-go-in-darknet/) Go game play
 
-## How to install Docker
+## Order your GPU enabled Virtual Server Instance
 
-We will be using Docker to run this lab. You will need a VM. Any Ubuntu 16 VM will do, this will not affect your homeworks, but you can provision a fresh VM (2 cpu, 4GB ram, 100GB disk, Ubuntu 16) if you wish. The steps below will install Docker CE on your VM.
-
-```
-sudo apt install -y python
-sudo apt-get remove -y docker docker-engine docker.io
-sudo apt-get -f install
-sudo apt-get update
-sudo apt-get install -y apt-transport-https     ca-certificates     curl     software-properties-common
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo add-apt-repository    "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-sudo apt-get update
-sudo apt-get install -y docker-ce
-sudo docker run hello-world
-```
-
-## How to build the Docker container
-You can build build the docker image from the Dockerfile folder or from Docker repositories hub.
-
-To pull the [darknet image](https://store.docker.com/community/images/loretoparisi/darknet) from the repo
+Since we can't order from the CLI, we'll use the portal:
+ * Navigate to https://control.softlayer.com/devices
+ * Select "Order Devices" and pick the Hourly Public Virtual Server
+ * Pick Dallas 13 as your data center
+ * Select the GPU flavor
+ * Pick AC1.8x60x25
+ * Select CentOS 7.x - Minimal Install (64 bit)
+ * Click the "ADD TO ORDER" button
+ * Select a ssh key and set the host/domain names
+ * Accept the licenses (if you agree) and finalize the order
+ 
 
 ```
-docker pull loretoparisi/darknet
+yum update
+yum update -y
+reboot
+wget https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-repo-rhel7-9.2.88-1.x86_64.rpm
+rpm -i cuda-repo-rhel7-9.2.88-1.x86_64.rpm
+yum install -y epel-release
+yum clean all
+yum install -y cuda
+yum install -y git
+reboot
+nvidia-smi
+git clone https://github.com/pjreddie/darknet
+cd darknet
+make
+wget https://pjreddie.com/media/files/yolov3.weights
+./darknet detect cfg/yolov3.cfg yolov3.weights data/dog.jpg
+
 ```
 
-This will build all layers, cache each of them with a opportunist caching of git repositories for hunspell and dictionaries stable branches.
 
-## INFORMATIONAL: How to build your own darknet container
-If you want to play with darknet further, you can modify and build the container using the `Dockerfile` contained in the `cpu/` folder. Run:
-
-```
-git clone https://github.com/loretoparisi/docker.git
-cd docker/darknet/cpu/
-./build.sh
-```
-
-You can then run and enter the container by running
-`./run.sh` in the same directory.
-
-## How to test the docker image
-
-
-Then to run the container in interactive mode (bash, run the following, depending on if you built or pulled the image.
-
-Built:
-```
-docker run --rm -it --name darknet darknet bash
-```
-
-Pulled:
-```
-docker run --rm -it --name darknet loretoparisi/darknet bash
-```
 
 then you can perform some darknet tasks like
 
 Run [yolo](http://pjreddie.com/darknet/yolo/)
 
 ```
-cd darknet
-./darknet detector test cfg/coco.data cfg/yolo.cfg /root/yolo.weights data/dog.jpg
+
+./darknet detect cfg/yolov3.cfg yolov3.weights data/dog.jpg
 layer     filters    size              input                output
-    0 conv     32  3 x 3 / 1   416 x 416 x   3   ->   416 x 416 x  32
-    1 max          2 x 2 / 2   416 x 416 x  32   ->   208 x 208 x  32
-    2 conv     64  3 x 3 / 1   208 x 208 x  32   ->   208 x 208 x  64
-    3 max          2 x 2 / 2   208 x 208 x  64   ->   104 x 104 x  64
-    4 conv    128  3 x 3 / 1   104 x 104 x  64   ->   104 x 104 x 128
-    5 conv     64  1 x 1 / 1   104 x 104 x 128   ->   104 x 104 x  64
-    6 conv    128  3 x 3 / 1   104 x 104 x  64   ->   104 x 104 x 128
-    7 max          2 x 2 / 2   104 x 104 x 128   ->    52 x  52 x 128
-    8 conv    256  3 x 3 / 1    52 x  52 x 128   ->    52 x  52 x 256
-    9 conv    128  1 x 1 / 1    52 x  52 x 256   ->    52 x  52 x 128
-   10 conv    256  3 x 3 / 1    52 x  52 x 128   ->    52 x  52 x 256
-   11 max          2 x 2 / 2    52 x  52 x 256   ->    26 x  26 x 256
-   12 conv    512  3 x 3 / 1    26 x  26 x 256   ->    26 x  26 x 512
-   13 conv    256  1 x 1 / 1    26 x  26 x 512   ->    26 x  26 x 256
-   14 conv    512  3 x 3 / 1    26 x  26 x 256   ->    26 x  26 x 512
-   15 conv    256  1 x 1 / 1    26 x  26 x 512   ->    26 x  26 x 256
-   16 conv    512  3 x 3 / 1    26 x  26 x 256   ->    26 x  26 x 512
-   17 max          2 x 2 / 2    26 x  26 x 512   ->    13 x  13 x 512
-   18 conv   1024  3 x 3 / 1    13 x  13 x 512   ->    13 x  13 x1024
-   19 conv    512  1 x 1 / 1    13 x  13 x1024   ->    13 x  13 x 512
-   20 conv   1024  3 x 3 / 1    13 x  13 x 512   ->    13 x  13 x1024
-   21 conv    512  1 x 1 / 1    13 x  13 x1024   ->    13 x  13 x 512
-   22 conv   1024  3 x 3 / 1    13 x  13 x 512   ->    13 x  13 x1024
-   23 conv   1024  3 x 3 / 1    13 x  13 x1024   ->    13 x  13 x1024
-   24 conv   1024  3 x 3 / 1    13 x  13 x1024   ->    13 x  13 x1024
-   25 route  16
-   26 reorg              / 2    26 x  26 x 512   ->    13 x  13 x2048
-   27 route  26 24
-   28 conv   1024  3 x 3 / 1    13 x  13 x3072   ->    13 x  13 x1024
-   29 conv    425  1 x 1 / 1    13 x  13 x1024   ->    13 x  13 x 425
-   30 detection
-Loading weights from /root/yolo.weights...Done!
-data/dog.jpg: Predicted in 8.208007 seconds.
-car: 54%
-bicycle: 51%
-dog: 56%
-Not compiled with OpenCV, saving to predictions.png instead
+    0 conv     32  3 x 3 / 1   416 x 416 x   3   ->   416 x 416 x  32  0.299 BFLOPs
+    1 conv     64  3 x 3 / 2   416 x 416 x  32   ->   208 x 208 x  64  1.595 BFLOPs
+    2 conv     32  1 x 1 / 1   208 x 208 x  64   ->   208 x 208 x  32  0.177 BFLOPs
+    3 conv     64  3 x 3 / 1   208 x 208 x  32   ->   208 x 208 x  64  1.595 BFLOPs
+    4 res    1                 208 x 208 x  64   ->   208 x 208 x  64
+    5 conv    128  3 x 3 / 2   208 x 208 x  64   ->   104 x 104 x 128  1.595 BFLOPs
+    6 conv     64  1 x 1 / 1   104 x 104 x 128   ->   104 x 104 x  64  0.177 BFLOPs
+    7 conv    128  3 x 3 / 1   104 x 104 x  64   ->   104 x 104 x 128  1.595 BFLOPs
+    8 res    5                 104 x 104 x 128   ->   104 x 104 x 128
+    9 conv     64  1 x 1 / 1   104 x 104 x 128   ->   104 x 104 x  64  0.177 BFLOPs
+   10 conv    128  3 x 3 / 1   104 x 104 x  64   ->   104 x 104 x 128  1.595 BFLOPs
+   11 res    8                 104 x 104 x 128   ->   104 x 104 x 128
+   12 conv    256  3 x 3 / 2   104 x 104 x 128   ->    52 x  52 x 256  1.595 BFLOPs
+   13 conv    128  1 x 1 / 1    52 x  52 x 256   ->    52 x  52 x 128  0.177 BFLOPs
+   14 conv    256  3 x 3 / 1    52 x  52 x 128   ->    52 x  52 x 256  1.595 BFLOPs
+   15 res   12                  52 x  52 x 256   ->    52 x  52 x 256
+   16 conv    128  1 x 1 / 1    52 x  52 x 256   ->    52 x  52 x 128  0.177 BFLOPs
+   17 conv    256  3 x 3 / 1    52 x  52 x 128   ->    52 x  52 x 256  1.595 BFLOPs
+   18 res   15                  52 x  52 x 256   ->    52 x  52 x 256
+   19 conv    128  1 x 1 / 1    52 x  52 x 256   ->    52 x  52 x 128  0.177 BFLOPs
+   20 conv    256  3 x 3 / 1    52 x  52 x 128   ->    52 x  52 x 256  1.595 BFLOPs
+   21 res   18                  52 x  52 x 256   ->    52 x  52 x 256
+   22 conv    128  1 x 1 / 1    52 x  52 x 256   ->    52 x  52 x 128  0.177 BFLOPs
+   23 conv    256  3 x 3 / 1    52 x  52 x 128   ->    52 x  52 x 256  1.595 BFLOPs
+   24 res   21                  52 x  52 x 256   ->    52 x  52 x 256
+   25 conv    128  1 x 1 / 1    52 x  52 x 256   ->    52 x  52 x 128  0.177 BFLOPs
+   26 conv    256  3 x 3 / 1    52 x  52 x 128   ->    52 x  52 x 256  1.595 BFLOPs
+   27 res   24                  52 x  52 x 256   ->    52 x  52 x 256
+   28 conv    128  1 x 1 / 1    52 x  52 x 256   ->    52 x  52 x 128  0.177 BFLOPs
+   29 conv    256  3 x 3 / 1    52 x  52 x 128   ->    52 x  52 x 256  1.595 BFLOPs
+   30 res   27                  52 x  52 x 256   ->    52 x  52 x 256
+   31 conv    128  1 x 1 / 1    52 x  52 x 256   ->    52 x  52 x 128  0.177 BFLOPs
+   32 conv    256  3 x 3 / 1    52 x  52 x 128   ->    52 x  52 x 256  1.595 BFLOPs
+   33 res   30                  52 x  52 x 256   ->    52 x  52 x 256
+   34 conv    128  1 x 1 / 1    52 x  52 x 256   ->    52 x  52 x 128  0.177 BFLOPs
+   35 conv    256  3 x 3 / 1    52 x  52 x 128   ->    52 x  52 x 256  1.595 BFLOPs
+   36 res   33                  52 x  52 x 256   ->    52 x  52 x 256
+   37 conv    512  3 x 3 / 2    52 x  52 x 256   ->    26 x  26 x 512  1.595 BFLOPs
+   38 conv    256  1 x 1 / 1    26 x  26 x 512   ->    26 x  26 x 256  0.177 BFLOPs
+   39 conv    512  3 x 3 / 1    26 x  26 x 256   ->    26 x  26 x 512  1.595 BFLOPs
+   40 res   37                  26 x  26 x 512   ->    26 x  26 x 512
+   41 conv    256  1 x 1 / 1    26 x  26 x 512   ->    26 x  26 x 256  0.177 BFLOPs
+   42 conv    512  3 x 3 / 1    26 x  26 x 256   ->    26 x  26 x 512  1.595 BFLOPs
+   43 res   40                  26 x  26 x 512   ->    26 x  26 x 512
+   44 conv    256  1 x 1 / 1    26 x  26 x 512   ->    26 x  26 x 256  0.177 BFLOPs
+   45 conv    512  3 x 3 / 1    26 x  26 x 256   ->    26 x  26 x 512  1.595 BFLOPs
+   46 res   43                  26 x  26 x 512   ->    26 x  26 x 512
+   47 conv    256  1 x 1 / 1    26 x  26 x 512   ->    26 x  26 x 256  0.177 BFLOPs
+   48 conv    512  3 x 3 / 1    26 x  26 x 256   ->    26 x  26 x 512  1.595 BFLOPs
+   49 res   46                  26 x  26 x 512   ->    26 x  26 x 512
+   50 conv    256  1 x 1 / 1    26 x  26 x 512   ->    26 x  26 x 256  0.177 BFLOPs
+   51 conv    512  3 x 3 / 1    26 x  26 x 256   ->    26 x  26 x 512  1.595 BFLOPs
+   52 res   49                  26 x  26 x 512   ->    26 x  26 x 512
+   53 conv    256  1 x 1 / 1    26 x  26 x 512   ->    26 x  26 x 256  0.177 BFLOPs
+   54 conv    512  3 x 3 / 1    26 x  26 x 256   ->    26 x  26 x 512  1.595 BFLOPs
+   55 res   52                  26 x  26 x 512   ->    26 x  26 x 512
+   56 conv    256  1 x 1 / 1    26 x  26 x 512   ->    26 x  26 x 256  0.177 BFLOPs
+   57 conv    512  3 x 3 / 1    26 x  26 x 256   ->    26 x  26 x 512  1.595 BFLOPs
+   58 res   55                  26 x  26 x 512   ->    26 x  26 x 512
+   59 conv    256  1 x 1 / 1    26 x  26 x 512   ->    26 x  26 x 256  0.177 BFLOPs
+   60 conv    512  3 x 3 / 1    26 x  26 x 256   ->    26 x  26 x 512  1.595 BFLOPs
+   61 res   58                  26 x  26 x 512   ->    26 x  26 x 512
+   62 conv   1024  3 x 3 / 2    26 x  26 x 512   ->    13 x  13 x1024  1.595 BFLOPs
+   63 conv    512  1 x 1 / 1    13 x  13 x1024   ->    13 x  13 x 512  0.177 BFLOPs
+   64 conv   1024  3 x 3 / 1    13 x  13 x 512   ->    13 x  13 x1024  1.595 BFLOPs
+   65 res   62                  13 x  13 x1024   ->    13 x  13 x1024
+   66 conv    512  1 x 1 / 1    13 x  13 x1024   ->    13 x  13 x 512  0.177 BFLOPs
+   67 conv   1024  3 x 3 / 1    13 x  13 x 512   ->    13 x  13 x1024  1.595 BFLOPs
+   68 res   65                  13 x  13 x1024   ->    13 x  13 x1024
+   69 conv    512  1 x 1 / 1    13 x  13 x1024   ->    13 x  13 x 512  0.177 BFLOPs
+   70 conv   1024  3 x 3 / 1    13 x  13 x 512   ->    13 x  13 x1024  1.595 BFLOPs
+   71 res   68                  13 x  13 x1024   ->    13 x  13 x1024
+   72 conv    512  1 x 1 / 1    13 x  13 x1024   ->    13 x  13 x 512  0.177 BFLOPs
+   73 conv   1024  3 x 3 / 1    13 x  13 x 512   ->    13 x  13 x1024  1.595 BFLOPs
+   74 res   71                  13 x  13 x1024   ->    13 x  13 x1024
+   75 conv    512  1 x 1 / 1    13 x  13 x1024   ->    13 x  13 x 512  0.177 BFLOPs
+   76 conv   1024  3 x 3 / 1    13 x  13 x 512   ->    13 x  13 x1024  1.595 BFLOPs
+   77 conv    512  1 x 1 / 1    13 x  13 x1024   ->    13 x  13 x 512  0.177 BFLOPs
+   78 conv   1024  3 x 3 / 1    13 x  13 x 512   ->    13 x  13 x1024  1.595 BFLOPs
+   79 conv    512  1 x 1 / 1    13 x  13 x1024   ->    13 x  13 x 512  0.177 BFLOPs
+   80 conv   1024  3 x 3 / 1    13 x  13 x 512   ->    13 x  13 x1024  1.595 BFLOPs
+   81 conv    255  1 x 1 / 1    13 x  13 x1024   ->    13 x  13 x 255  0.088 BFLOPs
+   82 yolo
+   83 route  79
+   84 conv    256  1 x 1 / 1    13 x  13 x 512   ->    13 x  13 x 256  0.044 BFLOPs
+   85 upsample            2x    13 x  13 x 256   ->    26 x  26 x 256
+   86 route  85 61
+   87 conv    256  1 x 1 / 1    26 x  26 x 768   ->    26 x  26 x 256  0.266 BFLOPs
+   88 conv    512  3 x 3 / 1    26 x  26 x 256   ->    26 x  26 x 512  1.595 BFLOPs
+   89 conv    256  1 x 1 / 1    26 x  26 x 512   ->    26 x  26 x 256  0.177 BFLOPs
+   90 conv    512  3 x 3 / 1    26 x  26 x 256   ->    26 x  26 x 512  1.595 BFLOPs
+   91 conv    256  1 x 1 / 1    26 x  26 x 512   ->    26 x  26 x 256  0.177 BFLOPs
+   92 conv    512  3 x 3 / 1    26 x  26 x 256   ->    26 x  26 x 512  1.595 BFLOPs
+   93 conv    255  1 x 1 / 1    26 x  26 x 512   ->    26 x  26 x 255  0.177 BFLOPs
+   94 yolo
+   95 route  91
+   96 conv    128  1 x 1 / 1    26 x  26 x 256   ->    26 x  26 x 128  0.044 BFLOPs
+   97 upsample            2x    26 x  26 x 128   ->    52 x  52 x 128
+   98 route  97 36
+   99 conv    128  1 x 1 / 1    52 x  52 x 384   ->    52 x  52 x 128  0.266 BFLOPs
+  100 conv    256  3 x 3 / 1    52 x  52 x 128   ->    52 x  52 x 256  1.595 BFLOPs
+  101 conv    128  1 x 1 / 1    52 x  52 x 256   ->    52 x  52 x 128  0.177 BFLOPs
+  102 conv    256  3 x 3 / 1    52 x  52 x 128   ->    52 x  52 x 256  1.595 BFLOPs
+  103 conv    128  1 x 1 / 1    52 x  52 x 256   ->    52 x  52 x 128  0.177 BFLOPs
+  104 conv    256  3 x 3 / 1    52 x  52 x 128   ->    52 x  52 x 256  1.595 BFLOPs
+  105 conv    255  1 x 1 / 1    52 x  52 x 256   ->    52 x  52 x 255  0.353 BFLOPs
+  106 yolo
+Loading weights from yolov3.weights...Done!
+data/dog.jpg: Predicted in 15.197990 seconds.
+dog: 99%
+truck: 92%
+bicycle: 99%
 ```
 You just analyzed an image (data/dog.jpg) and found a car, a bicyle, and a dog.
 
 The pre-defined (and pre-trained) categories can be viewed in [the darknet github repo](https://github.com/pjreddie/darknet/blob/master/examples/yolo.c).
 
-Run the [rnn](http://pjreddie.com/darknet/rnns-in-darknet/)
+Now we will run the [rnn](http://pjreddie.com/darknet/rnns-in-darknet/) feature of darknet to generate some text imitating George RR Martin and Shakespeare.
 
 ```
-cd ./darknet/
-./darknet rnn generate cfg/rnn.cfg /root/shakespeare.weights -srand 0 -seed CLEOPATRA -len 200 
-rnn
-layer     filters    size              input                output
-    0 RNN Layer: 256 inputs, 1024 outputs
-		connected                             256  ->  1024
-		connected                            1024  ->  1024
-		connected                            1024  ->  1024
-    1 RNN Layer: 1024 inputs, 1024 outputs
-		connected                            1024  ->  1024
-		connected                            1024  ->  1024
-		connected                            1024  ->  1024
-    2 RNN Layer: 1024 inputs, 1024 outputs
-		connected                            1024  ->  1024
-		connected                            1024  ->  1024
-		connected                            1024  ->  1024
-    3 connected                            1024  ->   256
-    4 softmax                                         256
-    5 cost                                            256
-Loading weights from /root/shakespeare.weights...Done!
-CLEOPATRA. O, the Senate House?
-    These haste doth bear the studiest dangerous weeds,
-    Which never had more profitable mind,
-    And yet most woeful note to you,
-    That hang them in these worthiest serv
-```
+cd ~/darknet/
+wget https://pjreddie.com/media/files/grrm.weights
+wget https://pjreddie.com/media/files/shakespeare.weights
 
-If you want to run darknet against your own images, you can put them into a directory on your VM and mount it into your container with:
+./darknet rnn generate cfg/rnn.cfg grrm.weights -srand 0 -seed JON
+./darknet rnn generate cfg/rnn.cfg shakespeare.weights -srand 0
+
 
 ```
-docker run -v /directory/of/images:/pictures --rm -it --name darknet darknet bash
-```
 
-*(make sure to update the `directory/of/images` to point to a directory on your VM that actually contains images)*
-
-Then you can re-run darknet:
-
-```
-cd darknet
-./darknet detector test cfg/coco.data cfg/yolo.cfg /root/yolo.weights /pictures/your_picture.jpg
-```
-where you replace `your_picture.jpg` with your image name.
