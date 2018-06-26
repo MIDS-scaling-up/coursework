@@ -40,7 +40,11 @@ wget https://pjreddie.com/media/files/yolov3.weights
 ./darknet detect cfg/yolov3.cfg yolov3.weights data/dog.jpg
 
 ```
+Play around with the images in the data directory to check for accuracy.
 
+Here's links to the input & output images:
+https://github.com/MIDS-scaling-up/coursework/tree/master/week3/labs/yolo/input_images
+https://github.com/MIDS-scaling-up/coursework/tree/master/week3/labs/yolo/output_images
 
 
 then you can perform some darknet tasks like
