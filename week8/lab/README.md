@@ -225,3 +225,5 @@ time ./darknet detect cfg/yolov3.cfg yolov3.weights data/dog.jpg
 Is the program faster with the GPU? If so, how much faster? If not, how much slower?
 
 What are your thoughts on how/why it is faster or slower with the GPU?
+
+# CANCEL YOUR VSI WHEN YOU ARE DONE WITH THIS LAB, DON'T LET IT LINGER. IT'S EXPENSIVE!!!
