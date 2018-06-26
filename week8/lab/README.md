@@ -49,10 +49,17 @@ You can then run and enter the container by running
 
 ## How to test the docker image
 
-Then to run the container in interactive mode (bash) do
 
+Then to run the container in interactive mode (bash, run the following, depending on if you built or pulled the image.
+
+Built:
 ```
 docker run --rm -it --name darknet darknet bash
+```
+
+Pulled:
+```
+docker run --rm -it --name darknet loretoparisi/darknet bash
 ```
 
 then you can perform some darknet tasks like
