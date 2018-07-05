@@ -8,7 +8,6 @@ Copy and paste this definition into the text entry area.
 
 ```
 name: appserver-w-policy
-location: jclouds:softlayer:tor01
 services:
 - type: org.apache.brooklyn.entity.webapp.ControlledDynamicWebAppCluster
   initialSize: 1
