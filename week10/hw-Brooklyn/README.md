@@ -52,46 +52,6 @@ https://brooklyn.incubator.apache.org/v/latest/start/blueprints.html
     #change working directory to the unpacked code
     cd  apache-brooklyn-0.12.0-bin
 
-    
-### Configure SoftLayer Location
-Brooklyn uses a properties file (~/apache-brooklyn-0.12.0-bin/etc/brooklyn.cfg) to define things like Cloud Endpoints (SoftLayer in our case) and portal security.
-
-edit ~/apache-brooklyn-0.12.0-bin/etc/brooklyn.cfg  and add the following lines (NOTE: make sure to provide your api key/username):
-
-    brooklyn.location.jclouds.softlayer.identity=YOUR_SOFTLAYER_USERNAME
-    brooklyn.location.jclouds.softlayer.credential=YOUR_SOFTLAYER_API_KEY
-    # brooklyn.localhost.private-key-file = path to your private key, set up if using localhost to test
-    brooklyn.webconsole.security.https.required=true
-    brooklyn.webconsole.security.users=admin
-
-    brooklyn.location.jclouds.softlayer.imageId=UBUNTU_14_64
-
-    # change this password
-    brooklyn.webconsole.security.user.admin.password=devcl0ud
-    brooklyn.datadir=~/.brooklyn/
-    # known good image, available in all regions
-    # brooklyn.location.jclouds.softlayer.imageId=13945
-    # ssh private key
-    brooklyn.location.jclouds.privateKeyFile=~/.ssh/id_rsa
-    # locations
-    brooklyn.location.named.Softlayer\ Seattle=jclouds:softlayer:sea01
-    brooklyn.location.named.Softlayer\ Washington=jclouds:softlayer:wdc01
-    brooklyn.location.named.Softlayer\ Dallas\ 1=jclouds:softlayer:dal01
-    brooklyn.location.named.Softlayer\ Dallas\ 5=jclouds:softlayer:dal05
-    brooklyn.location.named.Softlayer\ Dallas\ 6=jclouds:softlayer:dal06
-    brooklyn.location.named.Softlayer\ San\ Jose\ 1=jclouds:softlayer:sjc01
-    brooklyn.location.named.Softlayer\ Singapore\ 1=jclouds:softlayer:sng01
-    brooklyn.location.named.Softlayer\ Amsterdam\ 1=jclouds:softlayer:ams01
-    brooklyn.location.named.Softlayer\ London\ 2=jclouds:softlayer:lon02
-    brooklyn.location.named.Softlayer\ Hong\ Kong\ 2=jclouds:softlayer:hkg02
-    brooklyn.location.jclouds.privateKeyFile=~/.ssh/id_rsa
-
-
-
-Change the permissions on the new properties file
-
-    chmod 600 ~/.brooklyn/brooklyn.properties
-
 
 ### Start it:
 
@@ -100,14 +60,25 @@ Change the permissions on the new properties file
 
 
 ### Now connect to the web console
-Point your browser to https://your_vm_ip:8443 and log in with the creds you specififed in the brooklyn.properties file (default is admin/devcl0ud).
+Point your browser to http://your_vm_ip:8081 and log in with the default creds (default is admin/password).
+
+### Create a location
+In the GUI, click the `add location` button. 
+This can also be found on the Catalog tab by pressing the `+` sign and selecting `Location`.
+
+Select `Cloud` and click the `Next` button. 
+
+ * For Location ID, use `sl-dal10`
+ * For Location Name, use `Dallas 10`
+ * Cloud Provider is `SoftLayer`
+ * Cloud Region is `dal10`
+ * Use your API ID and Key for the credential fields
 
 ### Deploy a sample blueprint.
-The UI will show a deployment window. Click on the YAML Composer button, then paste the following blueprint:
+The UI will show a deployment window. Click on the YAML Composer button, then click the Catalog button (at the top) and paste the following blueprint:
 
     name: My Web Cluster
 
-    location: jclouds:softlayer:ams01
 
     services:
 
@@ -124,6 +95,10 @@ The UI will show a deployment window. Click on the YAML Composer button, then pa
       name: My DB
       brooklyn.config:
         creationScriptUrl: https://bit.ly/brooklyn-visitors-creation-script
+
+Then click the `Add to Catalog` button.
+
+You can launch the application by clicking the `add application` button on the homescreen or the `+` button on the Applications tab. Select `My Web Cluster` and click the `Next` button, then deploy to dal10.
 
 This will take a few minutes to provision.  Once the blueprint is up, you should be able to click on the My Web entity on the left and it'll display URL for the newly provisioned application on the right , e.g.
 http://169.53.137.237:8000/
