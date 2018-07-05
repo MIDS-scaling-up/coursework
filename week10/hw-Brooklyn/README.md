@@ -103,7 +103,7 @@ You can launch the application by clicking the `add application` button on the h
 This will take a few minutes to provision.  Once the blueprint is up, you should be able to click on the My Web entity on the left and it'll display URL for the newly provisioned application on the right , e.g.
 http://169.53.137.237:8000/
 
+Other blueprints can be found online, or you can create your own. The [week 10 lab](https://github.com/MIDS-scaling-up/coursework/blob/master/week10/labs-Brooklyn/README.md) has more examples.
+
 ## To clear out your servers, select the application and click "Stop" on the Effectors tab. This will break down the app and cancel all servers in SoftLayer
 
-## This homework is not graded. It is complete/incomplete only.
-### Submit the URL for your brooklyn admin UI as well as the ID and Password to access it.
