@@ -61,8 +61,10 @@ And finally, to verify the install:
 ## Validate TensorFlow
 
 With Docker installed, you may now test out the TensorFlow image:
-      
-     docker run -it tensorflow/tensorflow:1.2.1 bash
+
+```
+docker run -it tensorflow/tensorflow:1.2.1 bash
+```
     
 After downloading your prompt should change to root@xxxxxxx:/notebooks#.
 
@@ -73,12 +75,14 @@ Next check to confirm that your TensorFlow installation works by invoking Python
 
 Once you have a python prompt, >>>, run the following code:
 
-      # python
+```
+# python
 
-      import tensorflow as tf
-      hello = tf.constant('Hello, TensorFlow!')
-      sess = tf.Session() # It will print some warnings here.
-      print(sess.run(hello))
+import tensorflow as tf
+hello = tf.constant('Hello, TensorFlow!')
+sess = tf.Session() # It will print some warnings here.
+print(sess.run(hello))
+```
 
 This should print Hello TensorFlow! (and a couple of warnings after the tf.Session line).
 
@@ -88,46 +92,58 @@ Now press Ctrl-d, on a blank line, once to exit python, and a second time to exi
 
 Create a working directory:
 
-    mkdir tf_files
+```
+mkdir tf_files
+```
 
 and change to that directory
 
-    cd ~/tf_files
+```
+cd ~/tf_files
+```
     
 You will need to download the following files to your VM: bottlenecks1.tar.gz, bottlenecks2.tar.gz, label_image.py, retrain.py
 test.jpg:
 
-    curl -O https://raw.githubusercontent.com/MIDS-scaling-up/coursework/master/week10/lab-tf/bottlenecks1.tar.gz
-    curl -O https://raw.githubusercontent.com/MIDS-scaling-up/coursework/master/week10/lab-tf/bottlenecks2.tar.gz
-    curl -O https://raw.githubusercontent.com/MIDS-scaling-up/coursework/master/week10/lab-tf/label_image.py
-    curl -O https://raw.githubusercontent.com/MIDS-scaling-up/coursework/master/week10/lab-tf/retrain.py
-    curl -O https://raw.githubusercontent.com/MIDS-scaling-up/coursework/master/week10/lab-tf/test.jpg
+```
+curl -O https://raw.githubusercontent.com/MIDS-scaling-up/coursework/master/week10/lab-tf/bottlenecks1.tar.gz
+curl -O https://raw.githubusercontent.com/MIDS-scaling-up/coursework/master/week10/lab-tf/bottlenecks2.tar.gz
+curl -O https://raw.githubusercontent.com/MIDS-scaling-up/coursework/master/week10/lab-tf/label_image.py
+curl -O https://raw.githubusercontent.com/MIDS-scaling-up/coursework/master/week10/lab-tf/retrain.py
+curl -O https://raw.githubusercontent.com/MIDS-scaling-up/coursework/master/week10/lab-tf/test.jpg
+```
     
 Extract the bottleneck files:
 
-    tar xvf bottlenecks1.tar.gz 
-    tar xvf bottlenecks2.tar.gz 
+```
+tar xvf bottlenecks1.tar.gz 
+tar xvf bottlenecks2.tar.gz 
+```
 
 This will create the following directory stucture:
  
-    - bootlenecks
-        - daisy
-        - dandelion
-        - roses
-        - sunflowers
-        - tulips
-        
+```
+- bootlenecks
+    - daisy
+    - dandelion
+    - roses
+    - sunflowers
+    - tulips
+```
+
 These are the classes that we will train.  
 
 A "Bottleneck", is an informal term that the TensorFlow team often use for the layer just before the final output layer that actually does the classification. As, near the output, the representation is much more compact than in the main body of the network.  We've provided the files to speed up training.  See  https://codelabs.developers.google.com/codelabs/tensorflow-for-poets/#4 for a detailed description on what bottlenecks do and how they speed up learning. 
 
 Then relaunch Docker with that directory shared as your working directory, and port number 6006 published for TensorBoard:
     
-    docker run -it \
-    --publish 6006:6006 \
-    --volume ${HOME}/tf_files:/tf_files \
-    --workdir /tf_files \
-    tensorflow/tensorflow:1.2.1 bash
+```
+docker run -it \
+--publish 6006:6006 \
+--volume ${HOME}/tf_files:/tf_files \
+--workdir /tf_files \
+tensorflow/tensorflow:1.2.1 bash
+```
 
 ## Download the Images
 
@@ -135,14 +151,18 @@ Before you start any training, you'll need a set of images to teach the network 
 
 Download the sample images:
 
-    curl -O http://download.tensorflow.org/example_images/flower_photos.tgz
-    tar xzf flower_photos.tgz
+```
+curl -O http://download.tensorflow.org/example_images/flower_photos.tgz
+tar xzf flower_photos.tgz
+```
 
 After downloading 218MB, you should now have a copy of the flower photos available in your working directory.
 
 Now check the contents of the folder:
 
-    ls flower_photos
+```
+ls flower_photos
+```
 
 ## (Re)training
 
@@ -150,18 +170,22 @@ At this point, we have a trainer, we have data, so let's train! We will train th
 
 Optional: Before starting the training, launch tensorboard in the background so you can monitor the training progress.  
         
-     tensorboard --logdir training_summaries &
+```
+tensorboard --logdir training_summaries &
+```
      
 Start your image retraining with one big command (note the --summaries_dir option, sending training progress reports to the directory that tensorboard is monitoring):
 
-    python retrain.py \
-    --bottleneck_dir=bottlenecks \
-    --how_many_training_steps=500 \
-    --model_dir=inception \
-     --summaries_dir=training_summaries/basic \
-    --output_graph=retrained_graph.pb \
-    --output_labels=retrained_labels.txt \
-    --image_dir=flower_photos
+```
+python retrain.py \
+--bottleneck_dir=bottlenecks \
+--how_many_training_steps=500 \
+--model_dir=inception \
+--summaries_dir=training_summaries/basic \
+--output_graph=retrained_graph.pb \
+--output_labels=retrained_labels.txt \
+--image_dir=flower_photos
+```
     
 This script downloads the pre-trained Inception v3 model, adds a new final layer, and trains that layer on the flower photos you've downloaded.
 
