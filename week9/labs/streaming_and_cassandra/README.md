@@ -151,6 +151,8 @@ You should now be able to access the `cqlsh` shell on your Cassandra instance:
 
 Use CTRL-D to exit the shell.
 
+Note that if you want to run Cassandra in a non-local (server) mode, you will need to edit /etc/cassandra/cassandra.yaml and specify there the IP address on which Cassandra should be listening (see the rpc_address variable). Unless you also configure Cassandra security, use the internal IP of the Cassandra node.
+
 ### Create Cassandra Keyspace, Table
 
 Enter the `cqlsh` shell and execute the following instructions:
@@ -163,7 +165,7 @@ Enter the `cqlsh` shell and execute the following instructions:
 ### Edit the Tweet-consuming App
 
 Edit `tweeteat.scala` to write incoming DStream data to your Cassandra test cluster. First, you must set this property on the `SparkConf` object that gets passed to the `StreamingContext` constructor. You can do this by adding this method call to `SparkConf` object:
-
+    # assuming you're connecting to Cassandra locally
     .set("spark.cassandra.connection.host", "127.0.0.1")
 
 You'll also need to add the following imports:
@@ -184,7 +186,7 @@ There are a few noteworthy elements in this line. First, since we're not going t
 
 ### Run the Modified App
 
-Repackage your application and execute it again in Spark. You should notice that the tweet output from the first execution is missing and that log statements in the output report writes to the Cassandra instance.  Note, we have already included the Cassandra packages in both our build.sbt and in our job submission.
+Repackage your application and execute it again in Spark. You should notice that the tweet output from the first execution is missing and that log statements in the output report writes to the Cassandra instance.  Note, we have already included the Cassandra packages in both our build.sbt and in our job submission.  Note also that if your Cassandra IP is 127.0.0.1, you need to --master localhost [4] (4 here stands for the number of CPUs in the VM) otherwise other members of the cluster won't be able to connect.
 
 If you get an error similar to 
 
