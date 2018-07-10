@@ -115,7 +115,7 @@ You should see output like this:
 
     だからややこしい客多いねん。) TweetData(1016519051986681861,Mrchmadnes,@ChrisLu44 @Mezzo13531 Obama is intelligent and likes  learning.) TweetData(1016519051994992642,ashslay_haaa,RT @LiveLikeDavis: Hater : Sza hasn’t dropped any new music , you still listen to CRTL ?
     TweetData(1016519051978395654,tay_sagittarius,RT @RockettLynette: A 9-5 was never corny ... being broke is) (total tweets fetched: 41)
-18/07/10 03:06:44 INFO JobScheduler: Finished job streaming job 1531192004000 ms.0 from job set of time 1531192004000 ms
+    18/07/10 03:06:44 INFO JobScheduler: Finished job streaming job 1531192004000 ms.0 from job set of time 1531192004000 ms
 
 
 ## Part 2: Cassandra Setup
