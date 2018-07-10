@@ -164,8 +164,7 @@ Enter the `cqlsh` shell and execute the following instructions:
 
 ### Edit the Tweet-consuming App
 
-Edit `tweeteat.scala` to write incoming DStream data to your Cassandra test cluster. First, you must set this property on the `SparkConf` object that gets passed to the `StreamingContext` constructor. You can do this by adding this method call to `SparkConf` object:
-    # assuming you're connecting to Cassandra locally
+Edit `tweeteat.scala` to write incoming DStream data to your Cassandra test cluster. First, you must set this property on the `SparkConf` object that gets passed to the `StreamingContext` constructor. You can do this by adding this method call to `SparkConf` object (assuming you're connecting to Cassandra locally)
     .set("spark.cassandra.connection.host", "127.0.0.1")
 
 You'll also need to add the following imports:
