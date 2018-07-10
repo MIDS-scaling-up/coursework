@@ -86,14 +86,14 @@ print(sess.run(hello))
 
 This should print Hello TensorFlow! (and a couple of warnings after the tf.Session line).
 
-Now press Ctrl-d, on a blank line, once to exit python, and a second time to exit the docker image.
+Now press Ctrl-d, on a blank line, once to exit python, and a **second time to exit the docker image**.
 
 ## Configure
 
 Create a working directory:
 
 ```
-mkdir tf_files
+mkdir ~/tf_files
 ```
 
 and change to that directory
