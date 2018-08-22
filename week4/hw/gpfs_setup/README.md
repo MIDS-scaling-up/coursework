@@ -19,7 +19,7 @@ Make sure the nodes can talk to each other without a password.  When you created
 
     chmod 600 /root/.ssh/id_rsa
 
-Set up the hosts file (/etc/hosts) for your cluster by adding the internal IP addresses you noted earlier and names for each node in the cluster.  __Also__ you should remove the entry containing the fully qualified node name for your headnode / gpfs1.sftlyr.ws (otherwise it will trip up some of the GPFS tools since it likely does not resolve). For instance, your hosts file might look like this:
+Set up the hosts file (/etc/hosts) for your cluster by adding the __PRIVATE__ IP addresses you noted earlier and names for each node in the cluster.  __Also__ you should remove the entry containing the fully qualified node name for your headnode / gpfs1.sftlyr.ws (otherwise it will trip up some of the GPFS tools since it likely does not resolve). For instance, your hosts file might look like this:
 
     127.0.0.1 		localhost.localdomain localhost
     10.122.6.68		gpfs1
@@ -42,6 +42,9 @@ apt-get update
 apt-get install ksh binutils libaio1 g++ make m4
 cd
 tar -xvf Spectrum_Scale_ADV_501_x86_64_LNX.tar
+```
+Then install GPFS with:
+```
 ./Spectrum_Scale_Advanced-5.0.1.0-x86_64-Linux-install --silent
 cd /usr/lpp/mmfs/5.0.1.0/
 dpkg -i *.deb
