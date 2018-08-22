@@ -1,15 +1,5 @@
 # Homework: Part 1 - Installing GPFS FPO
 
-### Update Jan 24, 2018
-Some students are reporting that after appling the latest kernl, their VMs do not reboot.  At this time, we recommend not updating the kernel, so not not run ```yum install -y kernel```.  To install the correct version of the kernel headers run:
-```
-yum install "kernel-devel-uname-r == $(uname -r)"
-```
-You may then install the remaining dependences with the following command: 
-```
-yum -y install ksh gcc-c++ compat-libstdc++-33 redhat-lsb net-tools libaio
-```
-
 ## Overview
 
 These instructions are a subset of the official instructions linked to from here: [IBM Spectrum Scale Resources - GPFS](http://www-03.ibm.com/systems/storage/spectrum/scale/resources.html).
@@ -17,9 +7,7 @@ These instructions are a subset of the official instructions linked to from here
 
 We will install GPFS FPO with no replication (replication=1) and local write affinity.  This means that if you are on one of the nodes and are writing a file in GPFS, the file will end up on your local node unless your local node is out of space.
 
-A. __Get three virtual servers provisioned__, 2 vCPUs, 4G RAM, REDHAT\_6\_64, __two local disks__ 25G each, in San Jose. __Make sure__ you attach a keypair.  Pick intuitive names such as gpfs1, gpfs2, gpfs3.  Note their internal (10.x.x.x) ip addresses.
-
-_Note: The 3.10 kernel from RHEL 7 is not compatible with the GPFS kernel module build tools. Make sure you are provisioning RHEL 6 instances._
+A. __Get three virtual servers provisioned__, 2 vCPUs, 4G RAM, UBUNTU\_16\_64, __two local disks__ 25G each, in San Jose. __Make sure__ you attach a keypair.  Pick intuitive names such as gpfs1, gpfs2, gpfs3.  Note their internal (10.x.x.x) ip addresses.
 
 B. __Set up each one of your nodes as follows:__
 
@@ -46,52 +34,19 @@ Create a nodefile.  Edit /root/nodefile and add the names of your nodes.  This i
 
 C. __Install and configure GPFS FPO on each node:__
 
-You will need to obtain the GPFS tarball from us.  Check the wall for a post about where to obtain credentials for the file GPFS\_4.1\_STD\_LSX\_QSG.tar.gz.
+You will need to obtain the GPFS tarball from us.  Check the wall for a post about where to obtain the URL to download the file  Spectrum\_Scale\_ADV\_501\_x86\_64\_LNX.tar.
 
 As root on your node, download this tarball into /root, then unpack and install:
-
-    cd
-    tar -xvf GPFS_4.1_STD_LSX_QSG.tar
-    ./gpfs_install-4.1.0-0_x86_64 --silent
-    cd /usr/lpp/mmfs/4.1
-
-Upgrade the kernel if a package is available:
-
-    yum install -y kernel
-
-If a new kernel was installed you must **reboot now** before continuing.
-
-Now install kernel compilation packages and other tools:
-
-    yum -y install ksh gcc-c++ compat-libstdc++-33 kernel-devel redhat-lsb net-tools libaio
-
-The instructions below are specific to the version of the kernel you're running. Discover the version you're using by executing:
-
-    uname -r
-
-Here's mine:
-
-    [root@gpfs1 gpfsfpo]# uname -r
-    2.6.32-504.3.3.el6.x86_64
-
-__For the remainder of the guide, I'll use this kernel version in commands. Make sure you use your kernel version in the example commands below.__
-
-Kernel modules are a common feature of normal filesystems and distributed/cluster filesystems alike. You will compile modules for your kernel using the following instructions. First, create a symlink to the kernel source dir from the modules dir:
-
-    cd /lib/modules/2.6.32-504.3.3.el6.x86_64
-    rm -f build
-    ln -sf /usr/src/kernels/2.6.32-504.8.1.el6.x86_64 build
-
-Then install GPFS rpms:
-
-    rpm -ivh /usr/lpp/mmfs/4.1/gpfs*.rpm
-
-Next, build the GPFS kernel modules:
-
-    cd /usr/lpp/mmfs/src
-    make Autoconfig
-    make World
-    make InstallImages
+```
+apt-get update
+apt-get install ksh binutils libaio1 g++ make m4
+cd
+tar -xvf Spectrum_Scale_ADV_501_x86_64_LNX.tar
+./Spectrum_Scale_Advanced-5.0.1.0-x86_64-Linux-install --silent
+cd /usr/lpp/mmfs/5.0.1.0/
+dpkg -i *.deb
+/usr/lpp/mmfs/bin/mmbuildgpl
+```
 
 D. __Create the cluster.  Do these steps only on one node (gpfs1 in my example).__
 
