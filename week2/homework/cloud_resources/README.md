@@ -63,6 +63,17 @@ Associate the __public key__ with your SoftLayer account (you can pick any meani
 
 Don’t forget the __identifer__ you used in the above command, you’ll need it later.
 
+## Securing your VS
+
+Make the following two changes in /etc/ssh/sshd_config to prevent brute force attacks
+```
+PermitRootLogin prohibit-password
+PasswordAuthentication no
+```
+Restart the ssh daemon (google is your friend here)
+
+__NOTE that these steps will disable password-based authentication; you will be locked out of your VS if you secure it without having ssh key access first__
+
 ## Cloud Management with Salt
 
 Salt is a remote execution toolkit with cloud provisioning and configuration management features. In this section, you’ll install SaltStack’s Salt Master and Salt Cloud components on a SoftLayer VS and get acquainted with their core features. For more information on SaltStack, consult http://docs.saltstack.com/en/latest/ref/.
@@ -446,4 +457,4 @@ Upload a file from disk (named “another_test_file.txt”) to a new container n
 
 ## Homework Submission
 
-Please consult the Coursework area of LMS for details on homework submission (https://learn.datascience.berkeley.edu/course/view.php?id=64&group=185&page=coursework).
+Provide output of ordering a Virtual Server with the SL CLI and Provision a new VS with Salt Cloud.
