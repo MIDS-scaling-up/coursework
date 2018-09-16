@@ -9,6 +9,8 @@ Read up on the leading IoT device - Raspberry Pi 3: https://www.raspberrypi.org/
 ### Hardware: Nvidia Jetson family
 Read up on the Nvidia Jetson TX2 module here: http://www.nvidia.com/object/embedded-systems-dev-kits-modules.html  The TX2 is currently the leading DL / AI board on the market. Note that Nvidia offers an educational discount: the board is available to students for $299. Look through the specs; how much faster is it compared to a Raspberry Pi3?
 
+Just announced is the Jetson AGX Xavier, available for $1,299 with a registered developer discount: https://www.nvidia.com/en-us/autonomous-machines/jetson-agx-xavier/  How does it compare to a regular desktop?
+
 ### MQTT 
 MQTT - http://mqtt.org/ is a lightweight messaging protocol for the Internet of Things.  Please spend some time to read up on it.  In your homework submission, please write a one liner about the QoS 0,1, and 2 that MQTT enables.
 
