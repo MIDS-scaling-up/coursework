@@ -4,7 +4,7 @@
 This homework should be pretty easy and consists mostly of reading. The concept of the Internet of Things deals with a large number of devices that communicate largely through messaging.
 
 ### Hardware: Raspberry Pi3
-Read up on the leading IoT device - Raspberry Pi 3: https://www.raspberrypi.org/products/raspberry-pi-3-model-b/  How does it differ performance-wise from a regular desktop?
+Read up on the leading IoT device - Raspberry Pi 3: https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/  How does it differ performance-wise from a regular desktop?
 
 ### Hardware: Nvidia Jetson family
 Read up on the Nvidia Jetson TX2 module here: http://www.nvidia.com/object/embedded-systems-dev-kits-modules.html  The TX2 is currently the leading DL / AI board on the market. Note that Nvidia offers an educational discount: the board is available to students for $299. Look through the specs; how much faster is it compared to a Raspberry Pi3?
