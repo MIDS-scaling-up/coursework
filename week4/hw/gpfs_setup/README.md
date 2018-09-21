@@ -2,7 +2,7 @@
 
 ## Overview
 
-These instructions are a subset of the official instructions linked to from here: [IBM Spectrum Scale Resources - GPFS](http://www-03.ibm.com/systems/storage/spectrum/scale/resources.html).
+These instructions are a subset of the official instructions linked to from here: [IBM Spectrum Scale Resources - GPFS](https://www.ibm.com/support/knowledgecenter/en/STXKQY_5.0.1/com.ibm.spectrum.scale.v5r01.doc/bl1ins_manuallyinstallingonlinux_packages.htm).
 
 
 We will install GPFS FPO with no replication (replication=1) and local write affinity.  This means that if you are on one of the nodes and are writing a file in GPFS, the file will end up on your local node unless your local node is out of space.
