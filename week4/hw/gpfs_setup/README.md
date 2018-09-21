@@ -51,6 +51,12 @@ dpkg -i *.deb
 /usr/lpp/mmfs/bin/mmbuildgpl
 ```
 
+If you have errors installing all of the deb packages, try limiting to this subnet
+```
+dpkg -i gpfs.base*deb gpfs.gpl*deb gpfs.license.dm*.deb gpfs.gskit*deb 
+gpfs.msg*deb gpfs.ext*deb gpfs.compression*deb gpfs.adv*deb gpfs.crypto*deb
+```
+
 D. __Create the cluster.  Do these steps only on one node (gpfs1 in my example).__
 
 Now we are ready to create our cluster.  I named mine \[ -C\] dima .. Make sure you pass the correct node file to the --N command.
