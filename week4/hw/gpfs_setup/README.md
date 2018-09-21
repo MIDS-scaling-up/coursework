@@ -46,7 +46,7 @@ tar -xvf Spectrum_Scale_ADV_501_x86_64_LNX.tar
 Then install GPFS with:
 ```
 ./Spectrum_Scale_Advanced-5.0.1.0-x86_64-Linux-install --silent
-cd /usr/lpp/mmfs/5.0.1.0/
+cd /usr/lpp/mmfs/5.0.1.0/gpfs_debs
 dpkg -i *.deb
 /usr/lpp/mmfs/bin/mmbuildgpl
 ```
