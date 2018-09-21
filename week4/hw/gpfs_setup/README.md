@@ -53,7 +53,7 @@ dpkg -i *.deb
 
 If you have errors installing all of the deb packages, try limiting to this subnet
 ```
-dpkg -i gpfs.base*deb gpfs.gpl*deb gpfs.license.dm*.deb gpfs.gskit*deb 
+dpkg -i gpfs.base*deb gpfs.gpl*deb gpfs.license*.deb gpfs.gskit*deb 
 gpfs.msg*deb gpfs.ext*deb gpfs.compression*deb gpfs.adv*deb gpfs.crypto*deb
 ```
 
