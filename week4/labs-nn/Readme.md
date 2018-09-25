@@ -33,13 +33,3 @@ Assuming your container starts with no issues, let's generate some text!
 ```
 ruby sample.rb "She was"
 ```
-
-We also have a hosted version of this on a GPU server.  Try pasting this URL into your browser:
-
-http://169.44.201.108:5555/generate?start_text=star&n=5
-
-Or, play with an auto-complete page here:
-
-http://169.44.201.108/au/
-
-
