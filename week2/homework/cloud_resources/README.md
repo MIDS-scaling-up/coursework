@@ -63,16 +63,6 @@ Associate the __public key__ with your SoftLayer account (you can pick any meani
 
 Don’t forget the __identifer__ you used in the above command, you’ll need it later.
 
-## Securing your VS
-
-Make the following two changes in /etc/ssh/sshd_config to prevent brute force attacks
-```
-PermitRootLogin prohibit-password
-PasswordAuthentication no
-```
-Restart the ssh daemon (google is your friend here)
-
-__NOTE that these steps will disable password-based authentication; you will be locked out of your VS if you secure it without having ssh key access first__
 
 ## Cloud Management with Salt
 
@@ -95,6 +85,17 @@ Use `slcli vs list` to check up on the provisioning VS. Provisioning is finished
 Use `slcli vs list` and `slcli vs credentials <id>` or the SoftLayer management web UI (https://control.softlayer.com/) to discover both the public IP address and the root password of your VS. Login to the VS using SSH (note that you must replace the IP_ADDRESS with the IP you’ve discovered):
 
     ssh root@IP_ADDRESS
+
+## Securing your VS
+
+Make the following two changes in /etc/ssh/sshd_config to prevent brute force attacks
+```
+PermitRootLogin prohibit-password
+PasswordAuthentication no
+```
+Restart the ssh daemon (google is your friend here)
+
+__NOTE that these steps will disable password-based authentication; you will be locked out of your VS if you secure it without having ssh key access first__
 
 ## Option 1: Use Docker
 
