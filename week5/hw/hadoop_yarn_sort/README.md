@@ -25,9 +25,9 @@ Note: Instructions in this section are to be performed on each node unless other
 * Log into VMs (all 3 of them) and update `/etc/hosts/` with each system's public IP addresses (note that it's preferred to use private IPs for this communication instead, but that complicates use of Hadoop's UIs. For this assignment, public IPs will do. Here's my hosts file:
 
         127.0.0.1 localhost.localdomain localhost
-        50.22.13.216 master.hadoop.mids.lulz.bz master
-        50.22.13.194 slave1.hadoop.mids.lulz.bz slave1
-        50.22.13.217 slave2.hadoop.mids.lulz.bz slave2
+        50.22.13.216 master.mids.com master
+        50.22.13.194 slave1.mids.com slave1
+        50.22.13.217 slave2.mids.com slave2
 
 Note that the admin UIs for Hadoop create hyperlinks using hostnames and not IPs; if you want to use all features of the UIs, add the public IPs of the systems to your workstation's `hosts` file too.
 
@@ -72,9 +72,9 @@ Install packages (installing the entire JDK rather than the JRE is necessary to 
 
 ### Hadoop Download
 
-Download hadoop the latest v2.7.x from http://apache.claz.org/hadoop/core to `/usr/local` and extract it.  Assuming 2.7.6 is the latest:
+Download hadoop the latest v2.9.x from http://apache.claz.org/hadoop/core to `/usr/local` and extract it.  Assuming 2.9.1 is the latest:
 
-    curl http://apache.claz.org/hadoop/core/hadoop-2.7.6/hadoop-2.7.6.tar.gz| tar -zx -C /usr/local --show-transformed --transform='s,/*[^/]*,hadoop,'
+    curl http://apache.claz.org/hadoop/core/hadoop-2.9.1/hadoop-2.9.1.tar.gz| tar -zx -C /usr/local --show-transformed --transform='s,/*[^/]*,hadoop,'
 
 Make sure your key directories have correct permissions
 
