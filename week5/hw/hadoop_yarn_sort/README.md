@@ -22,6 +22,7 @@ For the master, you might do something like this:
 Note: Instructions in this section are to be performed on each node unless otherwise stated.
 
 ### Hosts file
+* Edit /etc/cloud/cloud.cfg and change or remove the value of 'manage_etc_hosts'
 * Log into VMs (all 3 of them) and update `/etc/hosts/` with each system's public IP addresses (note that it's preferred to use private IPs for this communication instead, but that complicates use of Hadoop's UIs. For this assignment, public IPs will do. Here's my hosts file:
 
         127.0.0.1 localhost.localdomain localhost
@@ -139,7 +140,7 @@ Edit these configuration files on the __master__ only initially; an instruction 
         <configuration>
           <property>
             <name>fs.defaultFS</name>
-            <value>hdfs://master/</value>
+            <value>hdfs://master:9000/</value>
           </property>
         </configuration>
 
