@@ -156,13 +156,13 @@ Edit these configuration files on the __master__ only initially; an instruction 
             <name>yarn.nodemanager.aux-services</name>
             <value>mapreduce_shuffle</value>
           </property>
-        </configuration>
-Note: if you want to use private IPs for your cluster, add this property also:
-
           <property>
            <name>yarn.resourcemanager.bind-host</name>
-           <value>0.0.0.0</value>
+           <value>10.XX.XX.XX</value>
           </property>
+         </configuration> 
+         
+REQUIRED: use you private IPs for your cluster, add this property also (where 10.XX.XX.XX must be the private IP of the master node)
 
 If you are using the 2 CPU/4G node configuration, you will need to add the following properties as well:
 
@@ -237,7 +237,7 @@ If you are using the 2 CPU/4G node configuration, you will need to add the follo
 
         yarn node -list
 
-* To check your cluster, browse to:
+* To check your cluster, browse to (using private IP network address for the Master node)
    * http://master-ip:50070/dfshealth.html
    * http://master-ip:8088/cluster
    * http://master-ip:19888/jobhistory (for Job History Server)
@@ -247,6 +247,10 @@ If you are using the 2 CPU/4G node configuration, you will need to add the follo
 Log files are located under `$HADOOP_HOME/logs`.
 
 You can check the java services running once your cluster is running using `jps`.
+
+To connect to the cluster over the private network IP, you must be connected to IBM Cloud VPN, please use this instructions to do so:
+https://console.bluemix.net/docs/infrastructure/iaas-vpn/getting-started.html#getting-started-with-virtual-private-networking-vpn-
+
 
 ## Run Terasort
 
