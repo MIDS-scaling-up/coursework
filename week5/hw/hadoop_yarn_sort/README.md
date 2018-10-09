@@ -23,14 +23,14 @@ Note: Instructions in this section are to be performed on each node unless other
 
 ### Hosts file
 * Edit /etc/cloud/cloud.cfg and change or remove the value of 'manage_etc_hosts'
-* Log into VMs (all 3 of them) and update `/etc/hosts/` with each system's public IP addresses (note that it's preferred to use private IPs for this communication instead, but that complicates use of Hadoop's UIs. For this assignment, public IPs will do. Here's my hosts file:
+* Log into VMs (all 3 of them) and update `/etc/hosts/` with each system's PRIVATE IP addresses, example hosts file:
 
         127.0.0.1 localhost.localdomain localhost
-        50.22.13.216 master.mids.com master
-        50.22.13.194 slave1.mids.com slave1
-        50.22.13.217 slave2.mids.com slave2
+        10.22.13.216 master.mids.com master
+        10.22.13.194 slave1.mids.com slave1
+        10.22.13.217 slave2.mids.com slave2
 
-Note that the admin UIs for Hadoop create hyperlinks using hostnames and not IPs; if you want to use all features of the UIs, add the public IPs of the systems to your workstation's `hosts` file too.
+Note that the admin UIs for Hadoop create hyperlinks using hostnames and not IPs; if you want to use all features of the UIs, add the private IPs of the systems to your workstation's `hosts` file too.
 
 ### 100G Disk Formatting
 * You need to find out the name of your disk, e.g
