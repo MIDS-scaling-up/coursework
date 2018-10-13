@@ -14,7 +14,7 @@ Provision 3 VSes to comprise a Spark cluster. You may set up the cluster manuall
 ***Note that we are using Spark 2.1.X.***
 
 ### Submitting a Scala program to Spark
-You can process data in an RDD by providing a function to execute on it. Spark will schedule execution of that function, collect results and process them as instructed. This is a common use case for Spark and often it is accomplished by submitting Scala programs to a Spark cluster. You'll write a small Scala program and submit it to the master. Note that we're going to package the simple program using Scala Build Tool(SBT), http://www.scala-sbt.org/0.13/tutorial/index.html. **Note that the version of Spark we're using expects applications written for Scala 2.11.**
+You can process data in an RDD by providing a function to execute on it. Spark will schedule execution of that function, collect results and process them as instructed. This is a common use case for Spark and often it is accomplished by submitting Scala programs to a Spark cluster. You'll write a small program in the language of your choice and submit it to the master. Note that we're going to package the simple program using Scala Build Tool(SBT), http://www.scala-sbt.org/0.13/tutorial/index.html. **Note that the version of Spark we're using expects applications written for Scala 2.11.**
 
 
 ## Part 2: Build a Twitter popular topic and user reporting system
@@ -23,7 +23,7 @@ Design and build a system for collecting data about 'popular' hashtags and users
 
 The output of your program should be lists of hashtags that were determined to be popular during the program's execution, as well as lists of users, per-hashtag, who were related to them. Think of this output as useful to marketers who want to target people to sell products to: the ones who surround conversations about particular events, products, and brands are more likely to purchase them than a random user.
 
-Your implementation should continually process incoming Twitter stream data for the duration of at least **30 minutes** and output a summary of data collected. Your program should also sample tweets over a **short** sampling duration in the range of a few minutes. The number of top most popular hashtags, _n_, to aggregate **at each sampling interval up to the total execution time** must be configurable as well. From tweets gathered during both short and long sampling periods you should determine:
+Your implementation should continually process incoming Twitter stream data for the duration of at least **30 minutes** and output a summary of data collected. Your program should also sample tweets over a **short** sampling duration in the range of a few minutes **while the longer duration is running**. The number of top most popular hashtags, _n_, to aggregate **at each sampling interval up to the total execution time** must be configurable as well. From tweets gathered during both short and long sampling periods you should determine:
 
 - The top _n_ most frequently-occurring hashtags among all tweets during the sampling period
 - The account names of users who authored tweets with popular hashtags in the period
