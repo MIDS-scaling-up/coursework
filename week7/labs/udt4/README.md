@@ -16,6 +16,9 @@ apt-get -y install g++ make
 ```
 
 Now, it's time to download UDT from https://sourceforge.net/projects/udt/files/latest/download
+
+Direct link to udt [4.11](https://netix.dl.sourceforge.net/project/udt/udt/4.11/udt.sdk.4.11.tar.gz)
+
 untar / unzip the file, then
 ```
 cd udt4
