@@ -10,16 +10,8 @@
 ## Order your GPU enabled Virtual Server Instance
 ### Do this at the beginning of class!
 
-Since we can't order from the CLI, we'll use the portal:
- * Navigate to https://control.softlayer.com/devices
- * Select "Order Devices" and pick the Hourly Public Virtual Server
- * Pick Dallas 13 as your data center
- * Select the GPU flavor
- * Pick AC1.8x60x25
- * Select CentOS 7.x - Minimal Install (64 bit)
- * Click the "ADD TO ORDER" button
- * Select a ssh key and set the host/domain names
- * Accept the licenses (if you agree) and finalize the order
+Order a GPU-enabled VSI:
+`slcli vs create --hostname=gpu-vsi --domain=test.com --flavor=AC1_8X60X25 --key=YOUR_SSH_KEY_HERE --datacenter=dal13 --os=CENTOS_7_64`
  
 ## Install and build darknet w/ a GPU
 ```
