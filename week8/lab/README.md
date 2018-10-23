@@ -11,28 +11,31 @@
 ### Do this at the beginning of class!
 
 Order a GPU-enabled VSI:
-`slcli vs create --hostname=gpu-vsi --domain=test.com --flavor=AC1_8X60X25 --key=YOUR_SSH_KEY_HERE --datacenter=dal13 --os=CENTOS_7_64`
+
+```
+slcli vs create --hostname=gpu-vsi4 --domain=test.com --flavor=AC1_8X60X25 --key=YOUR_SSH_KEY_HERE --datacenter=dal13 --os=UBUNTU_16_64 
+```
  
 ## Install and build darknet w/ a GPU
 ```
 # Get latest kernel
 yum update -y
 
-# Reboot to enable new kernel
-reboot
+# Get & install CUDA library deb package
+curl -o cuda-repo-ubuntu1604-10-0-local-10.0.130-410.48_1.0-1_amd64.deb "https://developer.download.nvidia.com/compute/cuda/10.0/secure/Prod/local_installers/cuda-repo-ubuntu1604-10-0-local-10.0.130-410.48_1.0-1_amd64.deb?1TqC0e2H8Ei1a3356TtbW3LEW5Lj6S0HOT8j-Q9sAa_nWPLdAzSa7eDOOA9kaLSKKkLm9um3XQ4MSFvpuOHyFbGd9_4ezCtFG6P46ZfsbXdx5OM8VXBYPy71sFum5UplzbI9VB6jM2UbkxNLQuR_V91hjCcqhmotC-RAVuMd-WY0mbDmpG912fSELx_Tv4E3EMnwlrO8pBg5M9Xf6F8bc7ozjKiiUPxxSli6joQ"
 
-# Get & install CUDA rpm
-wget https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-repo-rhel7-9.2.88-1.x86_64.rpm
-rpm -i cuda-repo-rhel7-9.2.88-1.x86_64.rpm
+dpkg -i cuda-repo-ubuntu1604-10-0-local-10.0.130-410.48_1.0-1_amd64.deb 
+```
+The output from installing the cuda package will give you a command to run which will add the apt key to your repo. It will be similar, but not exactly like, this one:
+```
+apt-key add /var/cuda-repo-10-0-local-10.0.130-410.48/7fa2af80.pub
+```
+Next we'll install the cuda package itself:
 
-# Install epel, cuda, and git
-yum install -y epel-release
-yum clean all
-yum install -y cuda
-yum install -y git pciutils
-
-# Reboot to reload libraries and new kernel
-reboot
+```
+# update packages and install cuda
+apt-get update
+apt-get install cuda
 
 # Test CUDA
 nvidia-smi
@@ -45,7 +48,7 @@ cd darknet
 sed -i 's/GPU=0/GPU=1/g' Makefile
 
 # Add nvcc to your PATH
-export PATH=/usr/local/cuda-9.2/bin${PATH:+:${PATH}}
+export PATH=/usr/local/cuda/bin${PATH:+:${PATH}}
 make
 ```
 
