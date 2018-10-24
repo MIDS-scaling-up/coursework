@@ -20,10 +20,10 @@ slcli vs create --hostname=gpu-vsi4 --domain=test.com --flavor=AC1_8X60X25 --key
 ```
 
 # Get & install CUDA library deb package
-curl -o cuda-repo-ubuntu1604-10-0-local-10.0.130-410.48_1.0-1_amd64.deb "https://developer.download.nvidia.com/compute/cuda/10.0/secure/Prod/local_installers/cuda-repo-ubuntu1604-10-0-local-10.0.130-410.48_1.0-1_amd64.deb?1TqC0e2H8Ei1a3356TtbW3LEW5Lj6S0HOT8j-Q9sAa_nWPLdAzSa7eDOOA9kaLSKKkLm9um3XQ4MSFvpuOHyFbGd9_4ezCtFG6P46ZfsbXdx5OM8VXBYPy71sFum5UplzbI9VB6jM2UbkxNLQuR_V91hjCcqhmotC-RAVuMd-WY0mbDmpG912fSELx_Tv4E3EMnwlrO8pBg5M9Xf6F8bc7ozjKiiUPxxSli6joQ"
+wget "http://1D7C9.http.dal05.cdn.softlayer.net/icp-artifacts/cuda-repo-ubuntu1604-10-0-local-10.0.130-410.48_1.0-1_amd64.deb"
 dpkg -i cuda-repo-ubuntu1604-10-0-local-10.0.130-410.48_1.0-1_amd64.deb 
 ```
-The output from installing the cuda package will give you a command to run which will add the apt key to your repo. It will be similar, but not exactly like, this one:
+The output from installing the cuda package will give you a command to run which will add the apt key to your repo. It will be similar, **but not exactly like**, this one:
 ```
 apt-key add /var/cuda-repo-10-0-local-10.0.130-410.48/7fa2af80.pub
 ```
