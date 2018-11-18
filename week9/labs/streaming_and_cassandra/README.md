@@ -139,12 +139,8 @@ Now install the Cassandra database:
 
 Now start Cassandra:
 
-    systemctl start cassandra
+    systemctl daemon-reload && systemctl start cassandra
 
-If that returns an error, as root run the following command instead
-
-    /etc/init.d/cassandra start
-    
 You should now be able to access the `cqlsh` shell on your Cassandra instance:
 
     cqlsh
