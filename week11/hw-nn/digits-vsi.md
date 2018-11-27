@@ -106,8 +106,11 @@ Login into nvcr.io
 # make sure you register at https://ngc.nvidia.com and enter your credentials when prompted
 docker login nvcr.io
 ```
-Start the container
+Pull and start the container.  Note that we are using 18.10 here; you will likely need to pull the latest.  Note also that we are passing through the /data disk to the container to be used for datasets:
 ```
 # check the latest version of the Digits container here: https://ngc.nvidia.com/catalog/containers/nvidia%2Fdigits
 nvidia-docker run --shm-size=1g --ulimit memlock=-1 --name digits -d -p 8888:5000 -v /data:/data -v /data/digits-jobs:/workspace/jobs nvcr.io/nvidia/digits:18.10
 ```
+### Validate that Digits is running
+Just hit this url:  http://<your VM IP>:8888
+	
