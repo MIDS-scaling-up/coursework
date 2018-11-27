@@ -34,3 +34,9 @@ And your pre-trained GoogleNet weights are located under
 ### Notes on training
 If you run the training as suggested in Nvidia github, you likely will not get to the results shown there (mAP over 50%) on the first try.  The set up does not appear to be very stable, and you are more likely to see something like this:
 ![Fig1](fig1.JPG)
+In this case, the mAP suddenly crashed at epoch 8 and we aborted the run.  It would be possible to continue training, and we are likely end up with something like this:
+![Fig2](fig2.JPG)
+Here, the mAP made a recovery, but not a full one.
+However, another idea is to recover from the checkpoint just before the crash, and "roll the dice" again.  Odds are, you will have better luck -- as we had here:
+![Fig3](fig3.JPG)
+Do give this some thought. This is the essential idea behind transfer learning.
