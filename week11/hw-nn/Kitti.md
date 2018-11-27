@@ -33,4 +33,4 @@ And your pre-trained GoogleNet weights are located under
 ```
 ### Notes on training
 If you run the training as suggested in Nvidia github, you likely will not get to the results shown there (mAP over 50%) on the first try.  The set up does not appear to be very stable, and you are more likely to see something like this:
-![Fig1](fig1.jpg)
+![Fig1](fig1.JPG)
