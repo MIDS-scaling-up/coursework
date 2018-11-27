@@ -99,6 +99,16 @@ Mount the disk
 ```
 mount /data
 ```
+### Move the working Docker directory
+By default, docker stores its images under /var/lib/docker , which will quickly fill up.  So,
+```
+service docker stop
+cd /var/lib
+cp -r docker /data
+rm -fr docker
+ln -s /data/docker ./docker
+service docker start
+```
 
 ### Start Digits in a container
 Login into nvcr.io
