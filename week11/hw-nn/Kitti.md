@@ -1,4 +1,4 @@
-# Notes pn the Kitti / object detection example
+# Notes on the Kitti / object detection example
 This page is attempted as a guide to accomplishing the object detection example described here in detail: https://github.com/NVIDIA/DIGITS/tree/master/examples/object-detection
 
 We are assuming that you have a VM with Digits in it and your /data folder is passed through to your container.. 
