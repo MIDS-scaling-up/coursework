@@ -18,6 +18,7 @@ Go to the appropriate directort
 cd /data/DIGITS/examples/object-detection
 ```
 Now, follow the instructions here: https://github.com/NVIDIA/DIGITS/tree/master/examples/object-detection#downloading-and-preparing-the-kitti-data
+
 Once the data is downloaded, run 
 ```
 ./prepare_kitti_data.py
@@ -25,4 +26,8 @@ Once the data is downloaded, run
 You can now follow the rest of the guide, just remember that your datasets are located under 
 ```
 /data/DIGITS/examples/object-detection/kitti-data
+```
+And your pre-trained GoogleNet weights are located under 
+```
+/data/bvlc_googlenet.caffemodel
 ```
