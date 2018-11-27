@@ -23,7 +23,7 @@ The MNIST data set consists of 28x28 black and white images of hand written digi
 
 #### 3. Keras / Theano MNIST demo (10 min in teams)
 In this lab, we take the same concept to the familiar world of Jupyter and Keras.  This lab, as the previous ones, should be done 
-in groups.  Note the number of your group, and open up the corresponding url; e.g. if your group number is 4, then go to http://169.44.201.108:8888/notebooks/cnn4.ipynb   The instructors will provide you with the Jupyter token.
+in groups.  Note the number of your group, and open up the corresponding url; e.g. if your group number is 4, then go to http://169.44.201.108:8891/notebooks/cnn4.ipynb   The instructors will provide you with the Jupyter token.
 Familiarize yourself with the code.  Make sure you understand the meaning of the layers in the model definition.  Run the model to completion, then try the following:
 * Note the time difference between GPU and CPU training (change the parameter in cell 1).  Note that multiple teams may be using the same GPU at the same time.  There are two GPUs in this machine, and we've assigned teams 1,3,5 GPU 0 and teams 2,4,6 GPU 1; ideally, only one team should be using the GPU at a time.  
 * Note the differences in network architecture vs lab 2 convnetjs
