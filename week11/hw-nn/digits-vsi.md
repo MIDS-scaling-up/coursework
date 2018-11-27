@@ -3,8 +3,9 @@
 Unfortunately, this is a little bit involved but ultimately, worth it!
 
 
-### Provision the VM
-We are using Ubuntu 16 in this example as right now, 18.04 is not supported with GPUs.
+### Provision the VM 
+We are using two P-100 GPUs for this VM, the fastest currently available in SoftLayer.  We are using Ubuntu 16 as the OS as of right now, 18.04 is not yet supported with GPUs.
+
 Notice that we are getting two disks; the larger one will be used for dataset storage later on.
 ```
 # replace the things in <> with your own values
@@ -24,7 +25,7 @@ apt-key add /var/cuda-repo-10-0-local-10.0.130-410.48/7fa2af80.pub
 apt-get update
 apt-get install cuda
 ```
-### install docker
+### Install docker
 Validate these at https://docs.docker.com/install/linux/docker-ce/ubuntu/
 ```
 apt-get install \
@@ -49,7 +50,7 @@ apt-get install docker-ce
 docker run hello-world
 ```
 
-### nvidia-docker
+### Install nvidia-docker (version 2)
 First, add the package repositories
 ```
 curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | \
@@ -89,7 +90,7 @@ mkdir -m 777 /data
 mkfs.ext4 /dev/xvdc
 ```
 
-Addd to /etc/fstab
+Add to /etc/fstab
 ```
 # edit /etc/fstab and all this line:
 /dev/xvdc /data                   ext4    defaults,noatime        0 0
