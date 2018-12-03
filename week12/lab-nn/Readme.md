@@ -11,8 +11,8 @@ neural net a number of previous measurements, and have it predict the next step 
 a network and tune it so as to minimize the loss for your validation dataset.
 
 #### Setup of the lab
-We assume that this is an exercise done in groups. Note the number of your group (group_num) and load http://169.44.201.108:8888/notebooks/lstm{group_num}.ipynb  For instance, if your 
-group number is 3, you go to http://169.44.201.108:8888/notebooks/lstm3.ipynb .  Instructors will share access tokens to the notebooks.  These
+We assume that this is an exercise done in groups. Note the number of your group (group_num) and load http://169.44.201.108:8891/notebooks/lstm{group_num}.ipynb  For instance, if your 
+group number is 3, you go to http://169.44.201.108:8891/notebooks/lstm3.ipynb .  Instructors will share access tokens to the notebooks.  These
 are running on a server with a number of GPUs.  Docker, nvidia-docker, theano, keras, and jupyter are running on top of that.  
 os.environ["CUDA_VISIBLE_DEVICES"] = "1" in cell 1 should list the number of GPU that you will be running on.  You will likely be sharing
 the GPU with a few other teams -- but this lab is simple and it should not present a performance issue.
