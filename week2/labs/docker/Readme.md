@@ -14,8 +14,10 @@ This assumes that you have an slcli installed somewhere, e.g. on a VM in softlay
 
 Let us spin up a clean VM.  This will take a few minutes to come up:
 ```
- slcli vs create --datacenter=dal09 --domain=<something here> --hostname=<something here> --os=UBUNTU_16_64 --cpu=1 --memory=1024 --billing=hourly --key=<your key>
+ ibmcloud sl vs create --datacenter=dal09 --domain=<something here> --hostname=<something here> --os=UBUNTU_16_64 --cpu=1 --memory=1024 --billing=hourly --key=<your key>
 ```
+
+#### ENSURE THAT YOU SECURE THE VSI AGAINST ATTACKS USING THE INSTRUCTIONS IN HOMEWORK 2
 
 Now, let us follow the official instructions here to install DockerCE on Ubuntu 16:
 https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/
